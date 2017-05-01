@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.1.1">
+<eagle version="8.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -3428,7 +3428,6 @@ Source: www.kingbright.com</description>
 <part name="U$11" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$12" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$13" library="myownthings" deviceset="N/C" device=""/>
-<part name="U$14" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$15" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$16" library="myownthings" deviceset="N/C" device=""/>
 <part name="J2" library="myownthings" deviceset="M07_SMD_STRAIGHT" device=""/>
@@ -3516,7 +3515,6 @@ Source: www.kingbright.com</description>
 <instance part="U$11" gate="G$1" x="86.36" y="142.24"/>
 <instance part="U$12" gate="G$1" x="86.36" y="139.7"/>
 <instance part="U$13" gate="G$1" x="86.36" y="137.16"/>
-<instance part="U$14" gate="G$1" x="106.68" y="93.98"/>
 <instance part="U$15" gate="G$1" x="106.68" y="91.44"/>
 <instance part="U$16" gate="G$1" x="106.68" y="88.9"/>
 <instance part="J2" gate="G$1" x="58.42" y="38.1"/>
