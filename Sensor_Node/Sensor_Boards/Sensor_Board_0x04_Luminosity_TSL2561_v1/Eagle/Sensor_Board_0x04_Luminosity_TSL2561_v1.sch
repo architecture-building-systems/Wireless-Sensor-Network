@@ -3561,6 +3561,8 @@ W = angled&lt;p&gt;
 <part name="U$20" library="myownthings" deviceset="N/C" device=""/>
 <part name="J1" library="myownthings" deviceset="M04_SMD_90" device=""/>
 <part name="SV1" library="con-lstb" deviceset="MA06-1" device=""/>
+<part name="GND1" library="SparkFun" deviceset="GND" device=""/>
+<part name="P+6" library="supply1" deviceset="VCC" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3652,6 +3654,8 @@ W = angled&lt;p&gt;
 <instance part="U$20" gate="G$1" x="63.5" y="40.64"/>
 <instance part="J1" gate="G$1" x="15.24" y="45.72" rot="MR180"/>
 <instance part="SV1" gate="1" x="109.22" y="40.64"/>
+<instance part="GND1" gate="1" x="134.62" y="27.94"/>
+<instance part="P+6" gate="VCC" x="134.62" y="53.34"/>
 </instances>
 <busses>
 </busses>
@@ -3724,8 +3728,9 @@ W = angled&lt;p&gt;
 </segment>
 <segment>
 <pinref part="SV1" gate="1" pin="1"/>
-<wire x1="116.84" y1="33.02" x2="121.92" y2="33.02" width="0.1524" layer="91"/>
-<label x="121.92" y="33.02" size="1.27" layer="95" xref="yes"/>
+<wire x1="116.84" y1="33.02" x2="134.62" y2="33.02" width="0.1524" layer="91"/>
+<pinref part="GND1" gate="1" pin="GND"/>
+<wire x1="134.62" y1="33.02" x2="134.62" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC" class="1">
@@ -3782,9 +3787,10 @@ W = angled&lt;p&gt;
 <wire x1="83.82" y1="48.26" x2="83.82" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 <segment>
+<pinref part="P+6" gate="VCC" pin="VCC"/>
+<wire x1="134.62" y1="50.8" x2="134.62" y2="38.1" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="3"/>
-<wire x1="116.84" y1="38.1" x2="121.92" y2="38.1" width="0.1524" layer="91"/>
-<label x="121.92" y="38.1" size="1.27" layer="95" xref="yes"/>
+<wire x1="134.62" y1="38.1" x2="116.84" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="RESET" class="0">
