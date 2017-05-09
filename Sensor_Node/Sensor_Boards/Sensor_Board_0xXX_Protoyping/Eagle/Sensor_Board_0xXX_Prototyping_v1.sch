@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -3663,7 +3663,7 @@ W = angled&lt;p&gt;
 <wire x1="47.752" y1="63.246" x2="47.752" y2="30.226" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="47.752" y1="30.226" x2="7.62" y2="30.226" width="0.1524" layer="97" style="shortdash"/>
 <text x="8.89" y="60.071" size="1.778" layer="97">Communication Module Connector</text>
-<text x="224.527240625" y="11.421534375" size="2.54" layer="94" font="vector">Sensor Board - SHT31</text>
+<text x="224.527240625" y="11.421534375" size="2.54" layer="94" font="vector">Sensor Board - Prototyping</text>
 <text x="277.8550125" y="1.158059375" size="2.54" layer="94" font="vector">1.0</text>
 <wire x1="104.14" y1="63.5" x2="53.34" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="104.14" y1="22.86" x2="53.34" y2="22.86" width="0.1524" layer="97" style="shortdash"/>
