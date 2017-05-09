@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -3670,6 +3670,11 @@ W = angled&lt;p&gt;
 <wire x1="53.34" y1="22.86" x2="53.34" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="104.14" y1="22.86" x2="104.14" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <text x="55.118" y="60.452" size="1.778" layer="97">FTDI Pogopin Connector</text>
+<wire x1="172.72" y1="203.2" x2="129.54" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="129.54" y1="144.78" x2="129.54" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="172.72" y1="144.78" x2="172.72" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="172.72" y1="144.78" x2="129.54" y2="144.78" width="0.1524" layer="97" style="shortdash"/>
+<text x="132.08" y="198.12" size="1.778" layer="97">Prototype Area</text>
 </plain>
 <instances>
 <instance part="GND17" gate="1" x="38.1" y="165.1"/>
@@ -3712,16 +3717,16 @@ W = angled&lt;p&gt;
 <instance part="GND1" gate="1" x="76.2" y="30.48"/>
 <instance part="P+6" gate="VCC" x="91.44" y="48.26"/>
 <instance part="C1" gate="G$1" x="30.48" y="182.88" rot="R90"/>
-<instance part="PAD1" gate="1" x="149.86" y="152.4" rot="R180"/>
-<instance part="U$1" gate="G$1" x="144.78" y="167.64"/>
-<instance part="PAD2" gate="1" x="149.86" y="147.32" rot="R180"/>
-<instance part="PAD3" gate="1" x="149.86" y="142.24" rot="R180"/>
-<instance part="PAD4" gate="1" x="149.86" y="137.16" rot="R180"/>
-<instance part="PAD5" gate="1" x="149.86" y="132.08" rot="R180"/>
-<instance part="PAD6" gate="1" x="149.86" y="127" rot="R180"/>
-<instance part="PAD7" gate="1" x="149.86" y="121.92" rot="R180"/>
-<instance part="PAD8" gate="1" x="149.86" y="116.84" rot="R180"/>
-<instance part="PAD9" gate="1" x="149.86" y="111.76" rot="R180"/>
+<instance part="PAD1" gate="1" x="134.62" y="193.04" rot="MR180"/>
+<instance part="U$1" gate="G$1" x="160.02" y="160.02"/>
+<instance part="PAD2" gate="1" x="134.62" y="187.96" rot="MR180"/>
+<instance part="PAD3" gate="1" x="134.62" y="182.88" rot="MR180"/>
+<instance part="PAD4" gate="1" x="134.62" y="177.8" rot="MR180"/>
+<instance part="PAD5" gate="1" x="134.62" y="172.72" rot="MR180"/>
+<instance part="PAD6" gate="1" x="134.62" y="167.64" rot="MR180"/>
+<instance part="PAD7" gate="1" x="134.62" y="162.56" rot="MR180"/>
+<instance part="PAD8" gate="1" x="134.62" y="157.48" rot="MR180"/>
+<instance part="PAD9" gate="1" x="134.62" y="152.4" rot="MR180"/>
 </instances>
 <busses>
 </busses>
@@ -3913,8 +3918,8 @@ W = angled&lt;p&gt;
 <pinref part="U2" gate="U$1" pin="PC5(ADC5/SCL)"/>
 </segment>
 <segment>
-<wire x1="147.32" y1="147.32" x2="142.24" y2="147.32" width="0.1524" layer="91"/>
-<label x="142.24" y="147.32" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="187.96" x2="142.24" y2="187.96" width="0.1524" layer="91"/>
+<label x="142.24" y="187.96" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD2" gate="1" pin="P"/>
 </segment>
 </net>
@@ -3925,8 +3930,8 @@ W = angled&lt;p&gt;
 <pinref part="U2" gate="U$1" pin="PC4(ADC4/SDA)"/>
 </segment>
 <segment>
-<wire x1="147.32" y1="152.4" x2="142.24" y2="152.4" width="0.1524" layer="91"/>
-<label x="142.24" y="152.4" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="193.04" x2="142.24" y2="193.04" width="0.1524" layer="91"/>
+<label x="142.24" y="193.04" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD1" gate="1" pin="P"/>
 </segment>
 </net>
@@ -3942,8 +3947,8 @@ W = angled&lt;p&gt;
 <pinref part="U2" gate="U$1" pin="PC0(ADC0)"/>
 </segment>
 <segment>
-<wire x1="147.32" y1="121.92" x2="142.24" y2="121.92" width="0.1524" layer="91"/>
-<label x="142.24" y="121.92" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="162.56" x2="142.24" y2="162.56" width="0.1524" layer="91"/>
+<label x="142.24" y="162.56" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD7" gate="1" pin="P"/>
 </segment>
 </net>
@@ -4046,8 +4051,8 @@ W = angled&lt;p&gt;
 </net>
 <net name="ADC6" class="0">
 <segment>
-<wire x1="147.32" y1="142.24" x2="142.24" y2="142.24" width="0.1524" layer="91"/>
-<label x="142.24" y="142.24" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="182.88" x2="142.24" y2="182.88" width="0.1524" layer="91"/>
+<label x="142.24" y="182.88" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD3" gate="1" pin="P"/>
 </segment>
 <segment>
@@ -4058,8 +4063,8 @@ W = angled&lt;p&gt;
 </net>
 <net name="ADC7" class="0">
 <segment>
-<wire x1="147.32" y1="137.16" x2="142.24" y2="137.16" width="0.1524" layer="91"/>
-<label x="142.24" y="137.16" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="177.8" x2="142.24" y2="177.8" width="0.1524" layer="91"/>
+<label x="142.24" y="177.8" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD4" gate="1" pin="P"/>
 </segment>
 <segment>
@@ -4070,8 +4075,8 @@ W = angled&lt;p&gt;
 </net>
 <net name="INT0" class="0">
 <segment>
-<wire x1="147.32" y1="132.08" x2="142.24" y2="132.08" width="0.1524" layer="91"/>
-<label x="142.24" y="132.08" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="172.72" x2="142.24" y2="172.72" width="0.1524" layer="91"/>
+<label x="142.24" y="172.72" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD5" gate="1" pin="P"/>
 </segment>
 <segment>
@@ -4082,8 +4087,8 @@ W = angled&lt;p&gt;
 </net>
 <net name="INT1" class="0">
 <segment>
-<wire x1="147.32" y1="127" x2="142.24" y2="127" width="0.1524" layer="91"/>
-<label x="142.24" y="127" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="167.64" x2="142.24" y2="167.64" width="0.1524" layer="91"/>
+<label x="142.24" y="167.64" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD6" gate="1" pin="P"/>
 </segment>
 <segment>
@@ -4094,8 +4099,8 @@ W = angled&lt;p&gt;
 </net>
 <net name="PC1" class="0">
 <segment>
-<wire x1="147.32" y1="116.84" x2="142.24" y2="116.84" width="0.1524" layer="91"/>
-<label x="142.24" y="116.84" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="157.48" x2="142.24" y2="157.48" width="0.1524" layer="91"/>
+<label x="142.24" y="157.48" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD8" gate="1" pin="P"/>
 </segment>
 <segment>
@@ -4106,8 +4111,8 @@ W = angled&lt;p&gt;
 </net>
 <net name="PC2" class="0">
 <segment>
-<wire x1="147.32" y1="111.76" x2="142.24" y2="111.76" width="0.1524" layer="91"/>
-<label x="142.24" y="111.76" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="137.16" y1="152.4" x2="142.24" y2="152.4" width="0.1524" layer="91"/>
+<label x="142.24" y="152.4" size="1.27" layer="95" rot="MR180" xref="yes"/>
 <pinref part="PAD9" gate="1" pin="P"/>
 </segment>
 <segment>
