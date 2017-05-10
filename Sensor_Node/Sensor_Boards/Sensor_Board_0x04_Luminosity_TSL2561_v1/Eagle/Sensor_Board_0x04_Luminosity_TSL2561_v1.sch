@@ -3591,7 +3591,7 @@ W = angled&lt;p&gt;
 <wire x1="50.8" y1="25.4" x2="50.8" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="93.98" y1="25.4" x2="93.98" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <text x="52.578" y="60.198" size="1.778" layer="97">TSL2561</text>
-<text x="224.52133125" y="11.3923625" size="2.54" layer="94" font="vector">Sensor Board - TSL2561</text>
+<text x="224.52133125" y="11.3923625" size="2.54" layer="94" font="vector">Sensor Board - TSL2561 (0x04)</text>
 <text x="277.84098125" y="1.169803125" size="2.54" layer="94" font="vector">1.0</text>
 <wire x1="144.78" y1="63.5" x2="101.6" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="144.78" y1="25.4" x2="101.6" y2="25.4" width="0.1524" layer="97" style="shortdash"/>

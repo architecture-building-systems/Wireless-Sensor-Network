@@ -3601,7 +3601,7 @@ W = angled&lt;p&gt;
 <wire x1="50.8" y1="22.86" x2="50.8" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="101.6" y1="22.86" x2="101.6" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <text x="53.594" y="59.944" size="1.778" layer="97">SHT31</text>
-<text x="224.527240625" y="11.421534375" size="2.54" layer="94" font="vector">Sensor Board - SHT31</text>
+<text x="224.527240625" y="11.421534375" size="2.54" layer="94" font="vector">Sensor Board - SHT31 (0x02)</text>
 <text x="277.8550125" y="1.158059375" size="2.54" layer="94" font="vector">1.0</text>
 <wire x1="157.48" y1="63.5" x2="106.68" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="157.48" y1="22.86" x2="106.68" y2="22.86" width="0.1524" layer="97" style="shortdash"/>

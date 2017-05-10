@@ -3682,7 +3682,7 @@ W = angled&lt;p&gt;
 <wire x1="220.98" y1="152.4" x2="220.98" y2="200.66" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="220.98" y1="152.4" x2="132.08" y2="152.4" width="0.1524" layer="97" style="shortdash"/>
 <text x="134.62" y="195.58" size="1.778" layer="97">SENSEAIR_S8</text>
-<text x="224.549478125" y="11.498909375" size="2.54" layer="94" font="vector">Sensor Board - CO2</text>
+<text x="224.549478125" y="11.498909375" size="2.54" layer="94" font="vector">Sensor Board - CO2 (0x06)</text>
 <text x="277.911478125" y="1.133621875" size="2.54" layer="94" font="vector">1.0</text>
 <wire x1="81.28" y1="30.226" x2="81.28" y2="63.246" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="81.28" y1="63.246" x2="121.92" y2="63.246" width="0.1524" layer="97" style="shortdash"/>
