@@ -15,7 +15,7 @@ static const uint8_t SENSORMODULE_TYPE = 0x06;
 #include <Wire.h>
 #include "Adafruit_SHT31.h"
 
-SoftwareSerial K_30_Serial(8,9);
+SoftwareSerial K_30_Serial(8,9); //RX TX (connect an jeweils TX RX von Device)
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
 byte readCO2[] = {0xFE, 0X44, 0X00, 0X08, 0X02, 0X9F, 0X25};  //Command packet to read Co2 (see app note)
