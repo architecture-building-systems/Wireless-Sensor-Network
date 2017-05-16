@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.1.1">
+<eagle version="8.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -160,9 +160,9 @@
 <text x="46.0375" y="12.065" size="0.762" layer="22">TX</text>
 <text x="48.5775" y="12.065" size="0.762" layer="22">RX</text>
 <text x="50.8" y="12.065" size="0.762" layer="22">GND</text>
-<text x="41.148" y="11.938" size="0.762" layer="22">5V</text>
-<text x="35.814" y="11.938" size="0.762" layer="22">N/C</text>
-<text x="38.354" y="11.938" size="0.762" layer="22">N/C</text>
+<text x="38.608" y="12.192" size="0.762" layer="22">5V</text>
+<text x="33.274" y="12.192" size="0.762" layer="22">N/C</text>
+<text x="35.56" y="12.192" size="0.762" layer="22">N/C</text>
 <circle x="44.5135" y="30.734" radius="0.3175" width="0.4064" layer="21"/>
 <text x="1.524" y="1.7145" size="1.778" layer="21">A/S
 Sensor Board
