@@ -1,7 +1,7 @@
 # Wireless Sensor Network
-This repository contains all files needed to reproduce the Wireless Sensor Network (WSN) used for the Data-Driven Building Retrofit Research of the [A/S Chair](http://www.systems.arch.ethz.ch/). 
 
 ## Introduction
+This repository contains all files needed to reproduce the Wireless Sensor Network (WSN) used for the Data-Driven Building Retrofit Research of the [A/S Chair](http://www.systems.arch.ethz.ch/). 
 The WSN is intended deployed in residential buildings to collect sensor data for building model calibration. The microcontroller boards are based on the Arduino framework. For wireless communication Xbee radio modules are used.
 
 ## Structure of the WSN
