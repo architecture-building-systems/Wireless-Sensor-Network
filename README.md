@@ -2,17 +2,18 @@
 This repository contains all files needed to reproduce the Wireless Sensor Network (WSN) used for the Data-Driven Building Retrofit Research of the [A/S Chair](http://www.systems.arch.ethz.ch/). 
 
 ## Introduction
-The WSN is deploys in residential buildings to collect sensor data for building model calibration. The microcontroller boards are based on the Arduino framework. For wireless communication Xbee radio modules are used.
+The WSN is intended deployed in residential buildings to collect sensor data for building model calibration. The microcontroller boards are based on the Arduino framework. For wireless communication Xbee radio modules are used.
 
 ## Structure of the WSN
 The WSN has a modular structure. The main components are the following:
 * Sensor Node
 * Gateway
 * Router Node
-On the sensor node the sensor readings are performed and the data is relay over router nodes to the gateway using the Xbee network. The gateway forwards the data over 3G-Network to a webserver, where the data is stored in a MySQL database. It is also possible to use a sensor node as data logger without any radio communication.
+
+On the sensor node the sensor readings are performed and the data is relayed over router nodes to the gateway using the Xbee network. The gateway forwards the data over 3G-Network to a webserver, where the data is stored in a MySQL database. It is also possible to use a sensor node as data logger without any radio communication.
 
 ### Sensor Node
-Sensor nodes consist of two parts: the communication board and the sensor board. The sensor board interfaces the actual sensor(s). It reads out the sensor reading and transmits the result via serial bus in a unified format to the communication board. The communication board interfaces the sensor board, radio module and the battery. It relays the readings from the sensor board to the gateway. Both, the communication board and the sensor board can be programmed using the Arduino framework.
+Sensor nodes consist of two parts: the communication board and the sensor board. The sensor board interfaces the actual sensor(s). It reads out the sensor reading and transmits the result via serial bus in a unified format to the communication board. The communication board interfaces the sensor board, radio module and the battery. It forwards the readings from the sensor board to the gateway. Both, the communication board and the sensor board, can be programmed using the Arduino framework.
 
 #### Communication Board
 The communication board is the same on all sensor nodes. It entails the following:
@@ -31,7 +32,7 @@ The tasks of the communication board are:
 * Interfacing Xbee module
 * Interfacing SD-card
 * Reading the charge state of the battery
-* Switching between normal operation and debugging
+* Switching between normal operation and debugging mode
 
 #### Sensor Board
 The sensor board interfaces the actual sensor(s). Each sensor or sensor configuration needs its own sensor board design.
@@ -44,11 +45,11 @@ The following sensor boards are available:
 * Dual Temperature (DS18B20)
 * Prototyping
 
-There are two kinds of sensor boards: sensor boards for periodic measurements (fixed time interval) and sensor boards for event based measurements (interrupt driven). On the first power-up of the communication board the type of the sensor board is requested in order to set the mode to periodic measurements or event based measurements. For periodic measurements the communication board is woken up by the RTC on the communication board. It then turns on the power to the sensor board. After power-up of the sensor board, it reads out the sensor(s) and transmits the readings over serial bus. Then the power to the sensor board is cut by the communication board and the data is written to the SD-card and/or sent to the gateway via radio.
-For event based measurements the sensor board is always power. The communication board is woken up by an interrupt signal from the sensor board instead of the RTC. The data transfer is the same as for the periodic measurements. 
+There are two kinds of sensor boards: sensor boards for periodic measurements (fixed time interval) and sensor boards for event based measurements (interrupt driven). On the first power-up of the communication board the type of the sensor board is requested, in order to set the mode to periodic measurements or event based measurements. For periodic measurements the communication board is woken up by the RTC on the communication board. It then turns on the power to the sensor board. After power-up of the sensor board, it reads out the sensor(s) and transmits the readings over serial bus. Then the power to the sensor board is cut by the communication board and the data is written to the SD-card and/or sent to the gateway via radio.
+For event based measurements the sensor board is always powered on. The communication board is woken up by an interrupt signal from the sensor board instead of the RTC. The data transfer is the same as for the periodic measurements. 
 
 ### Gateway
-The gateway receives the data from the sensor nodes and relays the data to a web-server. The gateway consists of Adafruit Feather 32u4 FONA and a Xbee radio-module. The Adafruit Feather 32u4 FONA can be programmed using the Arduino framework. The gateway is power via USB power supply and needs to be always powered on.
+The gateway receives the data from the sensor nodes and relays the data to a web-server. The gateway consists of Adafruit Feather 32u4 FONA and a Xbee radio-module. The Adafruit Feather 32u4 FONA can be programmed using the Arduino framework. The gateway is powered via USB power supply and needs to be always powered on.
 
 ### Router Node
 A router node consists of Xbee-radio module and SparkFun Xbee Explorer Regulated Board. The router node is powered by a wall adapter power supply. It needs to be always powered on.
