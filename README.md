@@ -10,7 +10,7 @@ The WSN has a modular structure. The main components are the following:
 * Gateway
 * Router Node
 
-On the sensor node the sensor readings are performed and the data is relayed over router nodes to the gateway using the Xbee network. The gateway forwards the data over 3G-Network to a webserver, where the data is stored in a MySQL database. It is also possible to use a sensor node as data logger without any radio communication.
+On the sensor node the sensor readings are performed and the data is relayed over router nodes to the gateway using the Xbee network. The gateway forwards the data over 3G cellular network to a webserver, where the data is stored in a MySQL database. It is also possible to use a sensor node as data logger without any radio communication.
 
 ### Sensor Node
 Sensor nodes consist of two parts: the communication board and the sensor board. The sensor board interfaces the actual sensor(s). It reads out the sensor reading and transmits the result via serial bus in a unified format to the communication board. The communication board interfaces the sensor board, radio module and the battery. It forwards the readings from the sensor board to the gateway. Both, the communication board and the sensor board, can be programmed using the Arduino framework.
@@ -49,7 +49,7 @@ There are two kinds of sensor boards: sensor boards for periodic measurements (f
 For event based measurements the sensor board is always powered on. The communication board is woken up by an interrupt signal from the sensor board instead of the RTC. The data transfer is the same as for the periodic measurements. 
 
 ### Gateway
-The gateway receives the data from the sensor nodes and relays the data to a web-server. The gateway consists of Adafruit Feather 32u4 FONA and a Xbee radio-module. The Adafruit Feather 32u4 FONA can be programmed using the Arduino framework. The gateway is powered via USB power supply and needs to be always powered on.
+The gateway receives the data from the sensor nodes and relays the data to a web-server via 3G cellular network. The gateway consists of Adafruit Feather 32u4 FONA and a Xbee radio-module. The Adafruit Feather 32u4 FONA can be programmed using the Arduino framework. The gateway is powered via USB power supply and needs to be always powered on.
 
 ### Router Node
 A router node consists of Xbee-radio module and SparkFun Xbee Explorer Regulated Board. The router node is powered by a wall adapter power supply. It needs to be always powered on.
