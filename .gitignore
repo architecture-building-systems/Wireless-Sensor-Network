@@ -45,3 +45,6 @@ eagle.epf
 # Archive directories
 archive/
 
+# random files
+*.b$?
+
