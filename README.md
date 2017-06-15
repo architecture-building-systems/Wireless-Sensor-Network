@@ -2,7 +2,7 @@
 
 ## Introduction
 This repository contains all files needed to reproduce the Wireless Sensor Network (WSN) used for the Data-Driven Building Retrofit Research of the [A/S Chair](http://www.systems.arch.ethz.ch/). 
-The WSN is intended deployed in residential buildings to collect sensor data for building model calibration. The microcontroller boards are based on the Arduino framework. For wireless communication Xbee radio modules are used.
+The WSN is intended to be deployed in residential buildings to collect sensor data for building model calibration. The microcontroller boards are based on the Arduino framework. For wireless communication Xbee radio modules are used.
 
 ## Structure of the WSN
 The WSN has a modular structure. The main components are the following:
@@ -52,7 +52,7 @@ For event based measurements the sensor board is always powered on. The communic
 The gateway receives the data from the sensor nodes and relays the data to a web-server via 3G cellular network. The gateway consists of Adafruit Feather 32u4 FONA and a Xbee radio-module. The Adafruit Feather 32u4 FONA can be programmed using the Arduino framework. The gateway is powered via USB power supply and needs to be always powered on.
 
 ### Router Node
-A router node consists of Xbee-radio module and SparkFun Xbee Explorer Regulated Board. The router node is powered by a wall adapter power supply. It needs to be always powered on.
+A router node consists of Xbee-radio module and SparkFun Xbee Explorer Regulated Board. The router node is powered by a wall adapter power supply. It always needs to be powered on.
 
 
 
