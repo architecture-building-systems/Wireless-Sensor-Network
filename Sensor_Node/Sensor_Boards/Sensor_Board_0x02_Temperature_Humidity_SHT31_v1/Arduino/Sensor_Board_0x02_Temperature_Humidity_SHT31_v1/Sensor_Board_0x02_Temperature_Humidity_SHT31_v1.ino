@@ -7,13 +7,14 @@
  * Source: SHT31 Library example
  */
 
-static const uint8_t SENSORMODULE_TYPE = 0x02;
+
 
  
 #include <Arduino.h>
 #include <Wire.h>
 #include "Adafruit_SHT31.h"
 
+static const uint8_t SENSORMODULE_TYPE = 0x02;
 int P_LED = 14;
 
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
@@ -32,10 +33,15 @@ static const uint8_t FRAMESTART_BYTE = 0xAA;
 
 void setup() {
   Serial.begin(9600);
+  Serial.write('Setup erfolgreich');
   pinMode(P_LED, OUTPUT);
   digitalWrite(P_LED, LOW);
   sht31.begin(0x44);// Set to 0x45 for alternate i2c addr
   blink();
+}
+
+void loop()
+{
   // START SENSOR MEASUREMENT
   
   // Dummy sensor 
@@ -71,11 +77,7 @@ void setup() {
   checksumbyte = 0xFF - checksumbyte; // such that is sums up to 0xFF
   Serial.write(checksumbyte);
   blink();
-}
-
-void loop()
-{
-  delay(10000);
+  delay(1000);
 }
 
 void blink(){
