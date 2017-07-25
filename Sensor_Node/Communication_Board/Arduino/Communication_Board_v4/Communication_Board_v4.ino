@@ -1,48 +1,51 @@
-/*
- * Script for Communication board
- * Major changes over v3
- *  - Removed SD card functionality
- */
+/**************************
+   Under development !
+ **************************/
+
+/*****************************************************************************************************
+   Script for Communication board
+   Major changes over v3
+    - Removed SD card functionality
+
+   To Do:
+    - Send every measurement immediatly (simplification)
+    - Send battery charge level once a day
+    - Remove hard coded gateway address
+    - Simplify hard coded PAN ID
+    - Simplify hard coded node ID
+    - Remove RTC functionality & switch to internal timers (simplification)
+ ******************************************************************************************************/
 
 // To configure:
 
-static const uint16_t C_MEASUREMENT_EVERY_X_MIN = 5; // Every how many minutes a measurement is taken from the sensor module
-static const uint16_t C_SD_XBEE_EVERY_X = 1; // Every how many measurements a XBEE transmit and SD card write is made
-
-static const float LOW_BATTERY_WARNING_LEVEL = 3.4; // V
+static const uint16_t C_MEASUREMENT_EVERY_X_MIN = 5; // Every how many minutes a measurement is taken from the sensor module = Measurement inverval
+static const float LOW_BATTERY_WARNING_LEVEL = 3.4;  // V
 
 // Coordinator XBee Address:
 #define UPLINK_SH 0x13A200
 //#define UPLINK_SL 0x  // C0
 //#define UPLINK_SL 0x41046BD5  // C100
 //#define UPLINK_SL 0x41628F9C  // C200
-#define UPLINK_SL 0x415ABDD9  // C300
+#define UPLINK_SL 0x415ABDD9    // C300
 //#define UPLINK_SL 0x41046775  // C400
 //#define UPLINK_SL 0x41631484  // C500
 //#define UPLINK_SL 0x41628FF0  // C600
 //#define UPLINK_SL 0x41628FA9  // C700
 //#define UPLINK_SL 0x41628FFD  // C800
 
-
-
 // Network ID (XBee PAN ID of Corrdinator): unsigned int 32 bit
 //static const uint32_t PAN_ID = 0x01;   // C0
 //static const uint32_t PAN_ID = 0x100;  // C100
 //static const uint32_t PAN_ID = 0x200;  // C200
-static const uint32_t PAN_ID = 0x300;  // C300
+static const uint32_t PAN_ID = 0x300;    // C300
 //static const uint32_t PAN_ID = 0x400;  // C400
 //static const uint32_t PAN_ID = 0x500;  // C500
 //static const uint32_t PAN_ID = 0x600;  // C600
 //static const uint32_t PAN_ID = 0x700;  // C700
 //static const uint32_t PAN_ID = 0x800;  // C800
 
-
-
 // This communication module's ID. Allowed range: [0,65535] (unsigned 16 bit integer)
 static const uint16_t THIS_CM_ID = 318;
-
-
-
 
 /********************************
    END OF CONFIGURATION
@@ -50,61 +53,6 @@ static const uint16_t THIS_CM_ID = 318;
 
 uint16_t wakeup_counter = 0;
 uint8_t measurement_counter = 0;
-
-static const uint8_t FRAMESTART_BYTE = 0xAA; // ANYTHING OTHER THAN 0xBB
-uint8_t* total_xbee_payload;
-uint8_t total_xbee_payload_size;
-uint8_t SMtype = 0; // Will be set once the sensor module tells us
-uint8_t sizeofSMdata = 0; // Will be set to number of bytes of the SM payload once the sensor module
-uint16_t MEASUREMENT_EVERY_X_MIN = 1;
-uint16_t SD_XBEE_EVERY_X = 1;
-
-
-static const uint8_t xbee_header_bytes = 4; // uint16_t NodeID, uint8_t n_measurements, uint8_t SM_type
-
-// Pin numbers
-static const uint8_t P_L1 = 14; // LED 1
-static const uint8_t P_L2 = 15; // LED 2
-static const uint8_t P_L3 = 16;// LED 3
-static const uint8_t P_DBG_ENABLE = 17; // Input, Debug Slide Switch
-static const uint8_t P_SDA = 18; // SDA pin for I2C
-static const uint8_t P_SCL = 19; // SDL pin for I2C
-static const uint8_t P_VBAT_MEASURE = 20; // Input, pin for measureing battery voltage over voltage divider
-static const uint8_t P_A7 = 21; // Unused
-static const uint8_t P_MCU_RXI = 0;
-static const uint8_t P_MCU_TXO = 1;
-static const uint8_t P_RTC_WAKE = 2; // Interrupt from RTC
-static const uint8_t P_SM_WAKE = 3; // Interrupt from interrupting sensor module
-static const uint8_t P_SLP_XBEE = 4;  // Output, put XBee module to sleep
-static const uint8_t P_SM_VCC_EN = 5; // Output, enable controlled supply voltage to SM
-static const uint8_t P_CTS_XBEE = 6; // Input, XBee's clear to send pin
-//static const uint8_t P_SD_CD = 7; // Input, detect whether SD card is inserted
-//static const uint8_t P_SD_SS = 8; // Output, slave select pin for SD card SPI
-static const uint8_t P_XBEE_RXI = 9; // Serial communication RXI pin for Xbee
-static const uint8_t P_XBEE_TXO = 10; // Serial communication TXO pin for Xbee
-static const uint8_t P_MOSI = 11; // SPI MOSI pin
-static const uint8_t P_MISO = 12; // SPI MISO pin
-static const uint8_t P_SCK = 13; // SPI SCK pin
-
-
-#include <avr/interrupt.h>
-#include <avr/power.h>
-#include <avr/sleep.h>
-#include <avr/io.h>
-
-#include "Wire.h"
-#define DS3231_I2C_ADDRESS 0x68
-
-#include <SPI.h>
-#include <XBee.h>
-
-XBee xbee = XBee();
-XBeeAddress64 addr64 = XBeeAddress64(UPLINK_SH, UPLINK_SL); // SH + SL Address of receiving XBee
-ZBTxRequest zbTx;
-ZBTxStatusResponse txStatus = ZBTxStatusResponse();
-
-#include <SoftwareSerial.h>
-SoftwareSerial xbeeSoftSerial(P_XBEE_TXO, P_XBEE_RXI);
 
 volatile bool wakeUpInterrupt_flag_RTC = false;
 volatile bool wakeUpInterrupt_flag_SM = false;
@@ -116,21 +64,62 @@ bool debug_mode_has_been_switched_off  = false;
 bool low_battery_level_detected = false;
 bool first_time = true;
 
+static const uint8_t FRAMESTART_BYTE = 0xAA; // ANYTHING OTHER THAN 0xBB
+uint8_t* total_xbee_payload;
+uint8_t total_xbee_payload_size;
+uint8_t SMtype = 0;                          // Will be set once the sensor module tells us
+uint8_t sizeofSMdata = 0;                    // Will be set to number of bytes of the SM payload once the sensor module
+uint16_t MEASUREMENT_EVERY_X_MIN = 1;
+uint16_t SD_XBEE_EVERY_X = 1;                // Every how many measurements a XBEE transmit and SD card write is made
 
+static const uint8_t xbee_header_bytes = 4;  // uint16_t NodeID, uint8_t n_measurements, uint8_t SM_type
+
+// Pin numbers
+static const uint8_t P_L1 = 14;           // LED 1
+static const uint8_t P_L2 = 15;           // LED 2
+static const uint8_t P_L3 = 16;           // LED 3
+static const uint8_t P_DBG_ENABLE = 17;   // Input, Debug Slide Switch
+static const uint8_t P_SDA = 18;          // SDA pin for I2C
+static const uint8_t P_SCL = 19;          // SDL pin for I2C
+static const uint8_t P_VBAT_MEASURE = 20; // Input, pin for measureing battery voltage over voltage divider
+static const uint8_t P_A7 = 21;           // Unused
+static const uint8_t P_MCU_RXI = 0;       // Serial communication RXO pin for sensor module
+static const uint8_t P_MCU_TXO = 1;       // Serial communication TXO pin for sensor module
+static const uint8_t P_RTC_WAKE = 2;      // Interrupt from RTC
+static const uint8_t P_SM_WAKE = 3;       // Interrupt from interrupting sensor module
+static const uint8_t P_SLP_XBEE = 4;      // Output, put XBee module to sleep
+static const uint8_t P_SM_VCC_EN = 5;     // Output, enable controlled supply voltage to SM
+static const uint8_t P_CTS_XBEE = 6;      // Input, XBee's clear to send pin
+//static const uint8_t P_SD_CD = 7;       // Input, detect whether SD card is inserted
+//static const uint8_t P_SD_SS = 8;       // Output, slave select pin for SD card SPI
+static const uint8_t P_XBEE_RXI = 9;      // Serial communication RXI pin for Xbee
+static const uint8_t P_XBEE_TXO = 10;     // Serial communication TXO pin for Xbee
+//static const uint8_t P_MOSI = 11;       // SPI MOSI pin
+//static const uint8_t P_MISO = 12;       // SPI MISO pin
+//static const uint8_t P_SCK = 13;        // SPI SCK pin
+
+#include <avr/interrupt.h>
+#include <avr/power.h>
+#include <avr/sleep.h>
+#include <avr/io.h>
+
+#include "Wire.h"
+#define DS3231_I2C_ADDRESS 0x68
+
+#include <XBee.h>
+XBee xbee = XBee();
+XBeeAddress64 addr64 = XBeeAddress64(UPLINK_SH, UPLINK_SL); // SH + SL Address of receiving XBee
+ZBTxRequest zbTx;
+ZBTxStatusResponse txStatus = ZBTxStatusResponse();
+
+#include <SoftwareSerial.h>
+SoftwareSerial xbeeSoftSerial(P_XBEE_TXO, P_XBEE_RXI);
+
+/****************************
+   Setup
+ ****************************/
 void setup() {
-  pinMode(P_SM_VCC_EN, OUTPUT);
-  digitalWrite(P_SM_VCC_EN, LOW);
 
-  pinMode(P_L1, OUTPUT);
-  digitalWrite(P_L1, LOW);
-  pinMode(P_L2, OUTPUT);
-  digitalWrite(P_L2, LOW);
-  pinMode(P_L3, OUTPUT);
-  digitalWrite(P_L3, LOW);
-  pinMode(P_DBG_ENABLE, INPUT);
-
-  // For sleep mode: Shut down things we do not need:
-  ACSR = (1 << ACD); //Disable the analog comparator
 
   // Sensor Module setup
   setupSerialToSM();
@@ -174,17 +163,18 @@ void setup() {
     // "AI" AT command returns network status. 0x00 means successfully joined.
     AI_value = getSingleByteATCmdValue('A', 'I');
 
-    digitalWrite(P_L2, HIGH); // blinking led indicates trying to join XBee network
-    delay(150);
-    digitalWrite(P_L2, LOW);
-    delay(350);
+    LED_blink(P_L2); // blinking led indicates trying to join XBee network
   }
 
-  digitalWrite(P_L2, HIGH); // Indicate Xbee network joined ok
+  LED_on(P_L2); // Indicate Xbee network joined ok
 
   // Initialize SD card with slave-select pin
-  digitalWrite(P_L3, HIGH); // Indicate SD initialized ok
+  LED_on(P_L3); // Indicate SD initialized ok
   delay(1500); // Time to let the user see the status LEDs.
+
+  LED_off(P_L1);
+  LED_off(P_L2);
+  LED_off(P_L3);
 
   // If debug mode is enable we measure and send more often
   if (digitalRead(P_DBG_ENABLE) == LOW)  {// Switch on east side = LOW
@@ -195,17 +185,15 @@ void setup() {
   else {
     debug_mode_enabled = false;
     MEASUREMENT_EVERY_X_MIN = C_MEASUREMENT_EVERY_X_MIN;
-    SD_XBEE_EVERY_X = C_SD_XBEE_EVERY_X;
   }
-
-  digitalWrite(P_L1, LOW);
-  digitalWrite(P_L2, LOW);
-  digitalWrite(P_L3, LOW);
 
   wakeUpInterrupt_flag_RTC = false;
   wakeUpInterrupt_flag_SM = false;
 }
 
+/****************************
+   Loop
+ ****************************/
 void loop() {
   // START EXTENDED SETUP
   // This first_time part is not in the setup() because it somehow did not work then.
@@ -214,7 +202,7 @@ void loop() {
     // Meaning that only now do we learn whether the sensor module is a periodic one or an interrupting one
     first_time = false;
 
-    digitalWrite(P_L1, HIGH); // Indicate start acquiring sensor measurement
+    LED_on(P_L1); // Indicate start acquiring sensor measurement
 
     // Take sensor module measurement
     turnOnSensorModule();
@@ -256,7 +244,6 @@ void loop() {
     Wire.write(0b10001000);
     Wire.endTransmission();
 
-
     wakeUpInterrupt_flag_RTC = false;
   }
   // END OF EXTENDED SETUP
@@ -272,13 +259,11 @@ void loop() {
         debug_mode_enabled = false;
         debug_mode_has_been_switched_off = true;
         MEASUREMENT_EVERY_X_MIN = C_MEASUREMENT_EVERY_X_MIN;
-        SD_XBEE_EVERY_X = C_SD_XBEE_EVERY_X;
       }
       else {
-        digitalWrite(P_L1, HIGH);
+        LED_on(P_L1);
       }
     }
-
 
     wakeup_counter++;
 
@@ -306,7 +291,7 @@ void loop() {
       turnOffSensorModule();
 
       if (debug_mode_enabled == true) {
-        digitalWrite(P_L2, HIGH);
+        LED_on(P_L2);
       }
 
       wakeup_counter = 0;
@@ -322,21 +307,19 @@ void loop() {
       while (digitalRead(P_CTS_XBEE) == 1) {}
 
       xbee_transmit_data();
-
       digitalWrite(P_SLP_XBEE, HIGH); // Xbee sleep
 
-
       if (debug_mode_enabled == true) {
-        digitalWrite(P_L3, HIGH);
+        LED_on(P_L3);
       }
       measurement_counter = 0;
     }
 
     if (debug_mode_enabled == true) {
       delay(2000);
-      digitalWrite(P_L1, LOW);
-      digitalWrite(P_L2, LOW);
-      digitalWrite(P_L3, LOW);
+      LED_off(P_L1);
+      LED_off(P_L2);
+      LED_off(P_L3);
     }
 
     if (debug_mode_enabled == true) {
@@ -353,11 +336,8 @@ void loop() {
     wakeUpInterrupt_flag_RTC = false;
   }
 
-
   // The usual interrupt from the sensor module when using an interrupting sensor module will trigger this:
   if (wakeUpInterrupt_flag_SM == true && ignore_sm_interrupt == false) {
-    // transmit at every event
-    SD_XBEE_EVERY_X = 1;
     startSerialToSM();
 
     // Check battery level
@@ -367,12 +347,11 @@ void loop() {
       // Wait until XBee is ready after waking up:
       while (digitalRead(P_CTS_XBEE) == 1) {}
       xbee_transmit_lowbatterywarning(currentBatteryVoltage);
-      digitalWrite(P_SLP_XBEE, HIGH); // Xbee sleep
-      low_battery_level_detected = true; // So that only the first time will the warning be transmitted
-      ignore_rtc_interrupt = true; // Do not wake up ever again to safe the battery
+      digitalWrite(P_SLP_XBEE, HIGH);     // Xbee sleep
+      low_battery_level_detected = true;  // So that only the first time will the warning be transmitted
+      ignore_rtc_interrupt = true;        // Do not wake up ever again to safe the battery
       ignore_sm_interrupt = true;
     }
-
 
     if (debug_mode_enabled == true) {
       // First check if slide switch still selects debug mode
@@ -381,7 +360,7 @@ void loop() {
         debug_mode_has_been_switched_off = true;
       }
       else {
-        digitalWrite(P_L1, HIGH);
+        LED_on(P_L1);
       }
     }
 
@@ -389,9 +368,9 @@ void loop() {
     startSerialToSM();
     readSensorModuleData();
     turnOffSensorModule();   // Addition by Mario to code from Marc
-    
+
     if (debug_mode_enabled == true) {
-      digitalWrite(P_L2, HIGH);
+      LED_on(P_L2);
     }
 
     digitalWrite(P_SLP_XBEE, LOW); // Wake XBee up
@@ -402,19 +381,17 @@ void loop() {
     digitalWrite(P_SLP_XBEE, HIGH); // Xbee sleep
 
     if (debug_mode_enabled == true) {
-      digitalWrite(P_L3, HIGH);
+      LED_on(P_L3);
     }
 
     if (debug_mode_enabled == true) {
       delay(2000);
-      digitalWrite(P_L1, LOW);
-      digitalWrite(P_L2, LOW);
-      digitalWrite(P_L3, LOW);
+      LED_off(P_L1);
+      LED_off(P_L2);
+      LED_off(P_L3);
     }
-
     wakeUpInterrupt_flag_SM = false;
   }
-
   goToSleep();
 }
 
@@ -489,11 +466,10 @@ bool readSensorModuleData() {
 
     // Fill in the header
     total_xbee_payload[0] = 0x00FF & THIS_CM_ID;
-    total_xbee_payload[1] = (0xFF00 & THIS_CM_ID)>>8;
+    total_xbee_payload[1] = (0xFF00 & THIS_CM_ID) >> 8;
     total_xbee_payload[2] = SD_XBEE_EVERY_X; // How many measurements are in this packet, number of measurement ≠ number of values, this byte counts how many measurements have been collected to send at once. one measurement may contain more than one (measurement) value
     total_xbee_payload[3] = SMtype;
   }
-
 
   // Wait until payload arrived plus checksum byte
   while (Serial.available() < sizeofSMdata + 1) {}
@@ -557,7 +533,7 @@ void xbee_transmit_data() {
 
   bool message_acked = false;
   while (message_acked == false)
- {
+  {
     message_acked = true; // TODO
     xbee.send(zbTx);
 
@@ -580,13 +556,11 @@ void xbee_transmit_data() {
         if (txStatus.getDeliveryStatus() == SUCCESS) {
           // success.  time to celebrate
           //Serial.println("SUCCESS.");
-          //flashLed(statusLed, 5, 50);
           message_acked = true;
 
         } else {
           // the remote XBee did not receive our packet. is it powered on?
           //Serial.println("FAILURE - RECEIVER DID NOT RECEIVE IT");
-          //flashLed(errorLed, 3, 500);
           message_acked = false;
         }
       }
@@ -596,7 +570,6 @@ void xbee_transmit_data() {
     } else {
       // local XBee did not provide a timely TX Status Response -- should not happen
       //Serial.println("FAILURE - FROM OUR MODULE.");
-      //flashLed(errorLed, 2, 50);
     }
   }
 }
@@ -621,9 +594,6 @@ void xbee_transmit_lowbatterywarning(float currentBatteryVoltage) {
 
     // flash TX indicator
     //Serial.println("SENT.");
-    //digitalWrite(13, HIGH);
-    //delay(20);
-    //digitalWrite(13, LOW);
 
     // after sending a tx request, we expect a status response
     // wait up to half second for the status response
@@ -638,13 +608,11 @@ void xbee_transmit_lowbatterywarning(float currentBatteryVoltage) {
         if (txStatus.getDeliveryStatus() == SUCCESS) {
           // success.  time to celebrate
           //Serial.println("SUCCESS.");
-          //flashLed(statusLed, 5, 50);
           message_acked = true;
-          
+
         } else {
           // the remote XBee did not receive our packet. is it powered on?
           //Serial.println("FAILURE - RECEIVER DID NOT RECEIVE IT");
-          //flashLed(errorLed, 3, 500);
           message_acked = false;
         }
       }
@@ -654,7 +622,6 @@ void xbee_transmit_lowbatterywarning(float currentBatteryVoltage) {
     } else {
       // local XBee did not provide a timely TX Status Response -- should not happen
       //Serial.println("FAILURE - FROM OUR MODULE.");
-      //flashLed(errorLed, 2, 50);
     }
   }
 }
@@ -707,7 +674,6 @@ void sendATCommand(uint8_t firstChar, uint8_t secondChar) {
     }
   }
 }
-
 
 uint8_t getSingleByteATCmdValue(uint8_t firstChar, uint8_t secondChar) {
   uint8_t at_command_container[2];
@@ -800,7 +766,7 @@ void goToSleep() {
   sleep_disable();
 
   power_twi_enable(); // Two Wire
-  power_spi_enable(); // SPI
+  //power_spi_enable(); // SPI
   power_usart0_enable();
   power_timer0_enable();
   power_timer1_enable();
@@ -859,7 +825,7 @@ void setupDS3231(bool useAlarm1) {
     Wire.beginTransmission(DS3231_I2C_ADDRESS);
     Wire.write(0x07); // set next input to start at (0Eh) register
 
-    Wire.write(1); // A1M1 is 0 and second values is zero
+    Wire.write(1);          // A1M1 is 0 and second values is zero
     Wire.write( (1 << 7) ); // A1M2 is 1 and we dont care about minute value we write here since it wont be checked, so we set them to 0
     Wire.write( (1 << 7) ); // A1M3 is 1 and we dont care about hoour value we write here since it wont be checked, so we set them to 0
     Wire.write( (1 << 7) ); // A1M4 is 1 and we dont care about day value we write here since it wont be checked, so we set them to 0
@@ -901,3 +867,21 @@ void readDS3231time(byte *second, byte *minute, byte *hour, byte *dayOfWeek, byt
   *year = bcdToDec(Wire.read());
 }
 
+/*********************************
+   LED
+*/
+void LED_blink(uint8_t led) {
+  digitalWrite(led, LOW);
+  delay(100);
+  digitalWrite(led, HIGH);
+  delay(200);
+  digitalWrite(led, LOW);
+  delay(100);
+}
+
+void LED_on(uint8_t led) {
+  digitalWrite(led, HIGH);
+}
+void LED_off(uint8_t led) {
+  digitalWrite(led, LOW);
+}
