@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.1.1">
+<eagle version="8.2.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -784,7 +784,7 @@ design rules under a new name.</description>
 </element>
 <element name="R1" library="SparkFun-Passives" package="0805" value="10k" x="5.969" y="14.1605" rot="R180"/>
 <element name="R2" library="SparkFun-Passives" package="0805" value="10k" x="5.969" y="16.637" rot="R180"/>
-<element name="U$15" library="myownthings" package="M03_SMD_90" value="M03_SMD_90" x="34.29" y="10.16"/>
+<element name="U$15" library="myownthings" package="M03_SMD_90" value="M03_SMD_90" x="36.83" y="10.16"/>
 <element name="U$16" library="myownthings" package="M04_SMD_90" value="M04_SMD_90" x="44.45" y="10.16"/>
 <element name="SV1" library="con-lstb" package="MA06-1" value="" x="52.324" y="23.368" rot="R270">
 <attribute name="MF" value="" x="52.324" y="23.368" size="1.778" layer="27" rot="R270" display="off"/>
@@ -962,10 +962,10 @@ design rules under a new name.</description>
 <wire x1="20.6375" y1="15.71625" x2="19.52625" y2="14.605" width="0.5" layer="1"/>
 <wire x1="16.8275" y1="17.145" x2="16.825" y2="17.2085" width="0.5" layer="1"/>
 <wire x1="20.6375" y1="15.71625" x2="20.8355" y2="15.795" width="0.5" layer="1"/>
-<wire x1="35.40125" y1="11.58875" x2="36.83" y2="10.16" width="0.5" layer="1"/>
-<wire x1="35.40125" y1="11.7475" x2="35.40125" y2="11.58875" width="0.5" layer="1"/>
+<wire x1="37.846" y1="11.938" x2="39.37" y2="10.16" width="0.5" layer="1"/>
+<wire x1="35.306" y1="11.938" x2="37.846" y2="11.938" width="0.5" layer="1"/>
 <wire x1="33.81375" y1="13.335" x2="34.76625" y2="12.3825" width="0.5" layer="1"/>
-<wire x1="34.76625" y1="12.3825" x2="35.40125" y2="11.7475" width="0.5" layer="1"/>
+<wire x1="34.76625" y1="12.3825" x2="35.306" y2="11.938" width="0.5" layer="1"/>
 <wire x1="30.63875" y1="13.335" x2="33.81375" y2="13.335" width="0.5" layer="1"/>
 <wire x1="29.68625" y1="14.2875" x2="30.63875" y2="13.335" width="0.5" layer="1"/>
 <wire x1="29.68625" y1="14.2875" x2="29.58" y2="14.478" width="0.5" layer="1"/>
@@ -1193,11 +1193,12 @@ design rules under a new name.</description>
 <signal name="INT_TO_COM">
 <contactref element="U$15" pad="1"/>
 <contactref element="U2" pad="2"/>
-<wire x1="37.94125" y1="8.73125" x2="37.94125" y2="14.605" width="0.3" layer="1"/>
-<wire x1="37.62375" y1="8.41375" x2="37.94125" y2="8.73125" width="0.3" layer="1"/>
-<wire x1="36.03625" y1="8.41375" x2="37.62375" y2="8.41375" width="0.3" layer="1"/>
-<wire x1="34.29" y1="10.16" x2="36.03625" y2="8.41375" width="0.3" layer="1"/>
-<wire x1="37.94125" y1="14.605" x2="37.878" y2="14.7574" width="0.3" layer="1"/>
+<wire x1="40.386" y1="11.938" x2="40.386" y2="8.382" width="0.3" layer="1"/>
+<wire x1="36.83" y1="8.382" x2="40.386" y2="8.382" width="0.3" layer="1"/>
+<wire x1="36.83" y1="10.16" x2="36.83" y2="8.382" width="0.3" layer="1"/>
+<wire x1="37.878" y1="14.7574" x2="37.878" y2="12.922" width="0.3" layer="1"/>
+<wire x1="37.878" y1="12.922" x2="38.862" y2="11.938" width="0.3" layer="1"/>
+<wire x1="38.862" y1="11.938" x2="40.386" y2="11.938" width="0.3" layer="1"/>
 </signal>
 <signal name="DIGITAL_INPUT_1">
 <contactref element="U$2" pad="OUT"/>
