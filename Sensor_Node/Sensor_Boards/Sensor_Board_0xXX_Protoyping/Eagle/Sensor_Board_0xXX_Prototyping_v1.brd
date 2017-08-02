@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.2.0">
+<eagle version="8.2.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -837,7 +837,7 @@ design rules under a new name.</description>
 <element name="PAD16" library="wirepad" package="1,6/0,9" value="" x="15.24" y="5.08"/>
 <element name="PAD17" library="wirepad" package="1,6/0,9" value="" x="12.7" y="5.08"/>
 <element name="PAD18" library="wirepad" package="1,6/0,9" value="" x="10.16" y="5.08"/>
-<element name="U$2" library="myownthings" package="M03_SMD_90" value="M03_SMD_90" x="35.56" y="10.16"/>
+<element name="U$2" library="myownthings" package="M03_SMD_90" value="M03_SMD_90" x="36.83" y="10.16"/>
 <element name="PAD19" library="wirepad" package="1,6/0,9" value="" x="25.4" y="7.62"/>
 <element name="PAD20" library="wirepad" package="1,6/0,9" value="" x="25.4" y="5.08"/>
 </elements>
@@ -878,10 +878,10 @@ design rules under a new name.</description>
 <wire x1="36.03625" y1="32.86125" x2="36.261" y2="32.766" width="0.5" layer="1"/>
 <wire x1="31.59125" y1="33.17875" x2="31.445" y2="33.3375" width="0.5" layer="1"/>
 <wire x1="38.4175" y1="13.17625" x2="38.4175" y2="13.97" width="0.5" layer="1"/>
-<wire x1="35.56" y1="10.31875" x2="36.98875" y2="11.7475" width="0.5" layer="1"/>
-<wire x1="36.98875" y1="11.7475" x2="38.25875" y2="13.0175" width="0.5" layer="1"/>
+<wire x1="36.83" y1="11.58875" x2="36.98875" y2="12.5095" width="0.5" layer="1"/>
+<wire x1="36.98875" y1="12.5095" x2="38.25875" y2="13.0175" width="0.5" layer="1"/>
 <wire x1="38.25875" y1="13.0175" x2="38.4175" y2="13.17625" width="0.5" layer="1"/>
-<wire x1="35.56" y1="10.16" x2="35.56" y2="10.31875" width="0.5" layer="1"/>
+<wire x1="36.83" y1="10.16" x2="36.83" y2="11.58875" width="0.5" layer="1"/>
 <wire x1="38.4175" y1="13.97" x2="38.3605" y2="13.9954" width="0.5" layer="1"/>
 <wire x1="40.005" y1="13.17625" x2="40.005" y2="13.97" width="0.5" layer="1"/>
 <wire x1="39.6875" y1="12.85875" x2="40.005" y2="13.17625" width="0.5" layer="1"/>
@@ -897,14 +897,14 @@ design rules under a new name.</description>
 <wire x1="52.07" y1="12.22375" x2="52.07" y2="10.16" width="0.5" layer="1"/>
 <wire x1="42.8625" y1="29.21" x2="42.8625" y2="30.48" width="0.5" layer="1"/>
 <wire x1="42.8625" y1="30.48" x2="42.8925" y2="30.48" width="0.5" layer="1"/>
-<wire x1="36.83" y1="11.90625" x2="36.98875" y2="11.7475" width="0.5" layer="1"/>
+<wire x1="37.084" y1="12.41425" x2="36.98875" y2="12.5095" width="0.5" layer="1"/>
 <via x="45.56125" y="24.4475" extent="1-16" drill="0.6096"/>
 <via x="39.21125" y="21.11375" extent="1-16" drill="0.6096"/>
 <via x="48.26" y="16.66875" extent="1-16" drill="0.6096"/>
 <via x="32.385" y="24.13" extent="1-16" drill="0.6096"/>
 <via x="52.07" y="12.22375" extent="1-16" drill="0.6096"/>
 <via x="42.8625" y="29.21" extent="1-16" drill="0.6096"/>
-<via x="36.83" y="11.90625" extent="1-16" drill="0.6096"/>
+<via x="37.084" y="12.41425" extent="1-16" drill="0.6096"/>
 <via x="36.35375" y="31.27375" extent="1-16" drill="0.6096"/>
 </signal>
 <signal name="VCC" class="1">
@@ -948,17 +948,17 @@ design rules under a new name.</description>
 <wire x1="41.5925" y1="12.3825" x2="40.79875" y2="13.17625" width="0.5" layer="1"/>
 <wire x1="44.45" y1="10.16" x2="43.815" y2="10.16" width="0.5" layer="1"/>
 <wire x1="40.79875" y1="13.81125" x2="40.7605" y2="13.9954" width="0.5" layer="1"/>
-<wire x1="39.52875" y1="11.58875" x2="38.1" y2="10.16" width="0.5" layer="1"/>
+<wire x1="39.52875" y1="11.58875" x2="39.37" y2="10.16" width="0.5" layer="1"/>
 <wire x1="39.52875" y1="11.7475" x2="39.52875" y2="11.58875" width="0.5" layer="1"/>
 <wire x1="40.005" y1="12.22375" x2="39.52875" y2="11.7475" width="0.5" layer="1"/>
 <wire x1="41.43375" y1="12.22375" x2="40.005" y2="12.22375" width="0.5" layer="1"/>
 <wire x1="41.43375" y1="12.22375" x2="41.5925" y2="12.3825" width="0.5" layer="1"/>
 <wire x1="29.5275" y1="12.065" x2="29.5275" y2="13.49375" width="0.5" layer="1"/>
-<wire x1="33.17875" y1="8.41375" x2="29.5275" y2="12.065" width="0.5" layer="1"/>
-<wire x1="36.5125" y1="8.41375" x2="33.17875" y2="8.41375" width="0.5" layer="1"/>
-<wire x1="38.1" y1="10.00125" x2="36.5125" y2="8.41375" width="0.5" layer="1"/>
+<wire x1="33.17875" y1="7.90575" x2="29.5275" y2="12.065" width="0.5" layer="1"/>
+<wire x1="38.2905" y1="7.90575" x2="33.17875" y2="7.90575" width="0.5" layer="1"/>
+<wire x1="39.37" y1="10.25525" x2="38.2905" y2="7.90575" width="0.5" layer="1"/>
 <wire x1="29.5275" y1="13.49375" x2="29.2625" y2="13.6525" width="0.5" layer="1"/>
-<wire x1="38.1" y1="10.00125" x2="38.1" y2="10.16" width="0.5" layer="1"/>
+<wire x1="39.37" y1="10.25525" x2="39.37" y2="10.16" width="0.5" layer="1"/>
 <wire x1="41.5925" y1="16.51" x2="41.5925" y2="22.38375" width="0.5" layer="1"/>
 <wire x1="40.3225" y1="15.24" x2="41.5925" y2="16.51" width="0.5" layer="1"/>
 <wire x1="41.5925" y1="22.38375" x2="41.5605" y2="22.5806" width="0.5" layer="1"/>
@@ -1334,8 +1334,8 @@ design rules under a new name.</description>
 <contactref element="PAD19" pad="1"/>
 <contactref element="U$2" pad="3"/>
 <contactref element="PAD20" pad="1"/>
-<wire x1="35.56" y1="5.08" x2="40.64" y2="10.16" width="0.3" layer="1"/>
-<wire x1="29.21" y1="5.08" x2="35.56" y2="5.08" width="0.3" layer="1"/>
+<wire x1="38.862" y1="5.08" x2="41.91" y2="10.16" width="0.3" layer="1"/>
+<wire x1="29.21" y1="5.08" x2="38.862" y2="5.08" width="0.3" layer="1"/>
 <wire x1="28.2575" y1="6.0325" x2="29.21" y2="5.08" width="0.3" layer="16"/>
 <wire x1="27.14625" y1="6.0325" x2="28.2575" y2="6.0325" width="0.3" layer="16"/>
 <wire x1="26.19375" y1="5.08" x2="27.14625" y2="6.0325" width="0.3" layer="16"/>
