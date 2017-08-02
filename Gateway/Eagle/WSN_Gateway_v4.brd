@@ -1755,10 +1755,11 @@ design rules under a new name.</description>
 <vertex x="-1.27" y="-1.27"/>
 </polygon>
 <contactref element="JP2" pad="4"/>
-<wire x1="81.6" y1="15.24" x2="91.12" y2="15.24" width="0" layer="19" extent="1-1"/>
-<wire x1="70.58" y1="23.47" x2="81.6" y2="15.24" width="0" layer="19" extent="1-1"/>
-<wire x1="33.97" y1="17.78" x2="70.58" y2="23.47" width="0" layer="19" extent="1-1"/>
-<wire x1="19.37" y1="13.97" x2="33.97" y2="13.97" width="0" layer="19" extent="1-1"/>
+<via x="55.88" y="17.78" extent="1-16" drill="0.35"/>
+<via x="55.88" y="24.13" extent="1-16" drill="0.35"/>
+<via x="78.74" y="15.24" extent="1-16" drill="0.35"/>
+<via x="55.88" y="10.16" extent="1-16" drill="0.35"/>
+<via x="55.88" y="2.54" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="3V">
 <contactref element="MS1" pad="2"/>
@@ -2059,6 +2060,24 @@ design rules under a new name.</description>
 <contactref element="U$2" pad="11"/>
 </signal>
 </signals>
+<errors>
+<approved hash="19,1,4c4c9cf3e159332f"/>
+<approved hash="19,1,885d3c858f22453e"/>
+<approved hash="19,1,a9f6a849238920f7"/>
+<approved hash="19,1,41f2d46f9da6d6fd"/>
+<approved hash="19,1,43d2f3438c5c5af1"/>
+<approved hash="19,1,39f4f8830f454cf5"/>
+<approved hash="19,1,3c43bc55c9f7cb23"/>
+<approved hash="19,1,3fd3db5daebfc8f3"/>
+<approved hash="19,1,c1fdfcb1197a22f2"/>
+<approved hash="19,1,c17d99697c0222d2"/>
+<approved hash="19,1,9bd53b7610951ef4"/>
+<approved hash="19,1,98455c7e77dd1d24"/>
+<approved hash="19,1,998f38aaab6f088e"/>
+<approved hash="19,1,9fd55309c2e98cf6"/>
+<approved hash="19,1,a171d115207d3edf"/>
+<approved hash="19,1,a1f1b4cd45053eff"/>
+</errors>
 </board>
 </drawing>
 </eagle>
