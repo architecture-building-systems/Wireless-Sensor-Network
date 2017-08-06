@@ -3815,14 +3815,20 @@ W = angled&lt;p&gt;
 <pinref part="J4" gate="G$1" pin="RST"/>
 </segment>
 <segment>
-<pinref part="C1" gate="G$1" pin="1"/>
-<wire x1="33.02" y1="182.88" x2="27.94" y2="182.88" width="0.1524" layer="91"/>
-<label x="27.94" y="182.88" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="SV1" gate="1" pin="6"/>
-<wire x1="116.84" y1="45.72" x2="121.92" y2="45.72" width="0.1524" layer="91"/>
-<label x="121.92" y="45.72" size="1.27" layer="95" xref="yes"/>
+<pinref part="C1" gate="G$1" pin="2"/>
+<pinref part="U2" gate="U$1" pin="PC6(/RESET)"/>
+<wire x1="40.64" y1="182.88" x2="48.26" y2="182.88" width="0.1524" layer="91"/>
+<pinref part="R5" gate="G$1" pin="1"/>
+<wire x1="48.26" y1="182.88" x2="55.88" y2="182.88" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="182.88" x2="60.96" y2="182.88" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="185.42" x2="48.26" y2="182.88" width="0.1524" layer="91"/>
+<junction x="48.26" y="182.88"/>
+<pinref part="S1" gate="G$1" pin="RIGHT"/>
+<wire x1="48.26" y1="180.34" x2="48.26" y2="182.88" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="182.88" x2="55.88" y2="193.04" width="0.1524" layer="91"/>
+<junction x="55.88" y="182.88"/>
+<wire x1="55.88" y1="193.04" x2="68.58" y2="193.04" width="0.1524" layer="91"/>
+<label x="68.58" y="193.04" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="SCK" class="0">
@@ -3944,7 +3950,7 @@ W = angled&lt;p&gt;
 <segment>
 <pinref part="R7" gate="G$1" pin="2"/>
 <wire x1="78.74" y1="93.98" x2="73.66" y2="93.98" width="0.1524" layer="91"/>
-<label x="73.66" y="93.98" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="73.66" y="93.98" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="N$30" class="0">
@@ -3969,19 +3975,6 @@ W = angled&lt;p&gt;
 <wire x1="96.52" y1="93.98" x2="88.9" y2="93.98" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$4" class="0">
-<segment>
-<pinref part="C1" gate="G$1" pin="2"/>
-<pinref part="U2" gate="U$1" pin="PC6(/RESET)"/>
-<wire x1="40.64" y1="182.88" x2="48.26" y2="182.88" width="0.1524" layer="91"/>
-<pinref part="R5" gate="G$1" pin="1"/>
-<wire x1="48.26" y1="182.88" x2="60.96" y2="182.88" width="0.1524" layer="91"/>
-<wire x1="48.26" y1="185.42" x2="48.26" y2="182.88" width="0.1524" layer="91"/>
-<junction x="48.26" y="182.88"/>
-<pinref part="S1" gate="G$1" pin="RIGHT"/>
-<wire x1="48.26" y1="180.34" x2="48.26" y2="182.88" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="FTDI_RXI" class="0">
 <segment>
 <wire x1="109.22" y1="162.56" x2="111.76" y2="162.56" width="0.1524" layer="91"/>
@@ -4004,6 +3997,18 @@ W = angled&lt;p&gt;
 <pinref part="SV1" gate="1" pin="5"/>
 <wire x1="116.84" y1="43.18" x2="121.92" y2="43.18" width="0.1524" layer="91"/>
 <label x="121.92" y="43.18" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="FTDI_RESET" class="0">
+<segment>
+<pinref part="SV1" gate="1" pin="6"/>
+<wire x1="116.84" y1="45.72" x2="121.92" y2="45.72" width="0.1524" layer="91"/>
+<label x="121.92" y="45.72" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="C1" gate="G$1" pin="1"/>
+<wire x1="33.02" y1="182.88" x2="27.94" y2="182.88" width="0.1524" layer="91"/>
+<label x="27.94" y="182.88" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
