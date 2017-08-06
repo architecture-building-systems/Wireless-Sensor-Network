@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.005" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -5513,7 +5513,6 @@ Mating wall wart : TOL-00298 (and others)</description>
 <part name="P+4" library="supply1" deviceset="+5V" device=""/>
 <part name="U$22" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$23" library="myownthings" deviceset="N/C" device=""/>
-<part name="C1" library="eagle-ltspice" deviceset="C" device="" value="100n"/>
 <part name="U$16" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$17" library="myownthings" deviceset="N/C" device=""/>
 <part name="J2" library="wsn" deviceset="POWER_JACK" device="SMD" value="5.5x2.1mm Barrel"/>
@@ -5612,7 +5611,6 @@ Mating wall wart : TOL-00298 (and others)</description>
 <instance part="P+4" gate="1" x="66.04" y="55.88"/>
 <instance part="U$22" gate="G$1" x="58.42" y="45.72"/>
 <instance part="U$23" gate="G$1" x="58.42" y="43.18"/>
-<instance part="C1" gate="G$1" x="35.052" y="185.674" rot="R90"/>
 <instance part="U$16" gate="G$1" x="108.4536375" y="172.987690625"/>
 <instance part="U$17" gate="G$1" x="108.4536375" y="175.527690625"/>
 <instance part="J2" gate="G$1" x="147.32" y="132.08"/>
@@ -5699,26 +5697,6 @@ Mating wall wart : TOL-00298 (and others)</description>
 <junction x="165.1" y="132.08"/>
 </segment>
 </net>
-<net name="VCC" class="1">
-<segment>
-<wire x1="55.1136375" y1="167.907690625" x2="55.1136375" y2="175.527690625" width="0.1524" layer="91"/>
-<pinref part="U2" gate="U$1" pin="VCC@6"/>
-<wire x1="60.1936375" y1="162.827690625" x2="55.1136375" y2="162.827690625" width="0.1524" layer="91"/>
-<pinref part="U2" gate="U$1" pin="VCC@4"/>
-<wire x1="60.1936375" y1="165.367690625" x2="55.1136375" y2="165.367690625" width="0.1524" layer="91"/>
-<wire x1="55.1136375" y1="165.367690625" x2="55.1136375" y2="162.827690625" width="0.1524" layer="91"/>
-<pinref part="U2" gate="U$1" pin="AVCC"/>
-<wire x1="60.1936375" y1="167.907690625" x2="55.1136375" y2="167.907690625" width="0.1524" layer="91"/>
-<wire x1="55.1136375" y1="167.907690625" x2="55.1136375" y2="165.367690625" width="0.1524" layer="91"/>
-<junction x="55.1136375" y="165.367690625"/>
-<junction x="55.1136375" y="167.907690625"/>
-<wire x1="55.1136375" y1="162.827690625" x2="34.7936375" y2="162.827690625" width="0.1524" layer="91"/>
-<junction x="55.1136375" y="162.827690625"/>
-<pinref part="C9" gate="G$1" pin="1"/>
-<wire x1="34.7936375" y1="155.207690625" x2="34.7936375" y2="162.827690625" width="0.1524" layer="91"/>
-<pinref part="P+2" gate="VCC" pin="VCC"/>
-</segment>
-</net>
 <net name="RESET" class="0">
 <segment>
 <wire x1="27.94" y1="96.52" x2="25.4" y2="96.52" width="0.1524" layer="91"/>
@@ -5726,9 +5704,16 @@ Mating wall wart : TOL-00298 (and others)</description>
 <pinref part="J4" gate="G$1" pin="RST"/>
 </segment>
 <segment>
-<pinref part="C1" gate="G$1" pin="1"/>
-<wire x1="32.512" y1="185.674" x2="28.448" y2="185.6696375" width="0.1524" layer="91"/>
-<label x="28.448" y="185.674" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="R5" gate="G$1" pin="1"/>
+<pinref part="S1" gate="G$1" pin="RIGHT"/>
+<wire x1="47.498" y1="188.722" x2="47.498" y2="185.674" width="0.1524" layer="91"/>
+<wire x1="47.498" y1="185.674" x2="47.498" y2="183.134" width="0.1524" layer="91"/>
+<wire x1="47.498" y1="185.674" x2="40.132" y2="185.674" width="0.1524" layer="91"/>
+<junction x="47.498" y="185.674"/>
+<pinref part="U2" gate="U$1" pin="PC6(/RESET)"/>
+<wire x1="60.1936375" y1="185.687690625" x2="47.498" y2="185.687690625" width="0.1524" layer="91"/>
+<wire x1="47.498" y1="185.687690625" x2="47.498" y2="185.674" width="0.1524" layer="91"/>
+<label x="40.132" y="185.674" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="SCK" class="0">
@@ -5911,6 +5896,24 @@ Mating wall wart : TOL-00298 (and others)</description>
 <pinref part="J1" gate="G$1" pin="1"/>
 <pinref part="+3V8" gate="G$1" pin="+3V3"/>
 </segment>
+<segment>
+<wire x1="55.1136375" y1="167.907690625" x2="55.1136375" y2="175.527690625" width="0.1524" layer="91"/>
+<pinref part="U2" gate="U$1" pin="VCC@6"/>
+<wire x1="60.1936375" y1="162.827690625" x2="55.1136375" y2="162.827690625" width="0.1524" layer="91"/>
+<pinref part="U2" gate="U$1" pin="VCC@4"/>
+<wire x1="60.1936375" y1="165.367690625" x2="55.1136375" y2="165.367690625" width="0.1524" layer="91"/>
+<wire x1="55.1136375" y1="165.367690625" x2="55.1136375" y2="162.827690625" width="0.1524" layer="91"/>
+<pinref part="U2" gate="U$1" pin="AVCC"/>
+<wire x1="60.1936375" y1="167.907690625" x2="55.1136375" y2="167.907690625" width="0.1524" layer="91"/>
+<wire x1="55.1136375" y1="167.907690625" x2="55.1136375" y2="165.367690625" width="0.1524" layer="91"/>
+<junction x="55.1136375" y="165.367690625"/>
+<junction x="55.1136375" y="167.907690625"/>
+<wire x1="55.1136375" y1="162.827690625" x2="34.7936375" y2="162.827690625" width="0.1524" layer="91"/>
+<junction x="55.1136375" y="162.827690625"/>
+<pinref part="C9" gate="G$1" pin="1"/>
+<wire x1="34.7936375" y1="155.207690625" x2="34.7936375" y2="162.827690625" width="0.1524" layer="91"/>
+<pinref part="P+2" gate="VCC" pin="VCC"/>
+</segment>
 </net>
 <net name="+5V" class="1">
 <segment>
@@ -5935,20 +5938,6 @@ Mating wall wart : TOL-00298 (and others)</description>
 <pinref part="P+5" gate="1" pin="+5V"/>
 <wire x1="160.02" y1="137.16" x2="165.1" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="165.1" y1="137.16" x2="165.1" y2="139.7" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$9" class="0">
-<segment>
-<pinref part="R5" gate="G$1" pin="1"/>
-<pinref part="S1" gate="G$1" pin="RIGHT"/>
-<wire x1="47.498" y1="188.722" x2="47.498" y2="185.674" width="0.1524" layer="91"/>
-<pinref part="C1" gate="G$1" pin="2"/>
-<wire x1="47.498" y1="185.674" x2="47.498" y2="183.134" width="0.1524" layer="91"/>
-<wire x1="47.498" y1="185.674" x2="40.132" y2="185.674" width="0.1524" layer="91"/>
-<junction x="47.498" y="185.674"/>
-<pinref part="U2" gate="U$1" pin="PC6(/RESET)"/>
-<wire x1="60.1936375" y1="185.687690625" x2="47.498" y2="185.687690625" width="0.1524" layer="91"/>
-<wire x1="47.498" y1="185.687690625" x2="47.498" y2="185.674" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
