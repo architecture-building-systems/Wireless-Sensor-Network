@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.1.1">
+<eagle version="8.2.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -4404,14 +4404,21 @@ W = angled&lt;p&gt;
 <pinref part="J4" gate="G$1" pin="RST"/>
 </segment>
 <segment>
-<pinref part="C1" gate="G$1" pin="1"/>
-<wire x1="27.94" y1="186.69" x2="22.86" y2="186.69" width="0.1524" layer="91"/>
-<label x="22.86" y="186.69" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="SV1" gate="1" pin="6"/>
-<wire x1="76.2" y1="53.34" x2="81.28" y2="53.34" width="0.1524" layer="91"/>
-<label x="81.28" y="53.34" size="1.27" layer="95" xref="yes"/>
+<pinref part="R5" gate="G$1" pin="1"/>
+<pinref part="S1" gate="G$1" pin="RIGHT"/>
+<wire x1="41.91" y1="189.23" x2="41.91" y2="186.69" width="0.1524" layer="91"/>
+<pinref part="U2" gate="U$1" pin="PC6(/RESET)"/>
+<wire x1="41.91" y1="186.69" x2="41.91" y2="184.15" width="0.1524" layer="91"/>
+<wire x1="54.61" y1="186.69" x2="48.895" y2="186.69" width="0.1524" layer="91"/>
+<junction x="41.91" y="186.69"/>
+<pinref part="C1" gate="G$1" pin="2"/>
+<wire x1="48.895" y1="186.69" x2="41.91" y2="186.69" width="0.1524" layer="91"/>
+<wire x1="41.91" y1="186.69" x2="35.56" y2="186.69" width="0.1524" layer="91"/>
+<wire x1="48.895" y1="186.69" x2="48.895" y2="194.691" width="0.1524" layer="91"/>
+<junction x="48.895" y="186.69"/>
+<wire x1="48.895" y1="194.691" x2="57.658" y2="194.691" width="0.1524" layer="91"/>
+<wire x1="57.658" y1="194.691" x2="57.658" y2="194.564" width="0.1524" layer="91"/>
+<label x="57.658" y="194.564" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="SCK" class="0">
@@ -4566,19 +4573,6 @@ W = angled&lt;p&gt;
 <wire x1="88.9" y1="91.44" x2="96.52" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$4" class="0">
-<segment>
-<pinref part="R5" gate="G$1" pin="1"/>
-<pinref part="S1" gate="G$1" pin="RIGHT"/>
-<wire x1="41.91" y1="189.23" x2="41.91" y2="186.69" width="0.1524" layer="91"/>
-<pinref part="U2" gate="U$1" pin="PC6(/RESET)"/>
-<wire x1="41.91" y1="186.69" x2="41.91" y2="184.15" width="0.1524" layer="91"/>
-<wire x1="54.61" y1="186.69" x2="41.91" y2="186.69" width="0.1524" layer="91"/>
-<junction x="41.91" y="186.69"/>
-<pinref part="C1" gate="G$1" pin="2"/>
-<wire x1="41.91" y1="186.69" x2="35.56" y2="186.69" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="FTDI_TXO" class="0">
 <segment>
 <pinref part="SV1" gate="1" pin="5"/>
@@ -4601,6 +4595,18 @@ W = angled&lt;p&gt;
 <wire x1="102.87" y1="166.37" x2="105.41" y2="166.37" width="0.1524" layer="91"/>
 <label x="105.41" y="166.37" size="1.27" layer="95" xref="yes"/>
 <pinref part="U2" gate="U$1" pin="PD0(RXD)"/>
+</segment>
+</net>
+<net name="FTDI_RESET" class="0">
+<segment>
+<pinref part="SV1" gate="1" pin="6"/>
+<wire x1="76.2" y1="53.34" x2="81.28" y2="53.34" width="0.1524" layer="91"/>
+<label x="81.28" y="53.34" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="C1" gate="G$1" pin="1"/>
+<wire x1="27.94" y1="186.69" x2="22.86" y2="186.69" width="0.1524" layer="91"/>
+<label x="22.86" y="186.69" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
