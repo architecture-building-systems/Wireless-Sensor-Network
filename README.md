@@ -29,7 +29,7 @@ The communication board is the same on all sensor nodes. It entails the followin
 The tasks of the communication board are:
 * Scheduling (RTC or interrupt from sensor board)
 * Interfacing the sensor board
-* Interfacing Xbee module
+* Interfacing XBee module
 * Interfacing SD-card
 * Reading the charge state of the battery
 * Switching between normal operation and debugging mode
