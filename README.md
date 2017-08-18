@@ -17,7 +17,7 @@ Sensor nodes consist of two parts: the communication board and the sensor board.
 
 #### Communication Board
 The communication board is the same on all sensor nodes. It entails the following:
-* Microcontroller (ATMega328p)
+* Microcontroller (ATmega328p)
 * Real-time clock (DS3231)
 * Battery (2000mAh LiPo)
 * SD-card socket
