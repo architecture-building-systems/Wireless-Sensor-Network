@@ -1,6 +1,7 @@
 # Router Node
+Router nodes relay messages from the sensor nodes to the gateway. A router node is basically a XBee radio module power by a wall adapter power supply in a housing. No additional microcontroller is needed.
 ![Router Node](Images/Router_node_with_open_housing_1.jpg)
-A router node includes the following parts:
+A router node consists of the following parts:
 * [SparkFun XBee Explorer Regulated](https://www.sparkfun.com/products/11373)
 * XBee Module
 * USB Power Supply
