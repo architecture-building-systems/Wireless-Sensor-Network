@@ -6,10 +6,12 @@ The WSN is intended to be deployed in residential buildings to collect sensor da
 
 ## Structure of the WSN
 ![Sensor-Kit](Miscellaneous/Images/Sensor_Kit_1.jpg)
+Sensor-Kit: Gateway (left), Router Node (middle), Sensor Node (right)
+
 The WSN has a modular structure. The main components are the following:
-* Sensor Node
 * Gateway
 * Router Node
+* Sensor Node
 
 On the sensor node, the sensor readings are performed and the data is relayed over router nodes to the gateway using the XBee network. The gateway forwards the data over 3G cellular network to a web server, where the data is stored in a MySQL database. It is also possible to use a sensor node as data logger without any radio communication.
 
