@@ -5,6 +5,7 @@ This repository contains all files needed to reproduce the Wireless Sensor Netwo
 The WSN is intended to be deployed in residential buildings to collect sensor data for building model calibration. The microcontroller boards are based on the Arduino framework. For wireless communication, XBee radio modules are used.
 
 ## Structure of the WSN
+![Sensor-Kit](Miscellaneous/Images/Sensor_Kit_1.jpg)
 The WSN has a modular structure. The main components are the following:
 * Sensor Node
 * Gateway
