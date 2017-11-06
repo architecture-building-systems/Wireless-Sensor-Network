@@ -4286,6 +4286,8 @@ W = angled&lt;p&gt;
 <part name="U$6" library="myownthings" deviceset="N/C" device=""/>
 <part name="VDD1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VDD" device=""/>
 <part name="VDD2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VDD" device=""/>
+<part name="P+5" library="supply1" deviceset="VCC" device=""/>
+<part name="U$8" library="myownthings" deviceset="N/C" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -4397,6 +4399,8 @@ only connect one</text>
 <instance part="U$6" gate="G$1" x="101.6" y="182.88"/>
 <instance part="VDD1" gate="G$1" x="25.4" y="66.04"/>
 <instance part="VDD2" gate="G$1" x="86.36" y="50.8"/>
+<instance part="P+5" gate="VCC" x="33.02" y="35.56"/>
+<instance part="U$8" gate="G$1" x="101.6" y="180.34"/>
 </instances>
 <busses>
 </busses>
@@ -4547,6 +4551,12 @@ only connect one</text>
 <wire x1="162.56" y1="33.02" x2="182.88" y2="33.02" width="0.1524" layer="91"/>
 <wire x1="182.88" y1="33.02" x2="182.88" y2="45.72" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="SV3" gate="G$1" pin="1"/>
+<pinref part="P+5" gate="VCC" pin="VCC"/>
+<wire x1="20.32" y1="30.48" x2="33.02" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="30.48" x2="33.02" y2="33.02" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="RESET" class="0">
 <segment>
@@ -4691,18 +4701,6 @@ only connect one</text>
 <wire x1="81.28" y1="30.48" x2="81.28" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="IN"/>
 <wire x1="81.28" y1="33.02" x2="93.98" y2="33.02" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="WAKE_UP" class="0">
-<segment>
-<wire x1="20.32" y1="30.48" x2="25.4" y2="30.48" width="0.1524" layer="91"/>
-<label x="25.4" y="30.48" size="1.27" layer="95" xref="yes"/>
-<pinref part="SV3" gate="G$1" pin="1"/>
-</segment>
-<segment>
-<pinref part="U2" gate="U$1" pin="PC1(ADC1)"/>
-<wire x1="101.6" y1="180.34" x2="104.14" y2="180.34" width="0.1524" layer="91"/>
-<label x="104.14" y="180.34" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="DIGITAL_INPUT_2" class="0">
