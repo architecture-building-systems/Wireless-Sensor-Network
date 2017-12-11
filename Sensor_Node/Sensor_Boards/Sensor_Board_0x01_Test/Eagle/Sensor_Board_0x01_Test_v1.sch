@@ -3516,11 +3516,11 @@ W = angled&lt;p&gt;
 <text x="8.89" y="60.071" size="1.778" layer="97">Communication Module Connector</text>
 <text x="224.527240625" y="11.421534375" size="2.54" layer="94" font="vector">Sensor Board - SHT31 (0x02)</text>
 <text x="277.8550125" y="1.158059375" size="2.54" layer="94" font="vector">1.0</text>
-<wire x1="157.48" y1="63.5" x2="106.68" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
-<wire x1="157.48" y1="22.86" x2="106.68" y2="22.86" width="0.1524" layer="97" style="shortdash"/>
-<wire x1="106.68" y1="22.86" x2="106.68" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
-<wire x1="157.48" y1="22.86" x2="157.48" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
-<text x="108.458" y="60.452" size="1.778" layer="97">FTDI Pogopin Connector</text>
+<wire x1="109.22" y1="63.5" x2="58.42" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="109.22" y1="22.86" x2="58.42" y2="22.86" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="58.42" y1="22.86" x2="58.42" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="109.22" y1="22.86" x2="109.22" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
+<text x="60.198" y="60.452" size="1.778" layer="97">FTDI Pogopin Connector</text>
 </plain>
 <instances>
 <instance part="GND17" gate="1" x="38.1" y="165.1"/>
@@ -3562,9 +3562,9 @@ W = angled&lt;p&gt;
 <instance part="U$15" gate="G$1" x="106.68" y="91.44"/>
 <instance part="U$16" gate="G$1" x="106.68" y="88.9"/>
 <instance part="J1" gate="G$1" x="15.24" y="45.72" rot="MR180"/>
-<instance part="SV1" gate="1" x="116.84" y="43.18"/>
-<instance part="GND1" gate="1" x="129.54" y="30.48"/>
-<instance part="P+6" gate="VCC" x="144.78" y="48.26"/>
+<instance part="SV1" gate="1" x="68.58" y="43.18"/>
+<instance part="GND1" gate="1" x="81.28" y="30.48"/>
+<instance part="P+6" gate="VCC" x="96.52" y="48.26"/>
 <instance part="C1" gate="G$1" x="30.48" y="182.88" rot="R90"/>
 <instance part="U$1" gate="G$1" x="99.06" y="180.34"/>
 <instance part="U$2" gate="G$1" x="99.06" y="177.8"/>
@@ -3631,12 +3631,12 @@ W = angled&lt;p&gt;
 <segment>
 <pinref part="SV1" gate="1" pin="1"/>
 <pinref part="GND1" gate="1" pin="GND"/>
-<wire x1="124.46" y1="35.56" x2="129.54" y2="35.56" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="35.56" x2="129.54" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="35.56" x2="81.28" y2="35.56" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="35.56" x2="81.28" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="2"/>
-<wire x1="124.46" y1="38.1" x2="129.54" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="38.1" x2="129.54" y2="35.56" width="0.1524" layer="91"/>
-<junction x="129.54" y="35.56"/>
+<wire x1="76.2" y1="38.1" x2="81.28" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="38.1" x2="81.28" y2="35.56" width="0.1524" layer="91"/>
+<junction x="81.28" y="35.56"/>
 </segment>
 </net>
 <net name="VCC" class="1">
@@ -3684,8 +3684,8 @@ W = angled&lt;p&gt;
 <segment>
 <pinref part="SV1" gate="1" pin="3"/>
 <pinref part="P+6" gate="VCC" pin="VCC"/>
-<wire x1="124.46" y1="40.64" x2="144.78" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="144.78" y1="40.64" x2="144.78" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="40.64" x2="96.52" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="40.64" x2="96.52" y2="45.72" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="RESET" class="0">
@@ -3848,8 +3848,8 @@ W = angled&lt;p&gt;
 <net name="FTDI_TXO" class="0">
 <segment>
 <pinref part="SV1" gate="1" pin="5"/>
-<wire x1="124.46" y1="45.72" x2="129.54" y2="45.72" width="0.1524" layer="91"/>
-<label x="129.54" y="45.72" size="1.27" layer="95" xref="yes"/>
+<wire x1="76.2" y1="45.72" x2="81.28" y2="45.72" width="0.1524" layer="91"/>
+<label x="81.28" y="45.72" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <wire x1="99.06" y1="160.02" x2="101.6" y2="160.02" width="0.1524" layer="91"/>
@@ -3860,8 +3860,8 @@ W = angled&lt;p&gt;
 <net name="FTDI_RXI" class="0">
 <segment>
 <pinref part="SV1" gate="1" pin="4"/>
-<wire x1="124.46" y1="43.18" x2="129.54" y2="43.18" width="0.1524" layer="91"/>
-<label x="129.54" y="43.18" size="1.27" layer="95" xref="yes"/>
+<wire x1="76.2" y1="43.18" x2="81.28" y2="43.18" width="0.1524" layer="91"/>
+<label x="81.28" y="43.18" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <wire x1="99.06" y1="162.56" x2="101.6" y2="162.56" width="0.1524" layer="91"/>
@@ -3872,8 +3872,8 @@ W = angled&lt;p&gt;
 <net name="FTDI_RESET" class="0">
 <segment>
 <pinref part="SV1" gate="1" pin="6"/>
-<wire x1="124.46" y1="48.26" x2="129.54" y2="48.26" width="0.1524" layer="91"/>
-<label x="129.54" y="48.26" size="1.27" layer="95" xref="yes"/>
+<wire x1="76.2" y1="48.26" x2="81.28" y2="48.26" width="0.1524" layer="91"/>
+<label x="81.28" y="48.26" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <label x="22.86" y="182.88" size="1.27" layer="95" rot="R180" xref="yes"/>
