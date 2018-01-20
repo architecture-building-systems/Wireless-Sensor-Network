@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.5.0">
+<eagle version="8.5.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -5924,6 +5924,8 @@ Mating wall wart : TOL-00298 (and others)</description>
 <part name="J2" library="wsn" deviceset="POWER_JACK" device="SMD" value="5.5x2.1mm Barrel"/>
 <part name="GND11" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+17" library="supply1" deviceset="VCC" device=""/>
+<part name="R12" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="100k"/>
+<part name="GND12" library="SparkFun" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5955,7 +5957,9 @@ Mating wall wart : TOL-00298 (and others)</description>
 <wire x1="58.42" y1="22.86" x2="58.42" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="109.22" y1="22.86" x2="109.22" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <text x="60.198" y="60.452" size="1.778" layer="97">FTDI Pogopin Connector</text>
-<text x="215.9" y="147.32" size="1.27" layer="97" align="bottom-right">JP1 sets the I2C adress of the CCS811. 
+<text x="223.52" y="185.42" size="1.27" layer="97" align="bottom-right">JP1 sets the 
+I2C adress of 
+the CCS811. 
 Open (default) - 0x5B 
 Closed - 0x5A </text>
 <text x="264.16" y="93.98" size="1.27" layer="97" align="bottom-right">JP1 connects
@@ -6035,20 +6039,20 @@ Closed - 0x45</text>
 <instance part="U$2" gate="G$1" x="99.06" y="177.8"/>
 <instance part="U$10" gate="G$1" x="99.06" y="182.88"/>
 <instance part="U1" gate="U1" x="190.5" y="170.18"/>
-<instance part="JP1" gate="G$1" x="223.52" y="149.86" smashed="yes" rot="R90">
-<attribute name="NAME" x="220.98" y="147.32" size="1.778" layer="95" font="vector" rot="R90"/>
+<instance part="JP1" gate="G$1" x="231.14" y="149.86" smashed="yes" rot="R90">
+<attribute name="NAME" x="228.6" y="147.32" size="1.778" layer="95" font="vector" rot="R90"/>
 </instance>
 <instance part="R4" gate="G$1" x="246.38" y="152.4" rot="R270"/>
 <instance part="R5" gate="G$1" x="165.1" y="180.34" rot="R90"/>
-<instance part="R6" gate="G$1" x="223.52" y="167.64" rot="R90"/>
+<instance part="R6" gate="G$1" x="231.14" y="167.64" rot="R90"/>
 <instance part="R7" gate="G$1" x="254" y="81.28" rot="R90"/>
 <instance part="R8" gate="G$1" x="279.4" y="81.28" rot="R90"/>
 <instance part="R9" gate="G$1" x="246.38" y="172.72" rot="R90"/>
 <instance part="P+7" gate="VCC" x="165.1" y="190.5"/>
 <instance part="P+8" gate="VCC" x="172.72" y="190.5"/>
 <instance part="GND3" gate="1" x="165.1" y="152.4"/>
-<instance part="GND4" gate="1" x="223.52" y="139.7"/>
-<instance part="P+9" gate="VCC" x="223.52" y="190.5"/>
+<instance part="GND4" gate="1" x="231.14" y="137.16"/>
+<instance part="P+9" gate="VCC" x="231.14" y="190.5"/>
 <instance part="P+10" gate="VCC" x="266.7" y="106.68"/>
 <instance part="P+11" gate="VCC" x="246.38" y="190.5"/>
 <instance part="U$9" gate="G$1" x="203.2" y="170.18"/>
@@ -6074,6 +6078,8 @@ Closed - 0x45</text>
 <instance part="J2" gate="G$1" x="144.78" y="20.32"/>
 <instance part="GND11" gate="1" x="170.18" y="12.7"/>
 <instance part="P+17" gate="VCC" x="170.18" y="35.56"/>
+<instance part="R12" gate="G$1" x="215.9" y="152.4" rot="R90"/>
+<instance part="GND12" gate="1" x="215.9" y="137.16"/>
 </instances>
 <busses>
 </busses>
@@ -6152,7 +6158,7 @@ Closed - 0x45</text>
 <segment>
 <pinref part="GND4" gate="1" pin="GND"/>
 <pinref part="JP1" gate="G$1" pin="1"/>
-<wire x1="223.52" y1="142.24" x2="223.52" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="231.14" y1="139.7" x2="231.14" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="GND6" gate="1" pin="GND"/>
@@ -6191,6 +6197,11 @@ Closed - 0x45</text>
 <pinref part="GND11" gate="1" pin="GND"/>
 <wire x1="160.02" y1="20.32" x2="170.18" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="170.18" y1="20.32" x2="170.18" y2="15.24" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R12" gate="G$1" pin="1"/>
+<pinref part="GND12" gate="1" pin="GND"/>
+<wire x1="215.9" y1="147.32" x2="215.9" y2="139.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC" class="1">
@@ -6255,7 +6266,7 @@ Closed - 0x45</text>
 <segment>
 <pinref part="R6" gate="G$1" pin="2"/>
 <pinref part="P+9" gate="VCC" pin="VCC"/>
-<wire x1="223.52" y1="172.72" x2="223.52" y2="187.96" width="0.1524" layer="91"/>
+<wire x1="231.14" y1="172.72" x2="231.14" y2="187.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="P+10" gate="VCC" pin="VCC"/>
@@ -6557,13 +6568,6 @@ Closed - 0x45</text>
 <label x="251.46" y="139.7" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="SENS_WAKE" class="0">
-<segment>
-<pinref part="U1" gate="U1" pin="!WAKE!"/>
-<wire x1="203.2" y1="172.72" x2="208.28" y2="172.72" width="0.1524" layer="91"/>
-<label x="208.28" y="172.72" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="AUX" class="0">
 <segment>
 <pinref part="U1" gate="U1" pin="AUX"/>
@@ -6583,12 +6587,12 @@ Closed - 0x45</text>
 <net name="N$4" class="0">
 <segment>
 <pinref part="U1" gate="U1" pin="ADDR"/>
-<wire x1="203.2" y1="160.02" x2="223.52" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="203.2" y1="160.02" x2="231.14" y2="160.02" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="1"/>
-<wire x1="223.52" y1="160.02" x2="223.52" y2="162.56" width="0.1524" layer="91"/>
+<wire x1="231.14" y1="160.02" x2="231.14" y2="162.56" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="G$1" pin="2"/>
-<wire x1="223.52" y1="154.94" x2="223.52" y2="160.02" width="0.1524" layer="91"/>
-<junction x="223.52" y="160.02"/>
+<wire x1="231.14" y1="154.94" x2="231.14" y2="160.02" width="0.1524" layer="91"/>
+<junction x="231.14" y="160.02"/>
 </segment>
 </net>
 <net name="N$7" class="0">
@@ -6608,6 +6612,14 @@ Closed - 0x45</text>
 <wire x1="165.1" y1="81.28" x2="165.1" y2="91.44" width="0.1524" layer="91"/>
 <wire x1="185.42" y1="81.28" x2="165.1" y2="81.28" width="0.1524" layer="91"/>
 <junction x="165.1" y="81.28"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="U1" gate="U1" pin="!WAKE!"/>
+<pinref part="R12" gate="G$1" pin="2"/>
+<wire x1="203.2" y1="172.72" x2="215.9" y2="172.72" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="172.72" x2="215.9" y2="157.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
