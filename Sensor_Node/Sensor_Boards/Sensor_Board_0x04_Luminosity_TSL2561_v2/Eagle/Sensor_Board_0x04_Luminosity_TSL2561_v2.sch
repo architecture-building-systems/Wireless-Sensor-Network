@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.5.0">
+<eagle version="8.5.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -3824,7 +3824,6 @@ remains asserted until the firmware clears it.</description>
 <part name="U$1" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$2" library="myownthings" deviceset="N/C" device=""/>
 <part name="U$10" library="myownthings" deviceset="N/C" device=""/>
-<part name="U1" library="TSL2561 Luminosity Sensor BOB" deviceset="MIKE-TEMP_TSL2561" device="FN"/>
 <part name="R4" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
 <part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
 <part name="U$9" library="myownthings" deviceset="N/C" device=""/>
@@ -3839,6 +3838,7 @@ remains asserted until the firmware clears it.</description>
 <part name="P+11" library="supply1" deviceset="VCC" device=""/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
 <part name="JP1" library="TSL2561 Luminosity Sensor BOB" deviceset="MIKE-TEMP_SOLDERJUMPER_2WAY" device="S"/>
+<part name="U3" library="TSL2561 Luminosity Sensor BOB" deviceset="MIKE-TEMP_TSL2561" device="T"/>
 </parts>
 <sheets>
 <sheet>
@@ -3923,7 +3923,6 @@ remains asserted until the firmware clears it.</description>
 <instance part="U$1" gate="G$1" x="99.06" y="180.34"/>
 <instance part="U$2" gate="G$1" x="99.06" y="177.8"/>
 <instance part="U$10" gate="G$1" x="99.06" y="182.88"/>
-<instance part="U1" gate="G$1" x="180.34" y="162.56"/>
 <instance part="R4" gate="G$1" x="160.02" y="177.8" rot="R90"/>
 <instance part="R5" gate="G$1" x="149.86" y="177.8" rot="R90"/>
 <instance part="U$9" gate="G$1" x="165.1" y="157.48"/>
@@ -3938,6 +3937,7 @@ remains asserted until the firmware clears it.</description>
 <instance part="P+11" gate="VCC" x="200.66" y="190.5"/>
 <instance part="GND6" gate="1" x="200.66" y="144.78"/>
 <instance part="JP1" gate="G$1" x="208.28" y="162.56"/>
+<instance part="U3" gate="G$1" x="180.34" y="162.56"/>
 </instances>
 <busses>
 </busses>
@@ -4020,8 +4020,8 @@ remains asserted until the firmware clears it.</description>
 <segment>
 <pinref part="GND6" gate="1" pin="GND"/>
 <wire x1="200.66" y1="147.32" x2="200.66" y2="157.48" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="GND"/>
 <wire x1="200.66" y1="157.48" x2="195.58" y2="157.48" width="0.1524" layer="91"/>
+<pinref part="U3" gate="G$1" pin="GND"/>
 </segment>
 </net>
 <net name="VCC" class="1">
@@ -4083,10 +4083,10 @@ remains asserted until the firmware clears it.</description>
 <wire x1="160.02" y1="182.88" x2="160.02" y2="187.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="VDD"/>
 <pinref part="P+11" gate="VCC" pin="VCC"/>
 <wire x1="195.58" y1="167.64" x2="200.66" y2="167.64" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="167.64" x2="200.66" y2="187.96" width="0.1524" layer="91"/>
+<pinref part="U3" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
 <pinref part="R6" gate="G$1" pin="2"/>
@@ -4177,13 +4177,13 @@ remains asserted until the firmware clears it.</description>
 <pinref part="U2" gate="U$1" pin="PC5(ADC5/SCL)"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="SCL"/>
 <pinref part="R4" gate="G$1" pin="1"/>
 <wire x1="165.1" y1="167.64" x2="160.02" y2="167.64" width="0.1524" layer="91"/>
 <wire x1="160.02" y1="167.64" x2="160.02" y2="172.72" width="0.1524" layer="91"/>
 <wire x1="160.02" y1="167.64" x2="144.78" y2="167.64" width="0.1524" layer="91"/>
 <junction x="160.02" y="167.64"/>
 <label x="144.78" y="167.64" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="U3" gate="G$1" pin="SCL"/>
 </segment>
 </net>
 <net name="SDA" class="0">
@@ -4193,13 +4193,13 @@ remains asserted until the firmware clears it.</description>
 <pinref part="U2" gate="U$1" pin="PC4(ADC4/SDA)"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="SDA"/>
 <pinref part="R5" gate="G$1" pin="1"/>
 <wire x1="165.1" y1="165.1" x2="149.86" y2="165.1" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="165.1" x2="149.86" y2="172.72" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="165.1" x2="144.78" y2="165.1" width="0.1524" layer="91"/>
 <junction x="149.86" y="165.1"/>
 <label x="144.78" y="165.1" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="U3" gate="G$1" pin="SDA"/>
 </segment>
 </net>
 <net name="L1" class="0">
@@ -4319,9 +4319,9 @@ remains asserted until the firmware clears it.</description>
 </net>
 <net name="N$7" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="ADDR"/>
 <wire x1="195.58" y1="162.56" x2="203.2" y2="162.56" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="G$1" pin="2"/>
+<pinref part="U3" gate="G$1" pin="ADDR"/>
 </segment>
 </net>
 </nets>

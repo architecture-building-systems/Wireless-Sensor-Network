@@ -2,7 +2,7 @@
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
 <eagle version="8.5.2">
 <designblock>
-<description>Mask for 0x06_C02_CCS811</description>
+<description>Mask of 0x06_C02_CCS811</description>
 <attributes>
 <attribute name="BOARDSIZE" value="2.195 x 1.394 inch"/>
 <attribute name="LAYERS" value="2: 1, 16"/>
@@ -5897,6 +5897,8 @@ Mating wall wart : TOL-00298 (and others)</description>
 <part name="J2" library="wsn" deviceset="POWER_JACK" device="SMD" value="5.5x2.1mm Barrel"/>
 <part name="GND11" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+17" library="supply1" deviceset="VCC" device=""/>
+<part name="R12" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="100k"/>
+<part name="GND12" library="SparkFun" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5928,7 +5930,9 @@ Mating wall wart : TOL-00298 (and others)</description>
 <wire x1="58.42" y1="22.86" x2="58.42" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="109.22" y1="22.86" x2="109.22" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <text x="60.198" y="60.452" size="1.778" layer="97">FTDI Pogopin Connector</text>
-<text x="215.9" y="147.32" size="1.27" layer="97" align="bottom-right">JP1 sets the I2C adress of the CCS811. 
+<text x="223.52" y="185.42" size="1.27" layer="97" align="bottom-right">JP1 sets the 
+I2C adress of 
+the CCS811. 
 Open (default) - 0x5B 
 Closed - 0x5A </text>
 <text x="264.16" y="93.98" size="1.27" layer="97" align="bottom-right">JP1 connects
@@ -6004,20 +6008,20 @@ Closed - 0x45</text>
 <instance part="U$2" gate="G$1" x="99.06" y="177.8"/>
 <instance part="U$10" gate="G$1" x="99.06" y="182.88"/>
 <instance part="U1" gate="U1" x="190.5" y="170.18"/>
-<instance part="JP1" gate="G$1" x="223.52" y="149.86" smashed="yes" rot="R90">
-<attribute name="NAME" x="220.98" y="147.32" size="1.778" layer="95" font="vector" rot="R90"/>
+<instance part="JP1" gate="G$1" x="231.14" y="149.86" smashed="yes" rot="R90">
+<attribute name="NAME" x="228.6" y="147.32" size="1.778" layer="95" font="vector" rot="R90"/>
 </instance>
 <instance part="R4" gate="G$1" x="246.38" y="152.4" rot="R270"/>
 <instance part="R5" gate="G$1" x="165.1" y="180.34" rot="R90"/>
-<instance part="R6" gate="G$1" x="223.52" y="167.64" rot="R90"/>
+<instance part="R6" gate="G$1" x="231.14" y="167.64" rot="R90"/>
 <instance part="R7" gate="G$1" x="254" y="81.28" rot="R90"/>
 <instance part="R8" gate="G$1" x="279.4" y="81.28" rot="R90"/>
 <instance part="R9" gate="G$1" x="246.38" y="172.72" rot="R90"/>
 <instance part="P+7" gate="VCC" x="165.1" y="190.5"/>
 <instance part="P+8" gate="VCC" x="172.72" y="190.5"/>
 <instance part="GND3" gate="1" x="165.1" y="152.4"/>
-<instance part="GND4" gate="1" x="223.52" y="139.7"/>
-<instance part="P+9" gate="VCC" x="223.52" y="190.5"/>
+<instance part="GND4" gate="1" x="231.14" y="137.16"/>
+<instance part="P+9" gate="VCC" x="231.14" y="190.5"/>
 <instance part="P+10" gate="VCC" x="266.7" y="106.68"/>
 <instance part="P+11" gate="VCC" x="246.38" y="190.5"/>
 <instance part="U$9" gate="G$1" x="203.2" y="170.18"/>
@@ -6043,6 +6047,8 @@ Closed - 0x45</text>
 <instance part="J2" gate="G$1" x="144.78" y="20.32"/>
 <instance part="GND11" gate="1" x="170.18" y="12.7"/>
 <instance part="P+17" gate="VCC" x="170.18" y="35.56"/>
+<instance part="R12" gate="G$1" x="215.9" y="152.4" rot="R90"/>
+<instance part="GND12" gate="1" x="215.9" y="137.16"/>
 </instances>
 <busses>
 </busses>
@@ -6121,7 +6127,7 @@ Closed - 0x45</text>
 <segment>
 <pinref part="GND4" gate="1" pin="GND"/>
 <pinref part="JP1" gate="G$1" pin="1"/>
-<wire x1="223.52" y1="142.24" x2="223.52" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="231.14" y1="139.7" x2="231.14" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="GND6" gate="1" pin="GND"/>
@@ -6160,6 +6166,11 @@ Closed - 0x45</text>
 <pinref part="GND11" gate="1" pin="GND"/>
 <wire x1="160.02" y1="20.32" x2="170.18" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="170.18" y1="20.32" x2="170.18" y2="15.24" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R12" gate="G$1" pin="1"/>
+<pinref part="GND12" gate="1" pin="GND"/>
+<wire x1="215.9" y1="147.32" x2="215.9" y2="139.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC" class="1">
@@ -6224,7 +6235,7 @@ Closed - 0x45</text>
 <segment>
 <pinref part="R6" gate="G$1" pin="2"/>
 <pinref part="P+9" gate="VCC" pin="VCC"/>
-<wire x1="223.52" y1="172.72" x2="223.52" y2="187.96" width="0.1524" layer="91"/>
+<wire x1="231.14" y1="172.72" x2="231.14" y2="187.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="P+10" gate="VCC" pin="VCC"/>
@@ -6526,13 +6537,6 @@ Closed - 0x45</text>
 <label x="251.46" y="139.7" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="SENS_WAKE" class="0">
-<segment>
-<pinref part="U1" gate="U1" pin="!WAKE!"/>
-<wire x1="203.2" y1="172.72" x2="208.28" y2="172.72" width="0.1524" layer="91"/>
-<label x="208.28" y="172.72" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="AUX" class="0">
 <segment>
 <pinref part="U1" gate="U1" pin="AUX"/>
@@ -6552,12 +6556,12 @@ Closed - 0x45</text>
 <net name="N$4" class="0">
 <segment>
 <pinref part="U1" gate="U1" pin="ADDR"/>
-<wire x1="203.2" y1="160.02" x2="223.52" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="203.2" y1="160.02" x2="231.14" y2="160.02" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="1"/>
-<wire x1="223.52" y1="160.02" x2="223.52" y2="162.56" width="0.1524" layer="91"/>
+<wire x1="231.14" y1="160.02" x2="231.14" y2="162.56" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="G$1" pin="2"/>
-<wire x1="223.52" y1="154.94" x2="223.52" y2="160.02" width="0.1524" layer="91"/>
-<junction x="223.52" y="160.02"/>
+<wire x1="231.14" y1="154.94" x2="231.14" y2="160.02" width="0.1524" layer="91"/>
+<junction x="231.14" y="160.02"/>
 </segment>
 </net>
 <net name="N$7" class="0">
@@ -6579,6 +6583,14 @@ Closed - 0x45</text>
 <junction x="165.1" y="81.28"/>
 </segment>
 </net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="U1" gate="U1" pin="!WAKE!"/>
+<pinref part="R12" gate="G$1" pin="2"/>
+<wire x1="203.2" y1="172.72" x2="215.9" y2="172.72" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="172.72" x2="215.9" y2="157.48" width="0.1524" layer="91"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
@@ -6590,7 +6602,7 @@ Closed - 0x45</text>
 <setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.0125" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.000000123031" altunitdist="inch" altunit="inch"/>
+<grid distance="0.0125" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.00625" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -7434,8 +7446,8 @@ design rules under a new name.</description>
 <attribute name="NAME" x="6.013103125" y="26.16868125" size="0.6096" layer="25" rot="R180" align="bottom-center"/>
 <attribute name="PROD_ID" value="RES-13608" x="6.985" y="24.765" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="R5" library="SparkFun-Passives" package="0805" value="10k" x="15.875" y="32.385" smashed="yes">
-<attribute name="NAME" x="14.478" y="33.2105" size="0.6096" layer="25"/>
+<element name="R5" library="SparkFun-Passives" package="0805" value="10k" x="15.875" y="32.7025" smashed="yes">
+<attribute name="NAME" x="14.478" y="33.528" size="0.6096" layer="25"/>
 </element>
 <element name="R6" library="SparkFun-Passives" package="0805" value="100k" x="6.985" y="32.385" smashed="yes">
 <attribute name="NAME" x="5.588" y="33.2105" size="0.6096" layer="25"/>
@@ -7446,13 +7458,13 @@ design rules under a new name.</description>
 <element name="R8" library="SparkFun-Passives" package="0805" value="10k" x="31.4325" y="9.525" smashed="yes">
 <attribute name="NAME" x="30.09045" y="10.362846875" size="0.6096" layer="25"/>
 </element>
-<element name="R9" library="SparkFun-Passives" package="0805" value="10k" x="15.875" y="24.765" smashed="yes">
-<attribute name="NAME" x="14.478" y="25.5905" size="0.6096" layer="25"/>
+<element name="R9" library="SparkFun-Passives" package="0805" value="10k" x="16.8275" y="24.765" smashed="yes">
+<attribute name="NAME" x="15.4305" y="25.5905" size="0.6096" layer="25"/>
 </element>
-<element name="C4" library="eagle-ltspice" package="C0805" value="100n" x="16.8275" y="27.94" smashed="yes" rot="R180">
-<attribute name="NAME" x="14.9225" y="26.9875" size="0.8128" layer="25" rot="R90"/>
-<attribute name="SPICEMODEL" value="NONE" x="16.8275" y="27.94" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="SPICEPREFIX" value="C" x="16.8275" y="27.94" size="1.778" layer="27" rot="R180" display="off"/>
+<element name="C4" library="eagle-ltspice" package="C0805" value="100n" x="16.8275" y="29.845" smashed="yes" rot="R180">
+<attribute name="NAME" x="16.1925" y="31.75" size="0.8128" layer="25" rot="R180"/>
+<attribute name="SPICEMODEL" value="NONE" x="16.8275" y="29.845" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="SPICEPREFIX" value="C" x="16.8275" y="29.845" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="U3" library="Adafruit SHT31 Breakout" package="MICROBUILDER_SHT3X" value="" x="11.43" y="20.6375" smashed="yes" rot="R90">
 <attribute name="VALUE" x="13.401" y="19.3995" size="0.4064" layer="27" ratio="10" rot="R90"/>
@@ -7475,6 +7487,9 @@ design rules under a new name.</description>
 <element name="J2" library="wsn" package="POWER_JACK_SMD" value="5.5x2.1mm Barrel" x="5.715" y="7.62">
 <attribute name="PROD_ID" value="CONN-08106" x="5.715" y="7.62" size="1.778" layer="27" display="off"/>
 <attribute name="SF_ID" value="PRT-12748" x="5.715" y="7.62" size="1.778" layer="27" display="off"/>
+</element>
+<element name="R12" library="SparkFun-Passives" package="0805" value="100k" x="16.8275" y="27.305" smashed="yes" rot="R180">
+<attribute name="NAME" x="16.79575" y="28.702" size="0.6096" layer="25" rot="R180"/>
 </element>
 </elements>
 <signals>
@@ -7513,6 +7528,7 @@ design rules under a new name.</description>
 <contactref element="C5" pad="2"/>
 <contactref element="J2" pad="P$4"/>
 <contactref element="J2" pad="GND"/>
+<contactref element="R12" pad="1"/>
 </signal>
 <signal name="VCC" class="1">
 <contactref element="U2" pad="6"/>
@@ -7627,9 +7643,6 @@ design rules under a new name.</description>
 <contactref element="U1" pad="4"/>
 <contactref element="R4" pad="2"/>
 </signal>
-<signal name="SENS_WAKE">
-<contactref element="U1" pad="7"/>
-</signal>
 <signal name="AUX">
 <contactref element="U1" pad="8"/>
 <contactref element="R9" pad="1"/>
@@ -7648,6 +7661,10 @@ design rules under a new name.</description>
 <contactref element="JP2" pad="2"/>
 <contactref element="R11" pad="1"/>
 <contactref element="U3" pad="2"/>
+</signal>
+<signal name="N$5">
+<contactref element="U1" pad="7"/>
+<contactref element="R12" pad="2"/>
 </signal>
 </signals>
 </board>
