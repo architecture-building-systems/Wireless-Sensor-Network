@@ -23,5 +23,5 @@ We use the default settings. Excpetions are listed below:
 |SP	        | AF0     | SP and SN together regulate after how long an end device is forgotten. We set it to the maximum time so that when waking up, our sensor modules are still in the network and not forgotten.|
 |SN	        |FFFF     |  |	
 
-The configuration profiles are also available as [files](/Xbee_Profiles).
+The configuration profiles are also available as [files](/Xbee_Profiles). The only setting that needs to be changed from the corresponding coordinator is CE. All XBees corresponding to one coordinator need to be set to the same PAN ID as the coordinator.
 
