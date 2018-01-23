@@ -15,7 +15,7 @@ The WSN has a modular structure. The main components are the following:
 
 On the sensor node, the sensor readings are performed and the data is relayed over router nodes to the gateway using the XBee network. The gateway forwards the data over 3G cellular network to a web server, where the data is stored in a MySQL database. It is also possible to use a sensor node as data logger without any radio communication.
 
-### Sensor Node
+### [Sensor Node](Sensor_Node/)
 Sensor nodes consist of two parts: the communication board and the sensor board. The sensor board interfaces the actual sensor(s). It reads out the sensor reading and transmits the result via the serial bus in a unified format to the communication board. The communication board interfaces the sensor board, radio module, and the battery. It forwards the readings from the sensor board to the gateway. Both, the communication board and the sensor board, can be programmed using the Arduino framework.
 
 #### Communication Board
