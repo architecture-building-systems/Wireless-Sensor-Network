@@ -43,7 +43,7 @@ eagle.epf
 *.lck
 
 # Archive directories
-archive/
+# archive/
 
 # random files
 *.b$?
