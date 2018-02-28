@@ -53,6 +53,10 @@ SoftwareSerial mySerial(7,6); // RX, TX
 
 void setup()
 {
+  pinMode(10, OUTPUT);
+  
+  Serial.begin(9600);
+  Serial.println("CCS811 & SHT31 Basic Example");
   mySerial.begin(9600);
   mySerial.println("CCS811 & SHT31 Basic Example");
 
@@ -62,14 +66,21 @@ void setup()
   
   if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
     mySerial.println("Couldn't find SHT31");
+    Serial.println("Couldn't find SHT31");
     while (1) delay(1);
   }
   
   if (returnCode != CCS811Core::SENSOR_SUCCESS)
   {
     mySerial.println(".begin() of CCS811 returned with an error.");
+    Serial.println(".begin() of CCS811 returned with an error.");
     while (1); //Hang if there was a problem.
   }
+
+  digitalWrite(10, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(200);                       // wait for a second
+  digitalWrite(10, LOW);    // turn the LED off by making the voltage LOW
+  delay(200);                       // wait for a second
 }
 
 void loop()
@@ -79,18 +90,23 @@ void loop()
 
   mySerial.println();
    
-  if (! isnan(t)) {  // check if 'is not a number'
+ if (! isnan(t)) {  // check if 'is not a number'
     mySerial.print("Temp *C = "); mySerial.println(t);
+    Serial.print("Temp *C = "); Serial.println(t);
   } else { 
     mySerial.println("Failed to read temperature");
-  }
+    Serial.println("Failed to read temperature");
+  } 
   
   if (! isnan(h)) {  // check if 'is not a number'
     mySerial.print("Hum. % = "); mySerial.println(h);
+    Serial.print("Hum. % = "); Serial.println(h);
   } else { 
     mySerial.println("Failed to read humidity");
+    Serial.println("Failed to read humidity");
   }
   mySerial.println();
+  Serial.println();
   
   //Check to see if data is ready with .dataAvailable()
   if (mySensor.dataAvailable())
@@ -110,6 +126,18 @@ void loop()
     mySerial.print(millis());
     mySerial.print("]");
     mySerial.println();
+
+    Serial.print("CO2[");
+    //Returns calculated CO2 reading
+    Serial.print(mySensor.getCO2());
+    Serial.print("] tVOC[");
+    //Returns calculated TVOC reading
+    Serial.print(mySensor.getTVOC());
+    Serial.print("] millis[");
+    //Simply the time since program start
+    Serial.print(millis());
+    Serial.print("]");
+    Serial.println();
   }
 
   delay(1000); //Don't spam the I2C bus
