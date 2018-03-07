@@ -54,6 +54,10 @@ SoftwareSerial mySerial(7,6); // RX, TX
 void setup()
 {
   pinMode(10, OUTPUT);
+  digitalWrite(10, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(200);                       // wait for a second
+  digitalWrite(10, LOW);    // turn the LED off by making the voltage LOW
+  delay(200);                       // wait for a second
   
   Serial.begin(9600);
   Serial.println("CCS811 & SHT31 Basic Example");
@@ -63,8 +67,8 @@ void setup()
   //It is recommended to check return status on .begin(), but it is not
   //required.
   CCS811Core::status returnCode = mySensor.begin();
-  
-  if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
+
+  if (! sht31.begin(0x45)) {   // Set to 0x44 for alternate i2c addr
     mySerial.println("Couldn't find SHT31");
     Serial.println("Couldn't find SHT31");
     while (1) delay(1);
@@ -73,9 +77,10 @@ void setup()
   if (returnCode != CCS811Core::SENSOR_SUCCESS)
   {
     mySerial.println(".begin() of CCS811 returned with an error.");
-    Serial.println(".begin() of CCS811 returned with an error.");
+    Serial.println(".begin() of CCS811 returned with an error.\n");
+
     while (1); //Hang if there was a problem.
-  }
+  } 
 
   digitalWrite(10, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(200);                       // wait for a second
