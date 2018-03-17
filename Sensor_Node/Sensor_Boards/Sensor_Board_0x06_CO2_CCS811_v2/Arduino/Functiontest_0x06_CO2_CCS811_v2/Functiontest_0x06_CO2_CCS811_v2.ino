@@ -1,40 +1,9 @@
 /******************************************************************************
-  BasicReadings.ino
 
-  Marshall Taylor @ SparkFun Electronics
-  Nathan Seidle @ SparkFun Electronics
+Testcode for C02 & SHT31 Board.
 
-  April 4, 2017
+It is possible to check outputs on both serial ports.
 
-  https://github.com/sparkfun/CCS811_Air_Quality_Breakout
-  https://github.com/sparkfun/SparkFun_CCS811_Arduino_Library
-
-  Read the TVOC and CO2 values from the SparkFun CSS811 breakout board
-
-  This is the simplest example.  It throws away most error information and
-  runs at the default 1 sample per second.
-
-  A new sensor requires at 48-burn in. Once burned in a sensor requires
-  20 minutes of run in before readings are considered good.
-
-  Hardware Connections (Breakoutboard to Arduino):
-  3.3V to 3.3V pin
-  GND to GND pin
-  SDA to A4
-  SCL to A5
-
-  Resources:
-  Uses Wire.h for i2c operation
-
-  Development environment specifics:
-  Arduino IDE 1.8.1
-
-  This code is released under the [MIT License](http://opensource.org/licenses/MIT).
-
-  Please review the LICENSE.md file included with this example. If you have any questions
-  or concerns with licensing, please contact techsupport@sparkfun.com.
-
-  Distributed as-is; no warranty is given.
 ******************************************************************************/
 #include "SparkFunCCS811.h"
 #include <SoftwareSerial.h>
@@ -55,9 +24,9 @@ void setup()
 {
   pinMode(10, OUTPUT);
   digitalWrite(10, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(200);                       // wait for a second
+  delay(200);               // wait 
   digitalWrite(10, LOW);    // turn the LED off by making the voltage LOW
-  delay(200);                       // wait for a second
+  delay(200);               // wait 
   
   Serial.begin(9600);
   Serial.println("CCS811 & SHT31 Basic Example");
@@ -81,11 +50,6 @@ void setup()
 
     while (1); //Hang if there was a problem.
   } 
-
-  digitalWrite(10, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(200);                       // wait for a second
-  digitalWrite(10, LOW);    // turn the LED off by making the voltage LOW
-  delay(200);                       // wait for a second
 }
 
 void loop()
