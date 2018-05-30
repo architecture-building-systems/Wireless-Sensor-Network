@@ -1,7 +1,7 @@
 /*******************************************
  * Gateway Arduino Sketch v5.1             *
  * Author: Mario Frei                      *
- * Sourcees: FONA library FONAtest sketch  *
+ * Sources: FONA library FONAtest sketch  *
  *           Xbee library example sketch   *
  *******************************************/
 
