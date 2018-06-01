@@ -48,3 +48,5 @@ eagle.epf
 # random files
 *.b$?
 
+# Temporary Excel files
+~$*.xls*
