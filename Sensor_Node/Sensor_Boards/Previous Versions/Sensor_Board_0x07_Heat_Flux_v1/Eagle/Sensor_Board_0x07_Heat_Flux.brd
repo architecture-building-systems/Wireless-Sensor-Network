@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="9.0.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.0125" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
@@ -166,7 +167,7 @@
 <text x="29.5275" y="43.4975" size="1.778" layer="1" rot="R90">ETH Zürich</text>
 </plain>
 <libraries>
-<library name="resistor">
+<library name="resistor" urn="urn:adsk.eagle:library:348">
 <description>&lt;b&gt;Resistors, Capacitors, Inductors&lt;/b&gt;&lt;p&gt;
 Based on the previous libraries:
 &lt;ul&gt;
@@ -1236,7 +1237,7 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 &lt;/table&gt;
 &lt;/BODY&gt;&lt;/HTML&gt;</description>
 <packages>
-<package name="M0805">
+<package name="M0805" urn="urn:adsk.eagle:footprint:25647/1" library_version="1">
 <description>&lt;b&gt;RESISTOR&lt;/b&gt;&lt;p&gt;
 MELF 0.10 W</description>
 <wire x1="-1.973" y1="0.983" x2="1.973" y2="0.983" width="0.0508" layer="39"/>
@@ -1247,13 +1248,22 @@ MELF 0.10 W</description>
 <wire x1="0.7112" y1="-0.635" x2="-0.7112" y2="-0.635" width="0.1524" layer="51"/>
 <smd name="1" x="-0.95" y="0" dx="1.3" dy="1.6" layer="1"/>
 <smd name="2" x="0.95" y="0" dx="1.3" dy="1.6" layer="1"/>
-<text x="-1.016" y="1.016" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.016" y="-2.286" size="1.27" layer="27">&gt;VALUE</text>
+<text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
 <rectangle x1="-1.0414" y1="-0.7112" x2="-0.6858" y2="0.7112" layer="51"/>
 <rectangle x1="0.6858" y1="-0.7112" x2="1.0414" y2="0.7112" layer="51"/>
 <rectangle x1="-0.1999" y1="-0.5999" x2="0.1999" y2="0.5999" layer="35"/>
 </package>
 </packages>
+<packages3d>
+<package3d name="M0805" urn="urn:adsk.eagle:package:26079/1" type="box" library_version="1">
+<description>RESISTOR
+MELF 0.10 W</description>
+<packageinstances>
+<packageinstance name="M0805"/>
+</packageinstances>
+</package3d>
+</packages3d>
 </library>
 <library name="LEDXLamp">
 <packages>
@@ -1392,7 +1402,7 @@ MELF 0.10 W</description>
 </package>
 </packages>
 </library>
-<library name="40xx">
+<library name="40xx" urn="urn:adsk.eagle:library:80">
 <description>&lt;b&gt;CMOS Logic Devices, 4000 Series&lt;/b&gt;&lt;p&gt;
 Based on the following sources:
 &lt;ul&gt;
@@ -1403,7 +1413,7 @@ Based on the following sources:
 &lt;/ul&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="SO14">
+<package name="SO14" urn="urn:adsk.eagle:footprint:714/1" library_version="2">
 <description>&lt;b&gt;Small Outline package&lt;/b&gt; 150 mil</description>
 <wire x1="4.064" y1="1.9558" x2="-4.064" y2="1.9558" width="0.1524" layer="21"/>
 <wire x1="4.064" y1="-1.9558" x2="4.445" y2="-1.5748" width="0.1524" layer="21" curve="90"/>
@@ -1449,6 +1459,14 @@ Based on the following sources:
 <rectangle x1="3.556" y1="-3.0988" x2="4.064" y2="-1.9558" layer="51"/>
 </package>
 </packages>
+<packages3d>
+<package3d name="SO14" urn="urn:adsk.eagle:package:823/2" type="model" library_version="2">
+<description>Small Outline package 150 mil</description>
+<packageinstances>
+<packageinstance name="SO14"/>
+</packageinstances>
+</package3d>
+</packages3d>
 </library>
 <library name="Stecker_Pins">
 <description>Stecker und Pins</description>
@@ -1573,10 +1591,11 @@ design rules under a new name.</description>
 <param name="slThermalsForVias" value="0"/>
 <param name="dpMaxLengthDifference" value="10mm"/>
 <param name="dpGapFactor" value="2.5"/>
-<param name="checkGrid" value="0"/>
 <param name="checkAngle" value="0"/>
 <param name="checkFont" value="1"/>
 <param name="checkRestrict" value="1"/>
+<param name="checkStop" value="0"/>
+<param name="checkValues" value="0"/>
 <param name="useDiameter" value="13"/>
 <param name="maxErrors" value="50"/>
 </designrules>
@@ -1680,8 +1699,10 @@ design rules under a new name.</description>
 <element name="D1" library="LEDXLamp" package="SOT23" value="BAV99" x="12.8778" y="49.53" rot="R270"/>
 <element name="D2" library="LEDXLamp" package="SOT23" value="BAV99" x="13.8176" y="10.16" rot="R90"/>
 <element name="D3" library="LEDXLamp" package="SOT23" value="BAV99" x="9.0678" y="10.16" rot="R270"/>
-<element name="IC1" library="heatflow" package="SSOP20" value="MCP3911A0-E/SS" x="15.5575" y="29.21" rot="R180"/>
-<element name="IC2" library="40xx" package="SO14" value="4066D" x="15.24" y="42.2275" rot="R180"/>
+<element name="IC1" library="heatflow" package="SSOP20" value="MCP3911A0-E/SS" x="15.5575" y="29.21" rot="R180">
+<attribute name="SPICEPREFIX" value="X" x="15.5575" y="29.21" size="1.778" layer="27" rot="R180" display="off"/>
+</element>
+<element name="IC2" library="40xx" library_urn="urn:adsk.eagle:library:80" package="SO14" package3d_urn="urn:adsk.eagle:package:823/2" value="4066D" x="15.24" y="42.2275" rot="R180"/>
 <element name="J1" library="Stecker_Pins" package="CON2X1" value="" x="16.51" y="53.6575" rot="R90"/>
 <element name="L1" library="heatflow2" package="0805" value="74279220601" x="6.985" y="24.4475"/>
 <element name="PIN1" library="Stecker_Pins" package="CON1X1" value="CON1X1" x="27.94" y="1.27" rot="R90"/>
@@ -1689,16 +1710,16 @@ design rules under a new name.</description>
 <element name="PIN3" library="Stecker_Pins" package="CON1X1" value="CON1X1" x="27.94" y="6.35" rot="R90"/>
 <element name="PIN4" library="Stecker_Pins" package="CON1X1" value="CON1X1" x="27.94" y="8.89" rot="R90"/>
 <element name="PIN5" library="Stecker_Pins" package="CON1X1" value="CON1X1" x="27.94" y="11.43" rot="R90"/>
-<element name="R1" library="resistor" package="M0805" value="10k" x="18.7325" y="9.8425" rot="R90"/>
-<element name="R2" library="resistor" package="M0805" value="0" x="27.6225" y="29.21" rot="R90"/>
+<element name="R1" library="resistor" library_urn="urn:adsk.eagle:library:348" package="M0805" package3d_urn="urn:adsk.eagle:package:26079/1" value="10k" x="18.7325" y="9.8425" rot="R90"/>
+<element name="R2" library="resistor" library_urn="urn:adsk.eagle:library:348" package="M0805" package3d_urn="urn:adsk.eagle:package:26079/1" value="0" x="27.6225" y="29.21" rot="R90"/>
 <element name="U1" library="heatflow" package="TSSOP14-0.65-5X4.4MM" value="PIC16F1825-I/ST-TSSOP14" x="16.51" y="19.05">
 <attribute name="MPN" value="PIC16F1825-I/ST" x="16.51" y="19.05" size="1.778" layer="27" display="off"/>
 </element>
 <element name="X1" library="heatflow" package="22-23-2041" value="22-23-2041" x="11.43" y="3.81" rot="R180">
-<attribute name="OC_NEWARK" value="38C0355" x="11.43" y="3.81" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="OC_FARNELL" value="1462920" x="11.43" y="3.81" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MPN" value="22-23-2041" x="11.43" y="3.81" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="MOLEX" x="11.43" y="3.81" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MPN" value="22-23-2041" x="11.43" y="3.81" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="OC_FARNELL" value="1462920" x="11.43" y="3.81" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="OC_NEWARK" value="38C0355" x="11.43" y="3.81" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C10" library="heatflow" package="C0805" value="1u" x="4.1275" y="10.16" rot="R90"/>
 <element name="C2" library="heatflow" package="C0805" value="100n" x="9.2075" y="17.145" rot="R90"/>
@@ -2064,81 +2085,9 @@ design rules under a new name.</description>
 </signal>
 </signals>
 <errors>
-<approved hash="19,1,42545dba5b80446e"/>
-<approved hash="19,1,8293fdb50e770407"/>
-<approved hash="19,1,c4b0437f575766e6"/>
-<approved hash="19,1,57e169cf8e0bc77a"/>
-<approved hash="19,1,180206d44614a802"/>
-<approved hash="19,1,f1c11e150dd1fb50"/>
-<approved hash="5,1,c4b6b9157bf6fcf4"/>
-<approved hash="5,1,fcc65c3da6aec4b4"/>
-<approved hash="5,1,c8b6b56872cbf5b4"/>
-<approved hash="5,1,f0c65040af93cdf4"/>
-<approved hash="5,1,052c3d882d725dd6"/>
-<approved hash="5,1,bab6c76f4c0ccb74"/>
-<approved hash="5,1,70f05f14147459f7"/>
-<approved hash="5,1,d301c36c08146618"/>
-<approved hash="5,1,c2b6bf6217419034"/>
-<approved hash="5,1,4fc052629e61f49a"/>
-<approved hash="5,1,fc1ed13d9100db54"/>
-<approved hash="5,1,c2b6bf66e28565f4"/>
-<approved hash="5,1,83b6b3f2bd13fdeb"/>
-<approved hash="5,1,41b6acfbc2c986b9"/>
-<approved hash="5,1,22453fe35f60359f"/>
-<approved hash="5,1,919bbcbc50011a51"/>
-<approved hash="5,1,dab6a765fdc67ab4"/>
-<approved hash="5,1,e2c6424d209e42f4"/>
-<approved hash="5,1,d6d9cb62aa61c083"/>
-<approved hash="5,1,6507483da500ef4d"/>
-<approved hash="5,1,c8b6b578f71b7074"/>
-<approved hash="5,1,f0c650502a434834"/>
-<approved hash="19,1,4f163e3846e037ce"/>
-<approved hash="19,1,6f11b351bde2a917"/>
-<approved hash="5,1,46806bbd6e00244a"/>
-<approved hash="5,1,00ee307f7300333d"/>
-<approved hash="5,1,051152b56523f13d"/>
-<approved hash="5,1,f55ee8e261610b84"/>
-<approved hash="5,1,fcc65c5713047174"/>
-<approved hash="5,1,c4b6b97fce5c4934"/>
-<approved hash="5,1,f8c6585a74c916b4"/>
-<approved hash="5,1,c0b6bd72a9912ef4"/>
-<approved hash="5,1,f611e66c16147808"/>
-<approved hash="5,1,55e07a140a7447e7"/>
-<approved hash="19,1,7050217e2754767a"/>
-<approved hash="5,1,c8b2d92cfee1023a"/>
-<approved hash="19,1,ec6e7ad58481118e"/>
-<approved hash="5,1,7e39d20d71655b89"/>
-<approved hash="5,1,7389aa89409cff67"/>
-<approved hash="1,20,69b45404571c6aac"/>
-<approved hash="1,20,18e8d418d42418d4"/>
-<approved hash="2,20,2dfb830584232add"/>
-<approved hash="2,20,547c12628ac3bdfc"/>
-<approved hash="2,20,8b357e8b7ee88b56"/>
-<approved hash="2,20,ec346e8a69b3eb0d"/>
-<approved hash="19,1,bbcc393e3ce5be17"/>
-<approved hash="19,1,024ffd70ffc48527"/>
-<approved hash="19,1,8d18d93a41670d44"/>
-<approved hash="19,1,4840aad30dec1e9e"/>
-<approved hash="19,1,714da3f4da75b06f"/>
-<approved hash="19,1,f6441fc87dc2582c"/>
-<approved hash="19,1,425df16f89c23af0"/>
-<approved hash="19,1,e832371abb278837"/>
-<approved hash="19,1,3bcc28fe2d2a3e18"/>
-<approved hash="5,1,245a42d6cf6db068"/>
-<approved hash="19,1,c11dc08083870621"/>
-<approved hash="19,16,bbcc393e3ce5be17"/>
-<approved hash="19,16,00f5b9b5625727cf"/>
-<approved hash="19,16,9a305c39dda7e776"/>
-<approved hash="19,16,4840aad30dec1e9e"/>
-<approved hash="19,16,1f0e59fe08973623"/>
-<approved hash="19,16,a9bbded5134edea5"/>
-<approved hash="19,16,425df16f89c23af0"/>
-<approved hash="19,16,f90f39f63cd4f48e"/>
-<approved hash="19,16,3bcc28fe2d2a3e18"/>
 <approved hash="1,20,ee6a50da50e4ee54"/>
 <approved hash="1,20,d21722e724afd45f"/>
 <approved hash="1,20,dd97d627d06fdbdf"/>
-<approved hash="11,1,b4d9c8cf8214fe02"/>
 <approved hash="1,20,29f8d188d3822bf2"/>
 <approved hash="1,20,d82b53db51b0da40"/>
 <approved hash="1,20,2ae4d614d6042af4"/>
@@ -2155,4 +2104,21 @@ design rules under a new name.</description>
 </errors>
 </board>
 </drawing>
+<compatibility>
+<note version="8.2" severity="warning">
+Since Version 8.2, EAGLE supports online libraries. The ids
+of those online libraries will not be understood (or retained)
+with this version.
+</note>
+<note version="8.3" severity="warning">
+Since Version 8.3, EAGLE supports URNs for individual library
+assets (packages, symbols, and devices). The URNs of those assets
+will not be understood (or retained) with this version.
+</note>
+<note version="8.3" severity="warning">
+Since Version 8.3, EAGLE supports the association of 3D packages
+with devices in libraries, schematics, and board files. Those 3D
+packages will not be understood (or retained) with this version.
+</note>
+</compatibility>
 </eagle>
