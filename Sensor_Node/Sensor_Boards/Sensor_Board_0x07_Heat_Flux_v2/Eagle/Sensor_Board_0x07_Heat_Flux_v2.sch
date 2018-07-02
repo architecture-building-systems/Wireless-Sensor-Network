@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.0.1">
+<eagle version="8.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -7995,9 +7995,9 @@ by exp-lbrs.ulp</description>
 <junction x="226.06" y="80.01"/>
 </segment>
 <segment>
-<pinref part="U2" gate="U$1" pin="PB0(ICP)"/>
-<wire x1="99.06" y1="142.24" x2="101.6" y2="142.24" width="0.1524" layer="91"/>
-<label x="101.6" y="142.24" size="1.27" layer="95" xref="yes"/>
+<pinref part="U2" gate="U$1" pin="PD5(T1)"/>
+<wire x1="99.06" y1="149.86" x2="101.6" y2="149.86" width="0.1524" layer="91"/>
+<label x="101.6" y="149.86" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="MCP_CLK" class="0">
@@ -8035,9 +8035,9 @@ by exp-lbrs.ulp</description>
 <junction x="293.37" y="50.8"/>
 </segment>
 <segment>
-<pinref part="U2" gate="U$1" pin="PD5(T1)"/>
-<wire x1="99.06" y1="149.86" x2="101.6" y2="149.86" width="0.1524" layer="91"/>
-<label x="101.6" y="149.86" size="1.27" layer="95" xref="yes"/>
+<pinref part="U2" gate="U$1" pin="PB0(ICP)"/>
+<wire x1="99.06" y1="142.24" x2="101.6" y2="142.24" width="0.1524" layer="91"/>
+<label x="101.6" y="142.24" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="N$5" class="0">
