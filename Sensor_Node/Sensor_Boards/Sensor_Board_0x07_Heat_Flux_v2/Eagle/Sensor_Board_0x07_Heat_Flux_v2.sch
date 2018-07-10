@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.0.1">
+<eagle version="8.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -7210,7 +7210,7 @@ by exp-lbrs.ulp</description>
 <part name="GND1" library="SparkFun" deviceset="GND" device="" value="DGND"/>
 <part name="P+6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="DVCC"/>
 <part name="C1" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" deviceset="C" device="" package3d_urn="urn:adsk.eagle:package:13265/1" value="100n"/>
-<part name="IC1" library="Sensor_Board_0x07_Heat_Flux" deviceset="HEATFLOW_MCP3911A0-E/*" device="SS"/>
+<part name="IC1" library="Sensor_Board_0x07_Heat_Flux" deviceset="HEATFLOW_MCP3911A0-E/*" device="SS" value="MCP3911"/>
 <part name="GND3" library="SparkFun" deviceset="GND" device="" value="DGND"/>
 <part name="P+7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="DVCC"/>
 <part name="AGND1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="AGND" device=""/>
@@ -7254,7 +7254,7 @@ by exp-lbrs.ulp</description>
 <part name="PAD6" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="WIREPAD" device="SMD1,27-254" package3d_urn="urn:adsk.eagle:package:30839/1"/>
 <part name="PAD7" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="WIREPAD" device="SMD1,27-254" package3d_urn="urn:adsk.eagle:package:30839/1"/>
 <part name="PAD8" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="WIREPAD" device="SMD1,27-254" package3d_urn="urn:adsk.eagle:package:30839/1"/>
-<part name="IC4" library="Adafruit_MAX31855 v2" deviceset="ADAFRUIT_MAX31855" device=""/>
+<part name="IC4" library="Adafruit_MAX31855 v2" deviceset="ADAFRUIT_MAX31855" device="" value="MAX31855"/>
 <part name="GND11" library="SparkFun" deviceset="GND" device="" value="DGND"/>
 <part name="P+14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="DVCC"/>
 <part name="PAD9" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="WIREPAD" device="SMD1,27-254" package3d_urn="urn:adsk.eagle:package:30839/1"/>
@@ -7276,6 +7276,10 @@ by exp-lbrs.ulp</description>
 <part name="AGND7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="AGND" device=""/>
 <part name="AGND8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="AGND" device=""/>
 <part name="VDD4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VDD" device="" value="AVCC"/>
+<part name="U$1" library="myownthings" deviceset="N/C" device=""/>
+<part name="U$3" library="myownthings" deviceset="N/C" device=""/>
+<part name="U$5" library="myownthings" deviceset="N/C" device=""/>
+<part name="U$7" library="myownthings" deviceset="N/C" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7284,7 +7288,7 @@ by exp-lbrs.ulp</description>
 <wire x1="52.07" y1="68.58" x2="52.07" y2="114.3" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="52.07" y1="114.3" x2="80.01" y2="114.3" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="80.01" y1="114.3" x2="80.01" y2="68.58" width="0.1524" layer="97" style="shortdash"/>
-<text x="53.34" y="111.125" size="1.778" layer="97">Debug LED</text>
+<text x="55.88" y="111.125" size="1.778" layer="97">Debug LED</text>
 <wire x1="7.62" y1="81.026" x2="7.62" y2="114.046" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="7.62" y1="114.046" x2="45.72" y2="114.046" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="45.72" y1="114.046" x2="45.72" y2="81.026" width="0.1524" layer="97" style="shortdash"/>
@@ -7294,7 +7298,7 @@ by exp-lbrs.ulp</description>
 <wire x1="7.62" y1="118.11" x2="125.73" y2="118.11" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="125.73" y1="118.11" x2="125.73" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="125.73" y1="203.2" x2="7.62" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
-<text x="8.89" y="197.485" size="1.778" layer="97">ATmega328</text>
+<text x="8.89" y="200.025" size="1.778" layer="97">ATmega328</text>
 <wire x1="7.62" y1="30.226" x2="7.62" y2="63.246" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="7.62" y1="63.246" x2="47.752" y2="63.246" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="47.752" y1="63.246" x2="47.752" y2="30.226" width="0.1524" layer="97" style="shortdash"/>
@@ -7311,7 +7315,24 @@ by exp-lbrs.ulp</description>
 <wire x1="134.62" y1="139.7" x2="134.62" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="195.58" y1="139.7" x2="195.58" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="195.58" y1="139.7" x2="134.62" y2="139.7" width="0.1524" layer="97" style="shortdash"/>
-<text x="137.16" y="198.12" size="1.778" layer="97">DS18B20</text>
+<text x="139.7" y="198.12" size="1.778" layer="97">2x DS18B20</text>
+<wire x1="309.88" y1="203.2" x2="205.74" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="205.74" y1="203.2" x2="205.74" y2="139.7" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="205.74" y1="139.7" x2="309.88" y2="139.7" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="309.88" y1="139.7" x2="309.88" y2="203.2" width="0.1524" layer="97" style="shortdash"/>
+<text x="210.82" y="198.12" size="1.778" layer="97">MAX38144 THERMOCOUPLE</text>
+<wire x1="312.42" y1="109.22" x2="124.46" y2="109.22" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="124.46" y1="109.22" x2="124.46" y2="5.08" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="312.42" y1="109.22" x2="312.42" y2="27.94" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="213.36" y1="27.94" x2="312.42" y2="27.94" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="124.46" y1="5.08" x2="213.36" y2="5.08" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="213.36" y1="5.08" x2="213.36" y2="27.94" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="83.82" y1="114.3" x2="119.38" y2="114.3" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="83.82" y1="68.58" x2="83.82" y2="114.3" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="119.38" y1="68.58" x2="119.38" y2="114.3" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="119.38" y1="68.58" x2="83.82" y2="68.58" width="0.1524" layer="97" style="shortdash"/>
+<text x="86.36" y="111.125" size="1.778" layer="97">GND/VCC plane connection</text>
+<text x="127" y="106.045" size="1.778" layer="97">MCP3911 24-BIT ADC</text>
 </plain>
 <instances>
 <instance part="GND17" gate="1" x="38.1" y="165.1"/>
@@ -7386,14 +7407,14 @@ by exp-lbrs.ulp</description>
 <instance part="C8" gate="G$1" x="180.34" y="30.48"/>
 <instance part="U$2" gate="G$1" x="162.56" y="40.64"/>
 <instance part="U$6" gate="G$1" x="162.56" y="22.86"/>
-<instance part="L1" gate="G$1" x="101.6" y="93.98" smashed="yes">
-<attribute name="NAME" x="102.235" y="98.425" size="1.778" layer="95"/>
+<instance part="L1" gate="G$1" x="93.98" y="91.44" smashed="yes">
+<attribute name="NAME" x="94.615" y="95.885" size="1.778" layer="95"/>
 </instance>
-<instance part="R6" gate="G$1" x="110.49" y="85.09"/>
-<instance part="P+12" gate="VCC" x="99.06" y="101.6"/>
-<instance part="VDD3" gate="G$1" x="121.92" y="100.33"/>
-<instance part="GND8" gate="1" x="99.06" y="80.01"/>
-<instance part="AGND6" gate="VR1" x="121.92" y="80.01"/>
+<instance part="R6" gate="G$1" x="102.87" y="82.55"/>
+<instance part="P+12" gate="VCC" x="91.44" y="99.06"/>
+<instance part="VDD3" gate="G$1" x="114.3" y="97.79"/>
+<instance part="GND8" gate="1" x="91.44" y="77.47"/>
+<instance part="AGND6" gate="VR1" x="114.3" y="77.47"/>
 <instance part="R1" gate="G$1" x="167.64" y="187.96" rot="R90"/>
 <instance part="R7" gate="G$1" x="167.64" y="162.56" rot="R90"/>
 <instance part="PAD3" gate="G$1" x="147.32" y="182.88" smashed="yes">
@@ -7460,6 +7481,10 @@ by exp-lbrs.ulp</description>
 <instance part="AGND7" gate="VR1" x="132.08" y="11.43"/>
 <instance part="AGND8" gate="VR1" x="176.53" y="15.24"/>
 <instance part="VDD4" gate="G$1" x="176.53" y="41.91"/>
+<instance part="U$1" gate="G$1" x="99.06" y="167.64"/>
+<instance part="U$3" gate="G$1" x="99.06" y="170.18"/>
+<instance part="U$5" gate="G$1" x="99.06" y="172.72"/>
+<instance part="U$7" gate="G$1" x="99.06" y="182.88"/>
 </instances>
 <busses>
 </busses>
@@ -7536,8 +7561,8 @@ by exp-lbrs.ulp</description>
 <segment>
 <pinref part="GND8" gate="1" pin="GND"/>
 <pinref part="R6" gate="G$1" pin="1"/>
-<wire x1="99.06" y1="82.55" x2="99.06" y2="85.09" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="85.09" x2="105.41" y2="85.09" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="80.01" x2="91.44" y2="82.55" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="82.55" x2="97.79" y2="82.55" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IC4" gate="G$1" pin="GND"/>
@@ -7627,8 +7652,8 @@ by exp-lbrs.ulp</description>
 <segment>
 <pinref part="P+12" gate="VCC" pin="VCC"/>
 <pinref part="L1" gate="G$1" pin="P$1"/>
-<wire x1="99.06" y1="99.06" x2="99.06" y2="93.98" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="93.98" x2="101.6" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="96.52" x2="91.44" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="91.44" x2="93.98" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IC4" gate="G$1" pin="VCC"/>
@@ -7913,8 +7938,8 @@ by exp-lbrs.ulp</description>
 <segment>
 <pinref part="AGND6" gate="VR1" pin="AGND"/>
 <pinref part="R6" gate="G$1" pin="2"/>
-<wire x1="121.92" y1="82.55" x2="121.92" y2="85.09" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="85.09" x2="115.57" y2="85.09" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="80.01" x2="114.3" y2="82.55" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="82.55" x2="107.95" y2="82.55" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IC2" gate="C" pin="A"/>
@@ -7960,8 +7985,8 @@ by exp-lbrs.ulp</description>
 <segment>
 <pinref part="VDD3" gate="G$1" pin="VDD"/>
 <pinref part="L1" gate="G$1" pin="P$2"/>
-<wire x1="121.92" y1="97.79" x2="121.92" y2="93.98" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="93.98" x2="119.38" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="95.25" x2="114.3" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="91.44" x2="111.76" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IC2" gate="P" pin="VDD"/>
