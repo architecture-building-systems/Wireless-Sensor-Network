@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.7.0">
+<eagle version="9.0.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -7187,7 +7187,7 @@ by exp-lbrs.ulp</description>
 <part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
 <part name="C3" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" deviceset="C" device="" package3d_urn="urn:adsk.eagle:package:13265/1" value="100n"/>
 <part name="GND5" library="SparkFun-Aesthetics" deviceset="GND" device="" value="DGND"/>
-<part name="LED1" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1" value="Red"/>
+<part name="LED" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1" value="Red"/>
 <part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="330"/>
 <part name="GND20" library="SparkFun-Aesthetics" deviceset="GND" device="" value="DGND"/>
 <part name="C2" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" deviceset="C" device="" package3d_urn="urn:adsk.eagle:package:13265/1" value="100n"/>
@@ -7320,7 +7320,7 @@ by exp-lbrs.ulp</description>
 <instance part="R2" gate="G$1" x="38.1" y="190.5" rot="R90"/>
 <instance part="C3" gate="G$1" x="33.02" y="149.86"/>
 <instance part="GND5" gate="1" x="40.64" y="96.52"/>
-<instance part="LED1" gate="G$1" x="71.12" y="83.82"/>
+<instance part="LED" gate="G$1" x="71.12" y="83.82"/>
 <instance part="R3" gate="G$1" x="71.12" y="96.52" rot="R90"/>
 <instance part="GND20" gate="1" x="71.12" y="73.66"/>
 <instance part="C2" gate="G$1" x="25.4" y="149.86"/>
@@ -7467,7 +7467,7 @@ by exp-lbrs.ulp</description>
 <net name="DGND" class="5">
 <segment>
 <pinref part="GND20" gate="1" pin="GND"/>
-<pinref part="LED1" gate="G$1" pin="C"/>
+<pinref part="LED" gate="G$1" pin="C"/>
 <wire x1="71.12" y1="76.2" x2="71.12" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 <segment>
@@ -7804,7 +7804,7 @@ by exp-lbrs.ulp</description>
 </net>
 <net name="N$30" class="0">
 <segment>
-<pinref part="LED1" gate="G$1" pin="A"/>
+<pinref part="LED" gate="G$1" pin="A"/>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="71.12" y1="86.36" x2="71.12" y2="91.44" width="0.1524" layer="91"/>
 </segment>
