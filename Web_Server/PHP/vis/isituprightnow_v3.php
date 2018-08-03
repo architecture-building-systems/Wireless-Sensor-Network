@@ -26,7 +26,8 @@
 <body>
 
 <?php
-// Debugging
+// Debugging      
+    $time_start = microtime(true);
     //ini_set('error_reporting','E_ALL');
     ini_set('display_errors', 1);    
     //echo "Beginning of File<br>";           
@@ -189,7 +190,10 @@
         } else {
             return -1;
         } 
-    }
+    }         
+    $time_end = microtime(true);
+    $execution_time = round(($time_end - $time_start),1);
+    echo "<div id=\"exectime\">Total Execution Time: ".$execution_time." Seconds </div>";
     //echo "<br>End of file.";
 ?>
 </body>
