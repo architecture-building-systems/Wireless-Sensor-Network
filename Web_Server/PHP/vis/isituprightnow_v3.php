@@ -14,6 +14,11 @@
         #mytables {
             width: 500px;
             float:left;
+        }    
+        #exectime {
+          position: absolute;
+          bottom: 2%;
+          left: 2%;
         }
     </style>
 </head>
@@ -141,7 +146,7 @@
 // Functions
     // Check time since gateway with id=$id entered a 
     function checkGateway($id, $conn){
-        $sql = "SELECT time as date FROM wsn_input WHERE gateway_id=$id ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT MAX(time) as date FROM wsn_input WHERE gateway_id=$id AND `time`>(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) GROUP BY gateway_id";
         $result = $conn->query($sql);        
         if ($result->num_rows > 0) {
             $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -154,8 +159,8 @@
     }
     
     function checkNode($id, $conn){
-        $sql = "SELECT time as date FROM wsn_input WHERE node_id=$id ORDER BY id DESC LIMIT 1";
-        $result = $conn->query($sql);        
+       $sql = "SELECT MAX(time) as date FROM wsn_input WHERE node_id=$id AND `time`>(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) GROUP BY node_id";
+       $result = $conn->query($sql);        
         if ($result->num_rows > 0) {
             $row = $result->fetch_array(MYSQLI_ASSOC);
             $seconds = time()-strtotime($row["date"]);
