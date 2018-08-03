@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.4.3">
+<eagle version="9.1.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -4174,13 +4174,13 @@ W = angled&lt;p&gt;
 <wire x1="7.62" y1="65.786" x2="48.26" y2="65.786" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="48.26" y1="65.786" x2="48.26" y2="30.226" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="48.26" y1="30.226" x2="7.62" y2="30.226" width="0.1524" layer="97" style="shortdash"/>
-<text x="8.89" y="62.611" size="1.778" layer="97">Communication Module Connector</text>
+<text x="8.89" y="62.611" size="1.778" layer="97">Main Module Connector</text>
 <wire x1="200.66" y1="152.4" x2="134.62" y2="152.4" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="134.62" y1="88.9" x2="134.62" y2="152.4" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="200.66" y1="88.9" x2="200.66" y2="152.4" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="200.66" y1="88.9" x2="134.62" y2="88.9" width="0.1524" layer="97" style="shortdash"/>
 <text x="137.16" y="147.32" size="1.778" layer="97">DS18B20</text>
-<text x="224.505775" y="11.52471875" size="2.54" layer="94" font="vector">Sensor Board - 2xDS18B20 (0x08)</text>
+<text x="224.505775" y="11.52471875" size="2.54" layer="94" font="vector">Sensor Module - 2xDS18B20 v1</text>
 <text x="278.465165625" y="1.12011875" size="2.54" layer="94" font="vector">1.0</text>
 <wire x1="63.5" y1="30.226" x2="63.5" y2="65.786" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="63.5" y1="65.786" x2="106.68" y2="65.786" width="0.1524" layer="97" style="shortdash"/>

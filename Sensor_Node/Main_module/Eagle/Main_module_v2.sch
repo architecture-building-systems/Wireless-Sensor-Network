@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="9.1.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
@@ -7525,7 +7526,7 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="NC17" library="marc_library" deviceset="NC" device=""/>
 <part name="U2" library="marc_library" deviceset="ATMEGA328P_TQFP" device="" value="ATMEGA328P_TQFP"/>
 <part name="FRAME1" library="marc_library" deviceset="FRAME-A4L" device="">
-<attribute name="CNAME" value="Communication Module"/>
+<attribute name="CNAME" value="Main Module"/>
 <attribute name="CREVISION" value="2.0"/>
 </part>
 <part name="C5" library="eagle-ltspice" deviceset="C" device="" value="100n"/>

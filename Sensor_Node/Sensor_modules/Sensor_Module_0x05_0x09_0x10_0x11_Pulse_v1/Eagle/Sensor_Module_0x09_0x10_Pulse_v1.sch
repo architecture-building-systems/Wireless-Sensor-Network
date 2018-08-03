@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.4.1">
+<eagle version="9.1.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -4310,7 +4310,7 @@ W = angled&lt;p&gt;
 <wire x1="7.62" y1="43.18" x2="48.26" y2="43.18" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="48.26" y1="43.18" x2="48.26" y2="12.7" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="48.26" y1="12.7" x2="7.62" y2="12.7" width="0.1524" layer="97" style="shortdash"/>
-<text x="10.16" y="38.1" size="1.778" layer="97">Communication Module Connector</text>
+<text x="10.16" y="38.1" size="1.778" layer="97">Main Module Connector</text>
 <wire x1="144.78" y1="66.04" x2="53.34" y2="66.04" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="53.34" y1="12.7" x2="53.34" y2="66.04" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="144.78" y1="12.7" x2="144.78" y2="66.04" width="0.1524" layer="97" style="shortdash"/>
@@ -4326,11 +4326,11 @@ W = angled&lt;p&gt;
 <wire x1="139.7" y1="68.58" x2="53.34" y2="68.58" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="53.34" y1="114.3" x2="53.34" y2="68.58" width="0.1524" layer="97" style="shortdash"/>
 <text x="55.88" y="111.125" size="1.778" layer="97">Digital Input 2</text>
-<text x="10.16" y="73.025" size="1.778" layer="97">Interrupt to CommBoard</text>
+<text x="10.16" y="73.025" size="1.778" layer="97">Interrupt connector to Main Module</text>
 <text x="99.06" y="99.06" size="1.778" layer="97">PULL UP/DOWN
 only connect one</text>
 <text x="278.4475" y="1.27" size="2.54" layer="94" font="vector">1.0</text>
-<text x="224.4725" y="11.1125" size="2.54" layer="94" font="vector">Sensor Board - Pulse</text>
+<text x="224.4725" y="11.1125" size="2.54" layer="94" font="vector">Sensor Module - Pulse v1</text>
 <wire x1="149.86" y1="58.42" x2="195.58" y2="58.42" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="195.58" y1="58.42" x2="195.58" y2="12.7" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="195.58" y1="12.7" x2="149.86" y2="12.7" width="0.1524" layer="97" style="shortdash"/>
