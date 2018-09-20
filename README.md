@@ -6,6 +6,7 @@ The WSN is intended to be deployed in residential buildings to collect sensor da
 
 ## Structure of the WSN
 ![Sensor-Kit](Miscellaneous/Images/Sensor_Kit_3.png)
+
 Sensor-Kit: (from left to right) two sensor nodes, Gateway and Router Node
 
 The WSN has a modular structure. The main components are the following:
