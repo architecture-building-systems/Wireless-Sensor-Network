@@ -1,5 +1,7 @@
 /*
-  Functiontest_0x12_U-Value_100_meas.ino - Advanced functionality sketch for the U-Value board.
+  Functiontest_0x12_U-Value_100_meas_no_offset.ino - Advanced functionality sketch for the U-Value board.
+  All the peripheral sensors are included, but no offset-calculation is made. An error prevails when measuring
+  uV.
   Version 1.0
   Created by Ruben J. Stadler, May 10, 2018.
   <rstadler@ethz.ch>
