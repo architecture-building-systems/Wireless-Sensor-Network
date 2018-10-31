@@ -26,8 +26,8 @@ long values_ch0[100] = {};  //Array for the 100 measurements
 
 //Counter the GAIN_Error. 
 //Measure a relatively high voltage and enter it's value into "measured_voltage" 
-double real_voltage = 23802;          //Here this equals a "real" voltage of 238.02mV
-double measured_voltage = 24659;
+double real_voltage = 23802;          //Measured with Multimeter (Here this equals a "real" voltage of 238.02mV)
+double measured_voltage = 24659;      //Initial measurement with MCP3911: Done with script "Functiontest_0x12_U-Value_100_meas_no_offset"
 
 //ADC interrupt function
 void ch0_data_interrupt(void)
@@ -131,9 +131,9 @@ void setup() {
   
   long offcal = ch0_calibrate();          //Initially calibrate offset of MCP3911 (and retrieve initial GND-Offset)
 
-  double gain_error = (real_voltage/(measured_voltage + offcal))-1;   //Datasheet equation 5.8
+  double gain_error = (real_voltage/(measured_voltage + offcal))-1;   //MCP3911 Datasheet equation 5.8
   //gain_error = (real_voltage/measured_voltage) - 1;                 //Calculation without including the offcal
-  long gain_error_24bit = gain_error * 8388608;                       //Datasheet equation 5.10
+  long gain_error_24bit = gain_error * 8388608;                       //MCP3911 Datasheet equation 5.10
 
   mcp3911.write_offset(gain_error_24bit, REG_GAINCAL_CH0);  //Write gain-offset to GAINCAL_Register
   //mcp3911.write_offset(0, REG_GAINCAL_CH0);

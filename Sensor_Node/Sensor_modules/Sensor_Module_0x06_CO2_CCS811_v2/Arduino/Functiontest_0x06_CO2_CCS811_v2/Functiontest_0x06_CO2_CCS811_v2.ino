@@ -36,7 +36,9 @@ void setup()
   //It is recommended to check return status on .begin(), but it is not
   //required.
   CCS811Core::status returnCode = mySensor.begin();
-
+  
+  Serial.println("Hang here");
+  
   if (! sht31.begin(0x45)) {   // Set to 0x44 for alternate i2c addr
     mySerial.println("Couldn't find SHT31");
     Serial.println("Couldn't find SHT31");
@@ -47,7 +49,6 @@ void setup()
   {
     mySerial.println(".begin() of CCS811 returned with an error.");
     Serial.println(".begin() of CCS811 returned with an error.\n");
-
     while (1); //Hang if there was a problem.
   } 
 }

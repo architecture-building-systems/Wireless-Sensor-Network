@@ -6,7 +6,7 @@
 */
 
 //SoftwareSerial mySerial(8, 9); // RX, TX
-int LEDpin = 14;
+int LEDpin = 10;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
