@@ -26,21 +26,18 @@
 <body>
 
 <?php
-// Debugging      
+// Debugging
     $time_start = microtime(true);
     //ini_set('error_reporting','E_ALL');
     ini_set('display_errors', 1);    
-    //echo "Beginning of File<br>";           
+    //echo "Beginning of File<br>";
+           
     
 // DB connection
     // Login data    
-    $servername = "localhost";   // Add database url here
-    $username   = "";            // Add database user name here
-    $password   = "";            // Add database password here
-    $dbname     = "ddr";         // Add database name here
-    
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
     // Create connection
-    $conn = new mysqli($servername, $username, $password,$dbname);
+    $conn = new mysqli($db_server, $db_username, $db_password, $db_name);
 
     // Check connection
     if ($conn->connect_error) {
@@ -53,93 +50,88 @@
    echo date("d.m.Y H:i:s", time());
    echo "</div>\n";
    
-   
+   // Gateway table
+    echo "<div id=\"mytables\">";
+    echo "<h2>Gateways</h2>\n";
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Gateway ID</th>";
+    echo "<th>Minutes since last entry</th>";
+    echo "<th>Status</th>";
+    echo "\n";
+    echo "</tr>";
+    
+    for ($i=1; $i<=8; $i++)
+    {
+        $timePast = checkGateway($i, $conn);
+        echo "<tr>";
+        echo "<td> <a href=\"?gateway_id=$i\">$i</a></td>";
+        echo "<td>";
+        echo number_format($timePast,0,",","'");
+        echo "</td>";
+        if ($timePast >-1 && $timePast < 10){ 
+           echo "<td bgcolor=\"#00FF00\">OK</td>";
+        } else {
+           echo "<td bgcolor=\"#FF0000\">Offline </td>";
+        }
+        echo "</tr>\n";
+    }
+    echo "</table>";
+    echo "</div>";
+    
 // Node table
     echo "<div id=\"mytables\">";
     echo "<h2>Nodes</h2>";
     echo "<table>";
     echo "<tr>";
-    echo "<th></th>";
-    echo "<th>1</th>";
-    echo "<th>2</th>";
-    echo "<th>3</th>";
-    echo "<th>4</th>";
-    echo "<th>5</th>";
-    echo "<th>6</th>";
-    echo "<th>7</th>";
-    echo "<th>8</th>";
-    echo "<th>9</th>";
-    echo "<th>10</th>";
-    echo "<th>11</th>";
-    echo "<th>12</th>";
-    echo "<th>13</th>";
-    echo "<th>14</th>";
-    echo "<th>15</th>";
-    echo "<th>16</th>";
-    echo "<th>17</th>";
-    echo "<th>18</th>";
-    echo "</tr>";
+    echo "<th>Node ID</th>";
+    echo "<th>Sensor type</th>";
+    echo "<th>Minutes since last entry</th>";
+    echo "<th>Status</th>";
     echo "\n";
-    echo "<tr>";
-    echo "<th></th>";
-    echo "<th>SHT31</th>";
-    echo "<th>SHT31</th>";
-    echo "<th>SHT31</th>";
-    echo "<th>W</th>";
-    echo "<th>W</th>";
-    echo "<th>W</th>";
-    echo "<th>CO2</th>";
-    echo "<th>DS</th>";
-    echo "<th>DS</th>";
-    echo "<th>DS</th>";
-    echo "<th>DS</th>";
-    echo "<th>DS</th>";
-    echo "<th>DS</th>";
-    echo "<th>HF</th>";
-    echo "<th>HF</th>";
-    echo "<th>HF</th>";
-    echo "<th>E</th>";
-    echo "<th>Oil</th>";
     echo "</tr>";
-    echo "\n";
     
-    
-    $nodes_not_installed = array(209, 210, 310, 317, 517, 618, 706, 717, 718, 817, 818);
+    //
+    if (isset($_GET["gateway_id"])) {
+        $gateway_id = $_GET["gateway_id"];
+    }
+    else {
+        $gateway_id = 1;
+    }
+    $node_list = array();
+    $pan_id = 100*$gateway_id;
+    for ($i=1; $i<=18; $i++){
+        $node_list[] = $pan_id + $i;
+
+    }
     
     $accepted_delay = 16; // [minutes]
-    for ($i=1; $i<=8; $i++){
-        $kit_id=$i*100;
-        echo "<tr>";
-        echo "<td>$kit_id</td>";
-        for ($j=1; $j<=18; $j++){
-            $node_id = $kit_id + $j;
-            if (in_array($node_id, $nodes_not_installed)){
-                echo "<td>n.i.</td>";
-            }
-            else {
-                $timePast = checkNode($node_id, $conn);
-                if ($timePast > -1 AND $timePast < $accepted_delay){
-                    $description = getSensorType($node_id, $conn);
-                } else {
-                    $description = "-";
-                }
-                if ($timePast > -1 AND $timePast < $accepted_delay){
-                   echo "<td bgcolor=\"#00FF00\">";
-                } else {
-                  echo "<td bgcolor=\"#FF0000\">";
-                }
-                echo "<a href=\"http://sustain.arch.ethz.ch/wsn/vis/graph_db_v1.php?node_id=$node_id\">";
-                echo number_format($timePast,2,",","'");
-                echo "</a>";
-                echo "</td>";
-            }
+    
+    for ($i=0; $i<count($node_list); $i++)
+    {
+        $node_id = $node_list[$i];
+        $timePast = checkNode($node_id, $conn);
+        if ($timePast > -1 AND $timePast < $accepted_delay){
+            $description = getSensorType($node_id, $conn);
+        } else {
+            $description = "-";
         }
-    echo "</tr>\n";
-    }   
+            
+        echo "<tr>";
+        echo "<td> <a href=\"http://sustain.arch.ethz.ch/wsn/vis/graph_db_v1.php?node_id=$node_id\">$node_id</a></td>";
+        echo "<td>$description</td>";
+        echo "<td>";
+        echo number_format($timePast,2,",","'");
+        echo "</td>";
+        if ($timePast > -1 AND $timePast < $accepted_delay){
+           echo "<td bgcolor=\"#00FF00\">OK</td>";
+        } else {
+          echo "<td bgcolor=\"#FF0000\">Offline</td>";
+        }
+        echo "</tr>\n";
+    }
     echo "</table>";
-    echo "<div> n.i.: not installed </div>";
     echo "</div>";
-
     
 // Close db-connection    
     $conn->close();
@@ -160,8 +152,8 @@
     }
     
     function checkNode($id, $conn){
-       $sql = "SELECT MAX(time) as date FROM wsn_input WHERE node_id=$id AND `time`>(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) GROUP BY node_id";
-       $result = $conn->query($sql);        
+        $sql = "SELECT MAX(time) as date FROM wsn_input WHERE node_id=$id AND `time`>(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) GROUP BY node_id";
+        $result = $conn->query($sql);        
         if ($result->num_rows > 0) {
             $row = $result->fetch_array(MYSQLI_ASSOC);
             $seconds = time()-strtotime($row["date"]);
@@ -190,7 +182,7 @@
         } else {
             return -1;
         } 
-    }         
+    }
     $time_end = microtime(true);
     $execution_time = round(($time_end - $time_start),1);
     echo "<div id=\"exectime\">Total Execution Time: ".$execution_time." Seconds </div>";

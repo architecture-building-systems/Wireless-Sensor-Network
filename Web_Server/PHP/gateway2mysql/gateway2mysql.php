@@ -1,17 +1,11 @@
 <?php
 
 // Debugging
-	//error_reporting(E_ALL);
-	//ini_set('display_errors', 1);
 	//ini_set('auto_detect_line_endings',TRUE);
     echo "Beginning of File<br>";                                                         // Just for debugging
-    include 'gateway2mysql_functions.php';
-// Database information
-    $db_server      = "localhost"; // Add database address here      
-    $db_username    = "";  // Add database username here
-    $db_password    = "";  // Add database password here
-    $db_name        = "";  // Add database name here
- 
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/gateway2mysql_functions.php');                // Include helper functions
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');                                 // Include configuration file
+    
 // Received data from gateway
     $payload   = $_GET['payload'];                                                        // Xbee payload in hex
     $comment   = $_GET['comment'];                                                        // Comment

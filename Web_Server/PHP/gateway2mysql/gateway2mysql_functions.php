@@ -4,10 +4,7 @@
     // grabs unit of measurement value by sensorModuleType form database
     function get_number_of_values($sensor_module_type){
     // Database information
-    $db_server      = "localhost";   // Add database address here             
-    $db_username    = "";  // Add database username here
-    $db_password    = "";  // Add database password here
-    $db_name        = "";  // Add database name here
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php'); 
     $conn = mysqli_connect($db_server, $db_username, $db_password, $db_name);  // Connect to database
     
     $sql = "SELECT number_of_values FROM wsn_sensor_module_type WHERE id=$sensor_module_type LIMIT 1";
@@ -28,15 +25,19 @@
     //low_battery_warning_mail()
     // Sends an e-mail to the $receiver notifying that $node_id has been shut down. 
     function low_battery_warning_mail($node_id){
-        $receiver = "user1@url1.com";  // Add receiver e-mail address here
-        $sender   = "user2@url2.com";  // Add sender e-mail address here
+        include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php'); 
+        
+        $receiver  = $e_mail_address_admin;
+        
         $subject  = "Low Battery Warning of Node $node_id";
-        $message  = "The Battery of node $node_id ";
+        $message  = "The Battery of node ";
+        $message .= "<a href=\"http://sustain.arch.ethz.ch/wsn/vis/graph_db_v1.php?node_id=$node_id\">$node_id</a> ";
         $message .= "has reached the minimum voltage threshhold.</br>\n"; 
         $message .= "The node has been shut down.</br>\n";
+        $message .= " More information can be found <a href=\"http://sustain.arch.ethz.ch/wsn/vis/isituprightnow_v2.php\">here</a>.";
         $headers  = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= "From: $sender";
+        $headers .= "From:".$e_mail_address_admin;
         echo mail($receiver, $subject, $message, $headers);
     }
 ?>

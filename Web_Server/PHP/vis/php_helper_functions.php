@@ -1,19 +1,16 @@
 <?
 // Debugging
-    ini_set('error_reporting','E_ALL');
-    ini_set('display_errors', 1);    
-    //echo "Beginning of File<br>";  
+    //ini_set('error_reporting','E_ALL');
+    //ini_set('display_errors', 1);     
     
     
 // Get entitity of DB entries
 
 function get_entity($node_id, $entity_nr){
-    $servername = "localhost";   // Add database url here
-    $username   = "";            // Add database user name here
-    $password   = "";            // Add database password here
-    $dbname     = "ddr";         // Add database name here
+    // Include configuration file
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
 
-    $conn = new mysqli($servername, $username, $password,$dbname);
+    $conn = new mysqli($db_server, $db_username, $db_password, $db_name);
 
     // Check connection
     if ($conn->connect_error) {

@@ -1,19 +1,13 @@
 <?php
-// Debugging
-    ini_set('error_reporting','E_ALL');
-    ini_set('display_errors', 1);    
-    //echo "Beginning of File<br>";  
     // Source: http://www.w3schools.com/php/php_mysql_select.asp
-    
-    $servername = "localhost";   // Add database url here
-    $username   = "";            // Add database user name here
-    $password   = "";            // Add database password here
-    $dbname     = "ddr";         // Add database name here
+
+    // Include configuration file
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
     
     $node_id = $_GET["node_id"];
-    //$node_id = 46;
+
     // Create connection
-    $conn = new mysqli($servername, $username, $password,$dbname);
+    $conn = new mysqli($db_server, $db_username, $db_password,$db_name);
 
     // Check connection
     if ($conn->connect_error) {
@@ -35,7 +29,7 @@
     $number_of_values = $row["number_of_values"];
     
     // Get measurement values
-    $sql = "SELECT time as date, value0 , value1, value2, value3, value4 FROM wsn_input WHERE node_id=$node_id AND sensorModuleType=$sensorModuleType ORDER BY id DESC LIMIT 300";
+    $sql = "SELECT time as date, value0 , value1, value2, value3, value4 FROM wsn_input WHERE node_id=$node_id AND sensorModuleType=$sensorModuleType ORDER BY id DESC LIMIT 150";
     $result = $conn->query($sql);
     $conn->close();
     
