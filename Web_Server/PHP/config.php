@@ -14,5 +14,5 @@
   
 
 // Admin contact
-    $e_mail_address_admin = ""; // Add e-mail address of the admin here
+    $e_mail_address_admin = "";     // Add e-mail address of the admin here
 ?>
