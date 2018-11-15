@@ -14,6 +14,7 @@
     - Simplify hard coded PAN ID
     - Simplify hard coded node ID
     - Remove RTC functionality & switch to internal timers (simplification)
+    - Move configuration to configurations file
  ******************************************************************************************************/
 
 // To configure:
