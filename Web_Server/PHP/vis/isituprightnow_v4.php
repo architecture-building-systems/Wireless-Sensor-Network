@@ -1,3 +1,10 @@
+<!------------------------------------------------------------------------------
+Isituprightnow_v4.php
+This script shows an overview of the sensor nodes and whether there is fresh
+data available or not. One table shows the status of all gateways. The second
+table shows all sensor nodes of one gateway.
+Author: Mario Frei (2018) 
+ ------------------------------------------------------------------------------>
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
@@ -26,16 +33,19 @@
 <body>
 
 <?php
-// Debugging
-    $time_start = microtime(true);
-    //ini_set('error_reporting','E_ALL');
-    ini_set('display_errors', 1);    
-    //echo "Beginning of File<br>";
-           
+/************************************************
+/ Configurations
+/************************************************/
+    $time_start = microtime(true);          
+    $number_of_gateways     = 8;  // Maximal number of gateways to show in the table (starting from 1)
+    $number_of_sensor_nodes = 18; // Maximal number of sensor node to show in the table (starting from xx1)
+    $accepted_delay         = 16; // Maximal accepted delay in minutes for which the cell is still highlighted green
+    include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
+    include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/php_helper_functions.php');
     
-// DB connection
-    // Login data    
-    include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
+/************************************************
+// DB connection 
+/************************************************/
     // Create connection
     $conn = new mysqli($db_server, $db_username, $db_password, $db_name);
 
@@ -43,14 +53,18 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } 
-    //echo "Connected successfully <br/>\n";
-// Echo titles
+
+/************************************************
+/ Echo title of site
+/************************************************/
    echo "<div>";
    echo "<h1><a href=\"?\">Is it up right now?</a></h1>\n";
    echo date("d.m.Y H:i:s", time());
    echo "</div>\n";
-   
-   // Gateway table
+ 
+/************************************************
+/ Echo gateway table
+/************************************************/  
     echo "<div id=\"mytables\">";
     echo "<h2>Gateways</h2>\n";
     echo "<table>";
@@ -60,8 +74,7 @@
     echo "<th>Status</th>";
     echo "\n";
     echo "</tr>";
-    
-    for ($i=1; $i<=8; $i++)
+    for ($i=1; $i<=$number_of_gateways; $i++)
     {
         $timePast = checkGateway($i, $conn);
         echo "<tr>";
@@ -78,8 +91,11 @@
     }
     echo "</table>";
     echo "</div>";
-    
-// Node table
+
+/************************************************
+/ Echo node table
+/************************************************/  
+// Echo table headers
     echo "<div id=\"mytables\">";
     echo "<h2>Nodes</h2>";
     echo "<table>";
@@ -90,23 +106,23 @@
     echo "<th>Status</th>";
     echo "\n";
     echo "</tr>";
-    
-    //
+
+// Set gateway id
     if (isset($_GET["gateway_id"])) {
         $gateway_id = $_GET["gateway_id"];
     }
     else {
-        $gateway_id = 1;
+        $gateway_id = 1; // If there is no gateway id available as GET-Parameter, set it to 1
     }
+
+// Create list of node ids
     $node_list = array();
     $pan_id = 100*$gateway_id;
-    for ($i=1; $i<=18; $i++){
+    for ($i=1; $i<=$number_of_sensor_nodes; $i++){
         $node_list[] = $pan_id + $i;
-
     }
-    
-    $accepted_delay = 16; // [minutes]
-    
+
+// Output information for each node listed in the node id list from above, row by row
     for ($i=0; $i<count($node_list); $i++)
     {
         $node_id = $node_list[$i];
@@ -118,7 +134,8 @@
         }
             
         echo "<tr>";
-        echo "<td> <a href=\"http://sustain.arch.ethz.ch/wsn/vis/graph_db_v1.php?node_id=$node_id\">$node_id</a></td>";
+        echo "<td> <a href=\"graph_db_v1.php?node_id=$node_id\">$node_id</a></td>";
+        //echo "<td> <a href=\"http://sustain.arch.ethz.ch/wsn/vis/graph_db_v1.php?node_id=$node_id\">$node_id</a></td>";
         echo "<td>$description</td>";
         echo "<td>";
         echo number_format($timePast,2,",","'");
@@ -136,57 +153,10 @@
 // Close db-connection    
     $conn->close();
     
-// Functions
-    // Check time since gateway with id=$id entered a 
-    function checkGateway($id, $conn){
-        $sql = "SELECT MAX(time) as date FROM wsn_input WHERE gateway_id=$id AND `time`>(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) GROUP BY gateway_id";
-        $result = $conn->query($sql);        
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_array(MYSQLI_ASSOC);
-            $seconds = time()-strtotime($row["date"]);
-            $minutes = $seconds/60;
-            return round($minutes, 2);
-        } else {
-            return -1;
-        } 
-    }
-    
-    function checkNode($id, $conn){
-        $sql = "SELECT MAX(time) as date FROM wsn_input WHERE node_id=$id AND `time`>(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) GROUP BY node_id";
-        $result = $conn->query($sql);        
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_array(MYSQLI_ASSOC);
-            $seconds = time()-strtotime($row["date"]);
-            $minutes = $seconds/60;
-            return round($minutes, 2);
-        } else {
-            return -1;
-        } 
-    }
-    
-    function getSensorType($id, $conn){
-        $sql = "SELECT sensorModuleType FROM wsn_input WHERE node_id=$id ORDER BY id DESC LIMIT 1";
-        $result = $conn->query($sql);    
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $sensorModuleType = $row["sensorModuleType"];
-        } else {
-            return -1;
-        }
-        
-        $sql = "SELECT description FROM wsn_sensor_module_type WHERE id=$sensorModuleType ORDER BY id DESC LIMIT 1";
-        $result = $conn->query($sql);        
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            return $row["description"];
-        } else {
-            return -1;
-        } 
-    }
+// Echo execution time
     $time_end = microtime(true);
     $execution_time = round(($time_end - $time_start),1);
     echo "<div id=\"exectime\">Total Execution Time: ".$execution_time." Seconds </div>";
-    //echo "<br>End of file.";
 ?>
 </body>
 </html>

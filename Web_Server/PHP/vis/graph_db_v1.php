@@ -1,3 +1,11 @@
+<!------------------------------------------------------------------------------
+ graph_db_v1 
+ This script takes the node id and displays time series data.
+ The time series data is fetched by det_data_v2.php.
+ Helper functions are in php_helper_functions.php.
+ To plot the time series data, the metrics graphics framework is used.
+ Author: Mario Frei (2018)
+ ------------------------------------------------------------------------------>
 <html lang='en'>
 <head>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
@@ -8,8 +16,6 @@
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
-
-    <!-- dev start -->
     <script src='./src/js/MG.js'></script>
     <script src='./src/js/misc/utility.js'></script>
     <script src='./src/js/common/data_graphic.js'></script>
@@ -38,22 +44,24 @@
     <script src='./src/js/misc/formatters.js'></script>
     <script src='./src/js/misc/transitions.js'></script>
     <script src='./src/js/misc/error.js'></script>
-    
     <script src='js/addons/mg_line_brushing.js'></script>
     <link rel='stylesheet' href='css/addons/mg_line_brushing.css' />
-    <!-- dev end -->
-    <?include 'php_helper_functions.php';?>
+    <?include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/php_helper_functions.php');?>
 </head>
 
+<!------------------------------------------------------------------------------
+Setup some divs that can be manipulated by javascript
+ ------------------------------------------------------------------------------>
 <body>
-    
 <div align="center">                
     <div id='myGraph'></div>     
     <div id='myLegend'></div>                 
 </div>
 
 
-
+<!------------------------------------------------------------------------------
+The actual plotting of the data happens in the following javascript lines.
+ ------------------------------------------------------------------------------>
 <script>
 MG._hooks = {};
 

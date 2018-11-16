@@ -1,22 +1,32 @@
 <?php
-    // Source: http://www.w3schools.com/php/php_mysql_select.asp
+    /********************************************************************************************************************
+    / get_data_v2.php
+    / This script takes the node id and fetches the most recent timeseries data from the database.
+    / The data is output as json. The json data is used to plot the timeseries using the metrics graphics framework.
+    / Author: Mario Frei (2018)
+    / Source: http://www.w3schools.com/php/php_mysql_select.asp
+    /********************************************************************************************************************/
 
-    // Include configuration file
+    /************************************************
+    / Include configuration file
+    /************************************************/
     include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
     
-    $node_id = $_GET["node_id"];
-
-    // Create connection
+    /************************************************
+    / Create database  connection
+    /************************************************/
     $conn = new mysqli($db_server, $db_username, $db_password,$db_name);
 
     // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } 
-    //echo "Connected successfully <br/>\n";
 
-    // Select data
+    /************************************************
+    // Select data 
+    /************************************************/
     // Get sensor module type
+    $node_id = $_GET["node_id"];
     $sql = "SELECT sensorModuleType FROM wsn_input WHERE node_id=$node_id ORDER BY id DESC LIMIT 1";
     $result = $conn->query($sql);
     $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -34,9 +44,8 @@
     $conn->close();
     
     if ($result->num_rows > 0) {
-        // output data of each row
-        while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            //$value0Array [] = array("date"=>$row["date"], "value"=>(float)$row["value0"]);      
+        // Read data of each row
+        while($row = $result->fetch_array(MYSQLI_ASSOC)) {      
             for ($i=0; $i<$number_of_values; $i++ ){
                 $myValueArray[$i] [] = array("date"=>$row["date"], "value"=>(float)$row["value$i"]);
             }
@@ -44,8 +53,10 @@
     } else {
         echo "0 results";
     }
-
+    
+    /************************************************
     // Output json
+    /************************************************/
     header("Content-Type: application/json;charset=utf-8");
     echo json_encode($myValueArray);
 
