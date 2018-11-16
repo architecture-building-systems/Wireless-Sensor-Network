@@ -16,4 +16,4 @@ In order to setup the webserver the following needs to be done:
 * Copy the files from the folder [PHP](PHP) into the root directory of your webserver.
 * Add the login credentials for the database to the [config file](PHP/config.php).
 * Add the e-mail address of the admin to the [config file](PHP/config.php).
-* Add the URL of your webserver to the Arduino [script for the gateway](Gateway\Arduino). The URL should look something like this: yourdomainname.com/gateway2mysql/gateway2mysql.php
+* Add the URL of your webserver to the Arduino [script for the gateway](../Gateway/Arduino). The URL should look something like this: yourdomainname.com/gateway2mysql/gateway2mysql.php
