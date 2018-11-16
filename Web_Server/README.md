@@ -19,5 +19,5 @@ In order to setup the webserver the following needs to be done:
 * Add the URL of your webserver to the Arduino [script for the gateway](../Gateway/Arduino). The URL should look something like this: yourdomainname.com/gateway2mysql/gateway2mysql.php
 
 There are two main PHP scripts:
-* [PHP/vis/isituprightnow_v4.php](PHP/vis/isituprightnow_v4.php) gives an overiew of the status of sensor nodes.
+* [PHP/vis/isituprightnow_v4.php](PHP/vis/isituprightnow_v4.php) gives an overview of the status of sensor nodes.
 * [PHP/gateway2mysql/gateway2mysql.php](PHP/gateway2mysql/gateway2mysql.php) is called by the gateways. It takes the payload message with the measured data, disaggregates it and inserts it in the database.
