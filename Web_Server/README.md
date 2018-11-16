@@ -17,3 +17,4 @@ In order to setup the webserver the following needs to be done:
 * Add the login credentials for the database to the [config file](PHP/config.php).
 * Add the e-mail address of the admin to the [config file](PHP/config.php).
 * Add the URL of your webserver to the Arduino [script for the gateway](../Gateway/Arduino). The URL should look something like this: yourdomainname.com/gateway2mysql/gateway2mysql.php
+* The measured data from the sensor nodes is now accessible from [PHP/vis/isituprightnow_v4.php](PHP/vis/isituprightnow_v4.php).
