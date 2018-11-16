@@ -7,6 +7,8 @@ Currently, battery warning messages and data from the heat flux sensors need to 
 
 ## Displaying Data
 Files for these tasks can be found in the [/vis/](PHP/vis/) directory. The main file is [isituprightnow_v4.php](PHP/vis/isituprightnow_v4.php). The site shows tables. The left hand side table gives an overview of the gateway activity. The gateway number is clickable and leads to an overview of the sensor nodes. The right hand side table gives an overview of all the sensor nodes of one gateway. The node id is clickable and links to a graph of the respective measured data.
+
+|<img src="Images/isituprightnow.png" alt="Table" width="400" height="225"> | <img src="Images/data_graph_example.png" alt="Graph" width="400" height="225"> |
 ![Table](Images/isituprightnow.png)
 ![Graph](Images/data_graph_example.png)
 
