@@ -135,7 +135,6 @@ Author: Mario Frei (2018)
             
         echo "<tr>";
         echo "<td> <a href=\"graph_db_v1.php?node_id=$node_id\">$node_id</a></td>";
-        //echo "<td> <a href=\"http://sustain.arch.ethz.ch/wsn/vis/graph_db_v1.php?node_id=$node_id\">$node_id</a></td>";
         echo "<td>$description</td>";
         echo "<td>";
         echo number_format($timePast,2,",","'");
