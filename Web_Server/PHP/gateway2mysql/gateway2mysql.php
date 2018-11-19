@@ -15,20 +15,40 @@
 /************************************************/
     include($_SERVER['DOCUMENT_ROOT'].'/wsn/gateway2mysql_functions.php');                // Include helper functions
     include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');                                 // Include configuration file
+    
+/************************************************
+/ Establish connection to database
+/************************************************/
+// Connect to database
+    $conn = mysqli_connect($db_server, $db_username, $db_password, $db_name);              // Connect to database
+
+    if ($conn->connect_error)                                                              // Check database connection
+    {
+      trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
+    }
 
 /************************************************
 / Check all GET-parameters from the gateway
 /************************************************/
 // Received data from gateway
-    $payload   = $_GET['payload'];                                                        // XBee payload in hexadecimal format   
-    $comment   = $_GET['comment'];                                                        // Comment (e.g. Reset)
+    $payload   = mysqli_real_escape_string($conn, $_GET['payload']);                      // XBee payload in hexadecimal format (escaped for SQL)
+    $token     = mysqli_real_escape_string($conn, $_GET['token']);                        // Access token (escaped for SQL)
+    $comment   = mysqli_real_escape_string($conn, $_GET['comment']);                      // Comment (e.g. Reset) (escaped for SQL)
     if (empty($_GET['g_id'])){                                                            // Gateway ID
        $gateway_id = -1;
     } else {
-        $gateway_id= $_GET['g_id'];                                                     
+        $gateway_id= mysqli_real_escape_string($conn, $_GET['g_id']);                     // (escaped for SQL)
     }
-    
-    $ip        = $_SERVER['REMOTE_ADDR'];                                                 // Gateway ip 
+    $ip        = $_SERVER['REMOTE_ADDR'];                                                 // Gateway ip
+/************************************************
+/ Check access token for validity
+/************************************************/
+  $type = "insert";
+  $access = check_token($token, $type);
+    // Abort script if access is not granted.
+    if (!$access){
+      exit();
+    } 
 
 /************************************************
 / Write data to file (as backup)
@@ -58,7 +78,7 @@
         $payloadBytes[] = hexdec($payloadArrayItem);
     }
     
-// Depending on the payload use a different script for the disaggregation
+// Depending on the payload type use a different script for the disaggregation (idealy all payload would adhere to the standard scheme)
     if ($payloadBytes[0]==255 && $payloadBytes[1]==255 && $payloadBytes[2]==255 && $payloadBytes[3]==255){
         include 'gateway2mysql_battery_warning.php';
     }
@@ -72,15 +92,7 @@
 
 /************************************************
 / Insert data into database
-/************************************************/
-// Connect to database
-    $conn = mysqli_connect($db_server, $db_username, $db_password, $db_name);              // Connect to database
-
-    if ($conn->connect_error)                                                              // Check database connection
-    {
-      trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
-    }
-    
+/************************************************/   
 // Insert  raw payload into database
     $sql = "INSERT INTO wsn_input_raw (payload) VALUES ('$payload')";                      
     if($conn->query($sql) === false) 

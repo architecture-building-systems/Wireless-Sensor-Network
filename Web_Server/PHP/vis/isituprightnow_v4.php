@@ -109,7 +109,7 @@ Author: Mario Frei (2018)
 
 // Set gateway id
     if (isset($_GET["gateway_id"])) {
-        $gateway_id = $_GET["gateway_id"];
+        $gateway_id = mysqli_real_escape_string($conn, $_GET["gateway_id"]);
     }
     else {
         $gateway_id = 1; // If there is no gateway id available as GET-Parameter, set it to 1

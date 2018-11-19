@@ -133,7 +133,7 @@
 function get_entity($node_id, $entity_nr){
 // Include configuration file
     include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
-   // echo ("mimi");
+
 // Establish connection to database
     $conn = new mysqli($db_server, $db_username, $db_password, $db_name);
 
@@ -163,4 +163,52 @@ function get_entity($node_id, $entity_nr){
         return "";
     }
 }
+
+/************************************************
+/ Check vadility of access token
+/ Input:  $token: access token as string, e.g. 23bsxmdzurk7qt8x
+          $type:  type of access as string, e.g. "read", "insert"
+/ Output: $access: boolean for access, e.g. False for access not granted, True for access granted
+/************************************************/
+function check_token($token, $type){
+// Include configuration file
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
+
+// Establish connection to database
+    $conn = new mysqli($db_server, $db_username, $db_password, $db_name);
+
+// Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+// Look for access token in database
+    $sql = "SELECT `$type` FROM `wsn_access` WHERE `token`='$token' ORDER BY `id` DESC LIMIT 1";
+    $result = $conn->query($sql);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+
+// End script if access token could not be found
+    if (empty($row)){
+      echo("Access token not found.");
+      return False;
+    }
+    
+// End script if access token does not grant read rights
+    $read_permission = $row[$type];
+    if (!$read_permission){
+      echo("Access token does not grant read access.");
+      return False;
+    }
+    
+// End function if acces token is valid
+    if ($read_permission){
+      return True;
+    }
+    
+// If functions ends here something went wrong
+    echo("Something went wrong.");
+    return False;
+}
+
+
 ?>
