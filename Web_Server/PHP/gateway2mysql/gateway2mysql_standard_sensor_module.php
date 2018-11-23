@@ -11,7 +11,7 @@
     $node_id = $payloadBytes[0] + 256*$payloadBytes[1];
  
 // Number of measurements ( $payloadBytes[2] )
-    $numOfMeas = $payloadBytes[2]+1;                                                       //+1 because it seams to be wrong in the arduino script
+    $numOfMeas = $payloadBytes[2]+1;                                                       //+1 because it seems to be wrong in the arduino script
     echo "numOfMeas=";
     echo $numOfMeas;
     echo "<br>\n";
