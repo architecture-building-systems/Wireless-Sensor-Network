@@ -13,7 +13,7 @@ import time
 import serial
 import struct
 
-SerialPort = 'COM38'
+SerialPort = 'COM28'
 
 print('Python serial sensor module reader')
 print('')

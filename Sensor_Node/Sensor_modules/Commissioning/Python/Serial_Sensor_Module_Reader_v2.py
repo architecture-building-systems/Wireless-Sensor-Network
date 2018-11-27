@@ -13,7 +13,7 @@ import time
 import serial
 import struct
 
-SerialPort = 'COM14'
+SerialPort = 'COM28'
 
 print('Python serial sensor module reader')
 print('')
@@ -56,10 +56,10 @@ try:
             for i in range(0, number_of_values):
                 n = i+1
                 payload = ser.read(4)
-                myCheckSum += payload[0]
-                myCheckSum += payload[1]
-                myCheckSum += payload[2]
-                myCheckSum += payload[3]
+                myCheckSum += struct.unpack('B', payload[0])[0]
+                myCheckSum += struct.unpack('B', payload[1])[0]
+                myCheckSum += struct.unpack('B', payload[2])[0]
+                myCheckSum += struct.unpack('B', payload[3])[0]
                 value.append(struct.unpack('f', payload)[0])
                 print('payload', n, ':\t\t', payload, 'value', n, ': ', value[i])
             
