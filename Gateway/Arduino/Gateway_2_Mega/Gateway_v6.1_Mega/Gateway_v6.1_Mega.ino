@@ -1,34 +1,41 @@
-/*******************************************
- * Gateway Arduino Sketch v5.1             *
- * Author: Mario Frei                      *
- * Sources: FONA library FONAtest sketch  *
- *           Xbee library example sketch   *
- *******************************************/
+/***************************************************
+ * Gateway Arduino Sketch v6.1                     *
+ * Author: Mario Frei                              *
+ * Year: 2018                                      *
+ * Sources: FONA library FONAtest sketch           *
+ *          Xbee library example sketch            *
+ *          SD library example sketch              *
+ *          RTC library example sketch (Sparkfun)  * 
+ ***************************************************/
 
-int gatewayID = 1;                                         // Set this accordingly
-String serverURL = "http://[your url]/gateway2mysql.php";  // Instert the url to your web server here
-
+int gatewayID = 0;                                                   // Set this accordingly
+String serverURL = "http://[your webserver]/wsn/gateway2mysql.php";  // Insert the url to your web server here
 bool resetFlag = true;
 
 // Libraries
-#include "Adafruit_FONA.h"
-#include <SoftwareSerial.h>
-#include <XBee.h>
-#include <avr/wdt.h>  // Remember USB-Serial doesn't work after first reset.
+#include "Adafruit_FONA.h"     // FONA
+#include <SoftwareSerial.h>    // FONA
+#include <XBee.h>              // Xbee
+#include <avr/wdt.h>           // Reset: Remember USB-Serial doesn't work after first reset.
+#include <SparkFunDS1307RTC.h> // RTC
+#include <Wire.h>              // RTC
+#include <SPI.h>               // SD card
+#include <SD.h>                // SD card
 
 // Debugging
-#define LED_PIN 13
+#define LED_PIN 3
 int counter = 0;
+long timestamp = 0;
 
 // FONA
-#define FONA_RX 9
-#define FONA_TX 8   
-#define FONA_RST 4  
-#define FONA_RI 7
+#define FONA_RX 2
+#define FONA_TX 10   
+#define FONA_RST 22  
+#define FONA_RI 53
 //("gprs.swisscom.ch", "gprs", "gprs");  // Configure a GPRS APN, username, and password.
 #define APN F("gprs.swisscom.ch")        // Change this according to your providers instructions
-#define APN_USR F("gprs")
-#define APN_PWD F("gprs")
+#define APN_USR F("gprs")                // Change this according to your providers instructions
+#define APN_PWD F("gprs")                // Change this according to your providers instructions 
 SoftwareSerial fonaSS = SoftwareSerial(FONA_TX, FONA_RX);
 SoftwareSerial *fonaSerial = &fonaSS;
 Adafruit_FONA fona = Adafruit_FONA(FONA_RST);// Use this one for FONA 3G: //Adafruit_FONA_3G fona = Adafruit_FONA_3G(FONA_RST);
@@ -41,9 +48,13 @@ XBeeResponse response = XBeeResponse();
 ZBRxResponse rx = ZBRxResponse();
 ModemStatusResponse msr = ModemStatusResponse();
 
+// SD card
+const int chipSelect = 8;
+
+// Other
 String payload;
-
-
+bool sd_ignore_flag = 0;
+int gprs_fail_counter = 0;
 
 
 /*********************
@@ -55,8 +66,8 @@ void setup() {
   Serial.println("Serial initialized");
   
 // Initialize Xbee ---------------------------------------------------------------------
-  Serial1.begin(9600);
-  xbee.setSerial(Serial1);
+  Serial3.begin(9600);
+  xbee.setSerial(Serial3);
   Serial.println("Xbee initialized");
   
 // Initialize Fona ---------------------------------------------------------------------
@@ -75,6 +86,19 @@ void setup() {
   startGPRS();
   Serial.println("FONA initialized");
 
+// Initialice RTC  --------------------------------------------------------------------
+  rtc.begin(); // Call rtc.begin() to initialize the library
+  rtc.set24Hour(); // Use rtc.set24Hour to set to 24-hour mode
+  Serial.println("RTC initialized.");
+
+// Initialice SD card  ----------------------------------------------------------------
+  if (!SD.begin(chipSelect)) {
+    Serial.println("SD card failed, or not present");
+    sd_ignore_flag = 1;
+  } else {
+    Serial.println("SD card initialized.");
+  }
+
 // Debugging
   Serial.println("End Setup");
   blink(10);
@@ -86,14 +110,13 @@ void setup() {
  *********************/
 void loop() {
 // Debugging ---------------------------------------------------------------------------
-  Serial.println(counter++);
+  timestamp = millis()/1000;
+  Serial.print(counter++);
+  Serial.print(": ");
+  Serial.println(timestamp);
   delay(1500);
   blink(2);
   
-// Resetting ---------------------------------------------------------------------------
-  if (millis()>((unsigned long)24*60*60*1000)){ // Resetting every 24 hours
-    reset();
-  }
 // If Xbee message available, retrieve it-----------------------------------------------
     xbee.readPacket();
     if (xbee.getResponse().isAvailable()) {// got something
@@ -103,8 +126,22 @@ void loop() {
         send2Server();
         resetFlag = false;
         blink(5);
+//  -> Write to SD card ----------------------------------------------------------------
+        write2SD();
         }
     }
+// Reset: If send2Server failed more than 100 times reset gateway.
+//        If running for longer than 24 hours
+  if (gprs_fail_counter>5){
+    Serial.print("gprs_fail_counter =");
+    Serial.println(gprs_fail_counter);
+    reset();
+  }
+  if (timestamp>24*3600){
+    Serial.print("millis()=");
+    Serial.println(millis());
+    reset();
+  }
 }
 
 
@@ -150,7 +187,9 @@ bool send2Server()
   
   if (!fona.HTTP_GET_start(urlCharArray, &statuscode, (uint16_t *)&length)) {
     // Failed to send: Resetting uC, FONA library will reset FONA
-    reset();
+    gprs_fail_counter++;
+    Serial.print("GPRS failed: gprs_fail_counter=");
+    Serial.println(gprs_fail_counter);
   }
   else {
     fona.HTTP_GET_end();
@@ -211,3 +250,59 @@ void reset(){
   wdt_enable(WDTO_15MS);         // WDTO_15MS, 30MS, 60MS, 120MS, 250MS, 500MS, 1S, 2S, 4S, 8S
 }
 
+
+
+/**************************************************
+ * Write to SD card                               *
+ **************************************************/
+void write2SD(){
+  if (sd_ignore_flag ==1 ) {
+    Serial.println("Ignore SD card");
+    return;
+  } else {
+    Serial.println("Write to SD card");
+  }
+  
+  // make a string for assembling the data to log:
+  String dataString = "";
+  dataString += getRTCdate();
+  dataString += " - ";
+  dataString += payload;
+  dataString += "\n";
+  // Actually write to SD card
+  File dataFile = SD.open("log.txt", FILE_WRITE);
+  if (dataFile) {
+    dataFile.println(dataString);
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening log.txt");
+  }
+}
+
+
+/**************************************************
+ * Get date                                       *
+ **************************************************/
+String getRTCdate(){
+  Serial.println("Get date from RTC");
+  String myDate = "";
+  if(rtc.update()) {
+    myDate += String(rtc.hour());
+    myDate += ":";
+    myDate += String(rtc.minute());
+    myDate += ":";
+    myDate += String(rtc.second());
+    myDate += " ";
+    myDate += String(rtc.date());
+    myDate += ".";
+    myDate += String(rtc.month());
+    myDate += ".";
+    myDate += String(rtc.year());
+  } else {
+    // RTC error
+    myDate += "RTC error";
+  }
+  return myDate;
+}
