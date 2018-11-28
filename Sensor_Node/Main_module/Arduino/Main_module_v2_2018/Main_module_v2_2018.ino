@@ -7,12 +7,13 @@ static const float LOW_BATTERY_WARNING_LEVEL = 3.4; // V
 
 // Coordinator XBee Address:
 #define UPLINK_SH 0x13A200
+
 //#define UPLINK_SL 0x  // C0
 //#define UPLINK_SL 0x41046BD5  // C100
 //#define UPLINK_SL 0x41628F9C  // C200
-#define UPLINK_SL 0x415ABDD9  // C300
+//#define UPLINK_SL 0x415ABDD9  // C300
 //#define UPLINK_SL 0x41046775  // C400
-//#define UPLINK_SL 0x41631484  // C500
+#define UPLINK_SL 0x41631484  // C500
 //#define UPLINK_SL 0x41628FF0  // C600
 //#define UPLINK_SL 0x41628FA9  // C700
 //#define UPLINK_SL 0x41628FFD  // C800
@@ -23,17 +24,16 @@ static const float LOW_BATTERY_WARNING_LEVEL = 3.4; // V
 //static const uint32_t PAN_ID = 0x01;   // C0
 //static const uint32_t PAN_ID = 0x100;  // C100
 //static const uint32_t PAN_ID = 0x200;  // C200
-static const uint32_t PAN_ID = 0x300;  // C300
+//static const uint32_t PAN_ID = 0x300;  // C300
 //static const uint32_t PAN_ID = 0x400;  // C400
-//static const uint32_t PAN_ID = 0x500;  // C500
+static const uint32_t PAN_ID = 0x500;  // C500
 //static const uint32_t PAN_ID = 0x600;  // C600
 //static const uint32_t PAN_ID = 0x700;  // C700
 //static const uint32_t PAN_ID = 0x800;  // C800
 
-
-
 // This communication module's ID. Allowed range: [0,65535] (unsigned 16 bit integer)
-static const uint16_t THIS_CM_ID = 318;
+static const uint16_t THIS_CM_ID = 521;
+
 
 
 
@@ -130,6 +130,15 @@ void setup()
   pinMode(P_DBG_ENABLE, INPUT);
   pinMode(P_SD_CD, INPUT);
 
+  // Initialize RTC 
+  Wire.begin();
+  setupDS3231(true);
+  setDS3231time(01, 49, 23, 7, 01, 01, 10); // DS3231 seconds, minutes, hours, day, date, month, year
+  pinMode(P_RTC_WAKE, INPUT_PULLUP); // Pin for Wakeup from RTC
+
+  digitalWrite(P_L1, HIGH); // Indicate RTC initialized ok
+
+
   // For sleep mode: Shut down things we do not need:
   ACSR = (1 << ACD); //Disable the analog comparator
 
@@ -208,6 +217,15 @@ void setup()
   digitalWrite(P_L1, LOW);
   digitalWrite(P_L2, LOW);
   digitalWrite(P_L3, LOW);
+
+  // Make first RTC interruppt occur shortly afterwards seconds
+  setDS3231time(59, 49, 23, 7, 01, 01, 10); // DS3231 seconds, minutes, hours, day, date, month, year
+  // Clear interrupt flag in RTC IC: Clear A2F and A1F bits by setting them to 0
+  Wire.beginTransmission(DS3231_I2C_ADDRESS);
+  Wire.write(0x0F); // write to register (0Fh)
+  Wire.write(0b10001000);
+  Wire.endTransmission();
+
 
   wakeUpInterrupt_flag_RTC = false;
   wakeUpInterrupt_flag_SM = false;
@@ -459,6 +477,11 @@ void loop()
 }
 
 
+
+
+
+
+
 /*****************************
    Sensor Module related functions
 */
@@ -541,8 +564,8 @@ bool readSensorModuleData()
 
     // Fill in the header
     total_xbee_payload[0] = 0x00FF & THIS_CM_ID;
-    total_xbee_payload[1] = (0xFF00 & THIS_CM_ID)>>8;
-    total_xbee_payload[2] = SD_XBEE_EVERY_X; // How many measurements are in this packet, number of measurement ≠ number of values, this byte counts how many measurements have been collected to send at once. one measurement may contain more than one (measurement) value
+    total_xbee_payload[1] = (0xFF00 & THIS_CM_ID)>>8;  // >>8 is a fix from original code (Mario/Marc)
+    total_xbee_payload[2] = SD_XBEE_EVERY_X; // How many measurements are in this packet
     total_xbee_payload[3] = SMtype;
   }
 
@@ -751,6 +774,45 @@ void setATCommandToValue(uint8_t firstChar, uint8_t secondChar, uint8_t* value, 
     // should be an AT command response
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
       xbee.getResponse().getAtCommandResponse(atResponse);
+
+      //      if (atResponse.isOk()) {
+      //        Serial.print("Command [");
+      //        Serial.print(atResponse.getCommand()[0]);
+      //        Serial.print(atResponse.getCommand()[1]);
+      //        Serial.println("] was successful!");
+      //
+      //        if (atResponse.getValueLength() > 0) {
+      //          Serial.print("Command value length is ");
+      //          Serial.println(atResponse.getValueLength(), DEC);
+      //
+      //          Serial.print("Command value: ");
+      //
+      //          for (int i = 0; i < atResponse.getValueLength(); i++) {
+      //            Serial.print(atResponse.getValue()[i], HEX);
+      //            Serial.print(" ");
+      //          }
+      //
+      //          Serial.println("");
+      //        }
+      //      }
+      //      else {
+      //        Serial.print("Command return error code: ");
+      //        Serial.println(atResponse.getStatus(), HEX);
+      //      }
+      //    } else {
+      //      Serial.print("Expected AT response but got ");
+      //      Serial.print(xbee.getResponse().getApiId(), HEX);
+      //    }
+      //  } else {
+      //    // at command failed
+      //    if (xbee.getResponse().isError()) {
+      //      Serial.print("Error reading packet.  Error code: ");
+      //      Serial.println(xbee.getResponse().getErrorCode());
+      //    }
+      //    else {
+      //      Serial.print("No response from radio");
+      //    }
+      //  }
     }
   }
 }
@@ -777,8 +839,46 @@ void sendATCommand(uint8_t firstChar, uint8_t secondChar)
     // should be an AT command response
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
       xbee.getResponse().getAtCommandResponse(atResponse);
+
+      //      if (atResponse.isOk()) {
+      //        Serial.print("Command [");
+      //        Serial.print(atResponse.getCommand()[0]);
+      //        Serial.print(atResponse.getCommand()[1]);
+      //        Serial.println("] was successful!");
+      //
+      //        if (atResponse.getValueLength() > 0) {
+      //          Serial.print("Command value length is ");
+      //          Serial.println(atResponse.getValueLength(), DEC);
+      //
+      //          Serial.print("Command value: ");
+      //
+      //          for (int i = 0; i < atResponse.getValueLength(); i++) {
+      //            Serial.print(atResponse.getValue()[i], HEX);
+      //            Serial.print(" ");
+      //          }
+      //
+      //          Serial.println("");
+      //        }
+      //      }
+      //      else {
+      //        Serial.print("Command return error code: ");
+      //        Serial.println(atResponse.getStatus(), HEX);
+      //      }
+      //    } else {
+      //      Serial.print("Expected AT response but got ");
+      //      Serial.print(xbee.getResponse().getApiId(), HEX);
     }
   }
+  //  else {
+  //    // at command failed
+  //    if (xbee.getResponse().isError()) {
+  //      Serial.print("Error reading packet.  Error code: ");
+  //      Serial.println(xbee.getResponse().getErrorCode());
+  //    }
+  //    else {
+  //      Serial.print("No response from radio");
+  //    }
+  //  }
 }
 
 
@@ -811,6 +911,23 @@ uint8_t getSingleByteATCmdValue(uint8_t firstChar, uint8_t secondChar)
           responseValue = atResponse.getValue()[0];
         }
       }
+      //      else {
+      //        Serial.print("Command return error code: ");
+      //        Serial.println(atResponse.getStatus(), HEX);
+      //      }
+      //    } else {
+      //      Serial.print("Expected AT response but got ");
+      //      Serial.print(xbee.getResponse().getApiId(), HEX);
+      //    }
+      //  } else {
+      //    // at command failed
+      //    if (xbee.getResponse().isError()) {
+      //      Serial.print("Error reading packet.  Error code: ");
+      //      Serial.println(xbee.getResponse().getErrorCode());
+      //    }
+      //    else {
+      //      Serial.print("No response from radio");
+      //    }
     }
   }
   else
@@ -904,6 +1021,32 @@ void sdWrite()
   }
 }
 
+
+
+// Commented out, not because it doesnt work but because we currently never read anything from the card
+//void sdRead()
+//{
+//  // re-open the file for reading:
+//  myFile = SD.open("test_2.txt");
+//  if (myFile) {
+//    Serial.println("test_2.txt content:");
+//
+//    // read from the file until there's nothing else in it:
+//    while (myFile.available()) {
+//      Serial.write(myFile.read());
+//    }
+//    // close the file:
+//    myFile.close();
+//  } else {
+//    // if the file didn't open, print an error:
+//    Serial.println("error opening test_2.txt");
+//  }
+//
+//  // Somehow if I dont do a dummy filewrite the current consumption staays high afterwards
+//  sdDummyFileWrite();
+//}
+
+
 /*****************************
    Measure Battery Voltage in Volts
 */
@@ -948,8 +1091,8 @@ void goToSleep()
   }
   if (ignore_sm_interrupt == false)
   {
-    //attachInterrupt(1, pin3_isr, LOW);  // Original Line
-    attachInterrupt(1, pin3_isr, RISING); // Adjustment in order to make the windows opening sensor node work
+    //attachInterrupt(1, pin3_isr, LOW);  // Original line
+    attachInterrupt(1, pin3_isr, RISING); // Adjustment in order to make the windows opening sensor node work (Mario/Marc)
   }
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   power_twi_disable(); // Two Wire
@@ -971,6 +1114,7 @@ void goToSleep()
   power_timer1_enable();
   power_timer2_enable();
 }
+
 
 
 /*****************************
@@ -1126,4 +1270,3 @@ void readDS3231time(byte *second, byte *minute, byte *hour, byte *dayOfWeek, byt
 //      break;
 //  }
 //}
-
