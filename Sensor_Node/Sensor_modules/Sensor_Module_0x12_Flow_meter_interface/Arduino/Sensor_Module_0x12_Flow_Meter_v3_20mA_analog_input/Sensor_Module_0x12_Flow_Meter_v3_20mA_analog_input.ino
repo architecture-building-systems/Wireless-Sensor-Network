@@ -11,6 +11,7 @@
 
 static const uint8_t SENSORMODULE_TYPE = 0x12; // 0x12 [HEX] = 18 [DEC]
 static const uint8_t FRAMESTART_BYTE = 0xAA;   // Frame start byte for payload transmission to main module
+float min_flow          = 0;
 float max_flow          = 20;                  // [l/min] Maximum flow rate output of flow meter 
 float resistor_value    = 164.6;               // [Ohm] Value of the resistor that converts the current into a voltage 
 
@@ -49,7 +50,8 @@ void loop()
   float request_voltage = analogRead(P_request)*(3.3/1023);     // [V] Read input voltage of measurement request signal
   request_state = digitalRead(P_request);
   float input_amperage  = (float)(1000.0*input_voltage) / (float)resistor_value; // [mA] Compute amperage based on analog input voltage an apriori measured resistor value
-  float current_flow = map(input_amperage, 4, 20, 0, max_flow); // Convert amperage to mass flow using the conversion factor XXX map uses integer math!!!!
+  //float current_flow = map(input_amperage, 4, 20, 0, max_flow); // Convert amperage to mass flow using the conversion factor XXX map uses integer math!!!!
+  float current_flow = min_flow + (max_flow-min_flow)/(20.0-4.0)*(input_amperage-4.0);
   flow_rate_sum += current_flow;                                // Add current flow rate to the sum.
   counter++;                                                    // Increase measurement counter. Needed for averaging of the sum
   // END SENSOR MEASUREMENT
