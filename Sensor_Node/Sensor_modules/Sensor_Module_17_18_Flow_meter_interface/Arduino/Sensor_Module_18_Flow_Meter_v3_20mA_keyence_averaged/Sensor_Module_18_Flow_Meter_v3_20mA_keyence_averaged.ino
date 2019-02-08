@@ -19,7 +19,7 @@ static const uint8_t FRAMESTART_BYTE = 0xAA;   // Frame start byte for payload t
 
 //******** Manual SETTINGS *********//
 float min_flow          = 0;
-float max_flow          = 10;                  // [l/min] Maximum flow rate output of flow meter 
+float max_flow          = 30;                  // [l/min] Maximum flow rate output of flow meter 
 //float resistor_value    = 164.4;             // [Ohm] Value of the resistor that converts the current into a voltage 
 //float resistor_value    = 163.58;            // [Ohm] Value of the resistor that converts the current into a voltage 
 //float resistor_value    = 164.10;            // [Ohm] Value of the resistor that converts the current into a voltage 
