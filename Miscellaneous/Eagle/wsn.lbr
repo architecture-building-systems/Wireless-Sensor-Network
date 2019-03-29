@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.1.1">
+<eagle version="9.3.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -30614,34 +30614,34 @@ Typ: 74279220601</description>
 <devices>
 <device name="" package="MKR">
 <connects>
-<connect gate="G$1" pin="0" pad="1"/>
-<connect gate="G$1" pin="1" pad="2"/>
-<connect gate="G$1" pin="2~" pad="3"/>
-<connect gate="G$1" pin="3V3" pad="4"/>
-<connect gate="G$1" pin="3~" pad="5"/>
-<connect gate="G$1" pin="4~" pad="6"/>
-<connect gate="G$1" pin="5V" pad="7"/>
-<connect gate="G$1" pin="5~" pad="8"/>
-<connect gate="G$1" pin="6" pad="9"/>
-<connect gate="G$1" pin="7" pad="10"/>
-<connect gate="G$1" pin="A1" pad="11"/>
-<connect gate="G$1" pin="A2" pad="12"/>
-<connect gate="G$1" pin="A3" pad="13"/>
-<connect gate="G$1" pin="A4" pad="14"/>
-<connect gate="G$1" pin="A5" pad="15"/>
-<connect gate="G$1" pin="A6" pad="16"/>
-<connect gate="G$1" pin="AREF" pad="17"/>
-<connect gate="G$1" pin="DAC0/A0" pad="18"/>
-<connect gate="G$1" pin="GND" pad="19"/>
-<connect gate="G$1" pin="MISO_10" pad="20"/>
-<connect gate="G$1" pin="MOSI_8" pad="21"/>
-<connect gate="G$1" pin="RESET" pad="22"/>
-<connect gate="G$1" pin="RX_13" pad="23"/>
-<connect gate="G$1" pin="SCK_9" pad="24"/>
-<connect gate="G$1" pin="SCL_12" pad="25"/>
-<connect gate="G$1" pin="SDA_11" pad="26"/>
-<connect gate="G$1" pin="TX_14" pad="27"/>
-<connect gate="G$1" pin="VIN" pad="28"/>
+<connect gate="G$1" pin="0" pad="9"/>
+<connect gate="G$1" pin="1" pad="10"/>
+<connect gate="G$1" pin="2~" pad="11"/>
+<connect gate="G$1" pin="3V3" pad="26"/>
+<connect gate="G$1" pin="3~" pad="12"/>
+<connect gate="G$1" pin="4~" pad="13"/>
+<connect gate="G$1" pin="5V" pad="28"/>
+<connect gate="G$1" pin="5~" pad="14"/>
+<connect gate="G$1" pin="6" pad="15"/>
+<connect gate="G$1" pin="7" pad="16"/>
+<connect gate="G$1" pin="A1" pad="3"/>
+<connect gate="G$1" pin="A2" pad="4"/>
+<connect gate="G$1" pin="A3" pad="5"/>
+<connect gate="G$1" pin="A4" pad="6"/>
+<connect gate="G$1" pin="A5" pad="7"/>
+<connect gate="G$1" pin="A6" pad="8"/>
+<connect gate="G$1" pin="AREF" pad="1"/>
+<connect gate="G$1" pin="DAC0/A0" pad="2"/>
+<connect gate="G$1" pin="GND" pad="25"/>
+<connect gate="G$1" pin="MISO_10" pad="19"/>
+<connect gate="G$1" pin="MOSI_8" pad="17"/>
+<connect gate="G$1" pin="RESET" pad="24"/>
+<connect gate="G$1" pin="RX_13" pad="22"/>
+<connect gate="G$1" pin="SCK_9" pad="18"/>
+<connect gate="G$1" pin="SCL_12" pad="21"/>
+<connect gate="G$1" pin="SDA_11" pad="20"/>
+<connect gate="G$1" pin="TX_14" pad="23"/>
+<connect gate="G$1" pin="VIN" pad="27"/>
 </connects>
 <technologies>
 <technology name=""/>
