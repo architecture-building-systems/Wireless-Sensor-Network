@@ -50,3 +50,4 @@ eagle.epf
 
 # Temporary Excel files
 ~$*.xls*
+Sensor_Node/Sensor_modules/Previous Versions/Sensor_Module_0x02_Temperature_Humidity_SHT31_v1/Arduino/Sensor_Module_0x02_Temperature_Humidity_SHT31_v1/Sensor_Module_0x02_Temperature_Humidity_SHT31_v1.ino
