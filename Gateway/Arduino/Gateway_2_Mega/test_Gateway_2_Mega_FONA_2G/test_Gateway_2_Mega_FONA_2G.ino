@@ -100,6 +100,7 @@ void setup() {
   // can be removed, but APN is required.
   //fona.setGPRSNetworkSettings(F("your APN"), F("your username"), F("your password"));
   fona.setGPRSNetworkSettings(F("gprs.swisscom.ch"), F("gprs"), F("gprs"));   // This line is specific to our Swisscom SIM Card
+  //fona.setGPRSNetworkSettings(F("internet"), F(""), F(""));   // This line is specific to our Sunrise SIM Card
   // Optionally configure HTTP gets to follow redirects over SSL.
   // Default is not to follow SSL redirects, however if you uncomment
   // the following line then redirects over SSL will be followed.
