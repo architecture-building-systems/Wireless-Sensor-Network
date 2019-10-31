@@ -1,7 +1,14 @@
+// Main module v4.1 (does not work properly)
+// Changes from v2
+//  - removed SD card functionality
+//  - removed multiple measurement per transmission functionality
+//  - removed out commented bits of code
+//  - 1272 lines -> 939
+// Tested
+
 // To configure:
 
 static const uint16_t C_MEASUREMENT_EVERY_X_MIN = 5; // Every how many minutes a measurement is taken from the sensor module
-static const uint16_t C_SD_XBEE_EVERY_X = 1; // Every how many measurements a XBEE transmit and SD card write is made
 
 static const float LOW_BATTERY_WARNING_LEVEL = 3.4; // V
 
@@ -32,9 +39,7 @@ static const float LOW_BATTERY_WARNING_LEVEL = 3.4; // V
 static const uint32_t PAN_ID = 0x800;  // C800
 
 // This communication module's ID. Allowed range: [0,65535] (unsigned 16 bit integer)
-static const uint16_t THIS_CM_ID = 807;
-
-
+static const uint16_t THIS_CM_ID = 818;
 
 
 
@@ -43,7 +48,6 @@ static const uint16_t THIS_CM_ID = 807;
  ********************************/
 
 uint16_t wakeup_counter = 0;
-uint8_t measurement_counter = 0;
 
 static const uint8_t FRAMESTART_BYTE = 0xAA; // ANYTHING OTHER THAN 0xBB
 uint8_t* total_xbee_payload;
@@ -51,7 +55,6 @@ uint8_t total_xbee_payload_size;
 uint8_t SMtype = 0; // Will be set once the sensor module tells us
 uint8_t sizeofSMdata = 0; // Will be set to number of bytes of the SM payload once the sensor module
 uint16_t MEASUREMENT_EVERY_X_MIN = 1;
-uint16_t SD_XBEE_EVERY_X = 1;
 
 
 static const uint8_t xbee_header_bytes = 4; // uint16_t NodeID, uint8_t n_measurements, uint8_t SM_type
@@ -72,8 +75,8 @@ static const uint8_t P_SM_WAKE = 3; // Interrupt from interrupting sensor module
 static const uint8_t P_SLP_XBEE = 4;  // Output, put XBee module to sleep
 static const uint8_t P_SM_VCC_EN = 5; // Output, enable controlled supply voltage to SM
 static const uint8_t P_CTS_XBEE = 6; // Input, XBee's clear to send pin
-static const uint8_t P_SD_CD = 7; // Input, detect whether SD card is inserted
-static const uint8_t P_SD_SS = 8; // Output, slave select pin for SD card SPI
+//static const uint8_t P_SD_CD = 7; // Input, detect whether SD card is inserted
+//static const uint8_t P_SD_SS = 8; // Output, slave select pin for SD card SPI
 static const uint8_t P_XBEE_RXI = 9; // Serial communication RXI pin for Xbee
 static const uint8_t P_XBEE_TXO = 10; // Serial communication TXO pin for Xbee
 static const uint8_t P_MOSI = 11; // SPI MOSI pin
@@ -89,10 +92,7 @@ static const uint8_t P_SCK = 13; // SPI SCK pin
 #include "Wire.h"
 #define DS3231_I2C_ADDRESS 0x68
 
-#include <SD.h>
 #include <SPI.h>
-File root;
-File myFile;
 
 #include <XBee.h>
 
@@ -106,7 +106,6 @@ SoftwareSerial xbeeSoftSerial(P_XBEE_TXO, P_XBEE_RXI);
 
 volatile bool wakeUpInterrupt_flag_RTC = false;
 volatile bool wakeUpInterrupt_flag_SM = false;
-volatile bool sd_card_is_initialized = false;
 volatile bool ignore_rtc_interrupt = false;
 volatile bool ignore_sm_interrupt = false;
 
@@ -128,7 +127,6 @@ void setup()
   pinMode(P_L3, OUTPUT);
   digitalWrite(P_L3, LOW);
   pinMode(P_DBG_ENABLE, INPUT);
-  pinMode(P_SD_CD, INPUT);
 
   // Initialize RTC 
   Wire.begin();
@@ -193,25 +191,16 @@ void setup()
 
   digitalWrite(P_L2, HIGH); // Indicate Xbee network joined ok
 
-  // Initialize SD card with slave-select pin
-  sdSetup();
-  digitalWrite(P_L3, HIGH); // Indicate SD initialized ok
-
-
-  delay(2000); // Time to let the user see the status LEDs.
-
   // If debug mode is enable we measure and send more often
   if (digitalRead(P_DBG_ENABLE) == LOW) // Switch on east side = LOW
   {
     debug_mode_enabled = true;
     MEASUREMENT_EVERY_X_MIN = 1;
-    SD_XBEE_EVERY_X = 1;
   }
   else
   {
     debug_mode_enabled = false;
     MEASUREMENT_EVERY_X_MIN = C_MEASUREMENT_EVERY_X_MIN;
-    SD_XBEE_EVERY_X = C_SD_XBEE_EVERY_X;
   }
 
   digitalWrite(P_L1, LOW);
@@ -269,7 +258,6 @@ void loop()
     digitalWrite(P_L1, LOW);
 
     wakeup_counter = 0;
-    measurement_counter = 0;
 
     // Disable interrupt flag in RTC IC: Clear A2F and A1F bits by setting them to 0
     Wire.beginTransmission(DS3231_I2C_ADDRESS);
@@ -303,7 +291,6 @@ void loop()
         debug_mode_enabled = false;
         debug_mode_has_been_switched_off = true;
         MEASUREMENT_EVERY_X_MIN = C_MEASUREMENT_EVERY_X_MIN;
-        SD_XBEE_EVERY_X = C_SD_XBEE_EVERY_X;
       }
       else
       {
@@ -345,42 +332,32 @@ void loop()
       }
 
       wakeup_counter = 0;
-      measurement_counter++;
     }
 
-    // Transmit and SD write accumulated measurements if it is time
-    if (measurement_counter >= SD_XBEE_EVERY_X)
+    // Do XBEE transmit when it is time
+    if (wakeup_counter >= SAMPLING_INTERVAL)
     {
-      // Do SD write and XBEE transmit
-
       digitalWrite(P_SLP_XBEE, LOW); // Wake XBee up
       // Wait until XBee is ready after waking up:
       while (digitalRead(P_CTS_XBEE) == 1) {}
-
+  
       xbee_transmit_data();
-
+  
       digitalWrite(P_SLP_XBEE, HIGH); // Xbee sleep
-
-
+  
       if (debug_mode_enabled == true)
       {
         digitalWrite(P_L3, HIGH);
       }
-
-
-      sdWrite();
-
-      measurement_counter = 0;
+  
+      if (debug_mode_enabled == true)
+      {
+        delay(2000);
+        digitalWrite(P_L1, LOW);
+        digitalWrite(P_L2, LOW);
+        digitalWrite(P_L3, LOW);
+      }
     }
-
-    if (debug_mode_enabled == true)
-    {
-      delay(2000);
-      digitalWrite(P_L1, LOW);
-      digitalWrite(P_L2, LOW);
-      digitalWrite(P_L3, LOW);
-    }
-
     if (debug_mode_enabled == true)
     {
       // If we are in debug mode we want an interrupt every 10 seconds instead of every minute.
@@ -402,7 +379,6 @@ void loop()
   if (wakeUpInterrupt_flag_SM == true && ignore_sm_interrupt == false)
   {
     // transmit at every event
-    SD_XBEE_EVERY_X = 1;
     startSerialToSM();
 
     // Check battery level
@@ -456,10 +432,6 @@ void loop()
       digitalWrite(P_L3, HIGH);
     }
 
-
-    sdWrite();
-
-
     if (debug_mode_enabled == true)
     {
       delay(2000);
@@ -475,11 +447,6 @@ void loop()
 
   goToSleep();
 }
-
-
-
-
-
 
 
 /*****************************
@@ -551,21 +518,20 @@ bool readSensorModuleData()
       // Throw out data measured but not yet transmitted of old SM for sake of simplicity
       free(total_xbee_payload);
       wakeup_counter = 0;
-      measurement_counter = 0;
     }
 
     sizeofSMdata = SMsizebyte;
     SMtype = SMtypebyte;
 
     // Allocate space for accumulating required number of measurements before transmit is done
-    total_xbee_payload_size = (xbee_header_bytes + sizeofSMdata * SD_XBEE_EVERY_X);
+    total_xbee_payload_size = (xbee_header_bytes + sizeofSMdata);
     total_xbee_payload = (uint8_t*) malloc(total_xbee_payload_size);
 
 
     // Fill in the header
     total_xbee_payload[0] = 0x00FF & THIS_CM_ID;
     total_xbee_payload[1] = (0xFF00 & THIS_CM_ID)>>8;  // >>8 is a fix from original code (Mario/Marc)
-    total_xbee_payload[2] = SD_XBEE_EVERY_X; // How many measurements are in this packet
+    total_xbee_payload[2] = 1; // How many measurements are in this packet
     total_xbee_payload[3] = SMtype;
   }
 
@@ -578,7 +544,7 @@ bool readSensorModuleData()
   {
     uint8_t inByte = (uint8_t) Serial.read();
     sumForChecksum += inByte;
-    (total_xbee_payload + xbee_header_bytes + measurement_counter * SMsizebyte)[k] = inByte; // " xbee_header_bytes + (measurement_counter-1)*SMsizebyte" provides offset, for second, third etc measurements
+    (total_xbee_payload + xbee_header_bytes)[k] = inByte; // formerly: " xbee_header_bytes + (measurement_counter-1)*SMsizebyte" provides offset, for second, third etc measurements
   }
 
 
@@ -709,12 +675,6 @@ void xbee_transmit_lowbatterywarning(float currentBatteryVoltage)
     message_acked = true; // TODO
     xbee.send(zbTx);
 
-    // flash TX indicator
-    //Serial.println("SENT.");
-    //digitalWrite(13, HIGH);
-    //delay(20);
-    //digitalWrite(13, LOW);
-
     // after sending a tx request, we expect a status response
     // wait up to half second for the status response
     if (xbee.readPacket(500)) {
@@ -739,14 +699,7 @@ void xbee_transmit_lowbatterywarning(float currentBatteryVoltage)
 
         }
       }
-    } else if (xbee.getResponse().isError()) {
-      //nss.print("Error reading packet.  Error code: ");
-      //nss.println(xbee.getResponse().getErrorCode());
-    } else {
-      // local XBee did not provide a timely TX Status Response -- should not happen
-      //Serial.println("FAILURE - FROM OUR MODULE.");
-      //flashLed(errorLed, 2, 50);
-    }
+    } 
   }
 }
 
@@ -758,13 +711,10 @@ void setATCommandToValue(uint8_t firstChar, uint8_t secondChar, uint8_t* value, 
 
   AtCommandRequest atRequest = AtCommandRequest(at_command_container, value, valueLength);
   AtCommandResponse atResponse = AtCommandResponse();
-
-  //Serial.println("Sending command to the XBee");
-
+  
 
   // send the command
   xbee.send(atRequest);
-
 
 
   // wait up to xxx milliseconds for the status response
@@ -774,45 +724,6 @@ void setATCommandToValue(uint8_t firstChar, uint8_t secondChar, uint8_t* value, 
     // should be an AT command response
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
       xbee.getResponse().getAtCommandResponse(atResponse);
-
-      //      if (atResponse.isOk()) {
-      //        Serial.print("Command [");
-      //        Serial.print(atResponse.getCommand()[0]);
-      //        Serial.print(atResponse.getCommand()[1]);
-      //        Serial.println("] was successful!");
-      //
-      //        if (atResponse.getValueLength() > 0) {
-      //          Serial.print("Command value length is ");
-      //          Serial.println(atResponse.getValueLength(), DEC);
-      //
-      //          Serial.print("Command value: ");
-      //
-      //          for (int i = 0; i < atResponse.getValueLength(); i++) {
-      //            Serial.print(atResponse.getValue()[i], HEX);
-      //            Serial.print(" ");
-      //          }
-      //
-      //          Serial.println("");
-      //        }
-      //      }
-      //      else {
-      //        Serial.print("Command return error code: ");
-      //        Serial.println(atResponse.getStatus(), HEX);
-      //      }
-      //    } else {
-      //      Serial.print("Expected AT response but got ");
-      //      Serial.print(xbee.getResponse().getApiId(), HEX);
-      //    }
-      //  } else {
-      //    // at command failed
-      //    if (xbee.getResponse().isError()) {
-      //      Serial.print("Error reading packet.  Error code: ");
-      //      Serial.println(xbee.getResponse().getErrorCode());
-      //    }
-      //    else {
-      //      Serial.print("No response from radio");
-      //    }
-      //  }
     }
   }
 }
@@ -827,8 +738,6 @@ void sendATCommand(uint8_t firstChar, uint8_t secondChar)
   AtCommandRequest atRequest = AtCommandRequest(at_command_container);
   AtCommandResponse atResponse = AtCommandResponse();
 
-  //Serial.println("Sending command to the XBee");
-
   // send the command
   xbee.send(atRequest);
 
@@ -839,46 +748,8 @@ void sendATCommand(uint8_t firstChar, uint8_t secondChar)
     // should be an AT command response
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
       xbee.getResponse().getAtCommandResponse(atResponse);
-
-      //      if (atResponse.isOk()) {
-      //        Serial.print("Command [");
-      //        Serial.print(atResponse.getCommand()[0]);
-      //        Serial.print(atResponse.getCommand()[1]);
-      //        Serial.println("] was successful!");
-      //
-      //        if (atResponse.getValueLength() > 0) {
-      //          Serial.print("Command value length is ");
-      //          Serial.println(atResponse.getValueLength(), DEC);
-      //
-      //          Serial.print("Command value: ");
-      //
-      //          for (int i = 0; i < atResponse.getValueLength(); i++) {
-      //            Serial.print(atResponse.getValue()[i], HEX);
-      //            Serial.print(" ");
-      //          }
-      //
-      //          Serial.println("");
-      //        }
-      //      }
-      //      else {
-      //        Serial.print("Command return error code: ");
-      //        Serial.println(atResponse.getStatus(), HEX);
-      //      }
-      //    } else {
-      //      Serial.print("Expected AT response but got ");
-      //      Serial.print(xbee.getResponse().getApiId(), HEX);
     }
   }
-  //  else {
-  //    // at command failed
-  //    if (xbee.getResponse().isError()) {
-  //      Serial.print("Error reading packet.  Error code: ");
-  //      Serial.println(xbee.getResponse().getErrorCode());
-  //    }
-  //    else {
-  //      Serial.print("No response from radio");
-  //    }
-  //  }
 }
 
 
@@ -911,23 +782,6 @@ uint8_t getSingleByteATCmdValue(uint8_t firstChar, uint8_t secondChar)
           responseValue = atResponse.getValue()[0];
         }
       }
-      //      else {
-      //        Serial.print("Command return error code: ");
-      //        Serial.println(atResponse.getStatus(), HEX);
-      //      }
-      //    } else {
-      //      Serial.print("Expected AT response but got ");
-      //      Serial.print(xbee.getResponse().getApiId(), HEX);
-      //    }
-      //  } else {
-      //    // at command failed
-      //    if (xbee.getResponse().isError()) {
-      //      Serial.print("Error reading packet.  Error code: ");
-      //      Serial.println(xbee.getResponse().getErrorCode());
-      //    }
-      //    else {
-      //      Serial.print("No response from radio");
-      //    }
     }
   }
   else
@@ -937,115 +791,6 @@ uint8_t getSingleByteATCmdValue(uint8_t firstChar, uint8_t secondChar)
   }
   return responseValue;
 }
-
-/*****************************
-   Functions for SD Card
-*/
-
-void sdSetup()
-{
-  if (digitalRead(P_SD_CD) == LOW)
-  {
-    // SD card not inserted
-    sd_card_is_initialized = false;
-    return;
-  }
-
-  // Initialize SD card with slave-select pin
-  if (!SD.begin(P_SD_SS))
-  {
-    // SD card is not inserted
-    sd_card_is_initialized = false;
-  }
-  else
-  {
-    // SD card is inserted
-    sdDummyFileWrite();
-    sd_card_is_initialized = true;
-
-    // Create the measurement file if it does not exist
-    if (!SD.exists("m.bin"))
-    {
-      myFile = SD.open("m.bin");
-      myFile.close();
-    }
-
-  }
-
-
-}
-
-void sdDummyFileWrite()
-{
-  // Create and close dummy file to prevent high power usage initially
-  if (SD.exists("init.xyz"))
-  {
-    SD.remove("init.xyz");
-  }
-  // SD.open creates new file if it doesnt exist
-  myFile = SD.open("init.xyz", O_CREAT | O_WRITE);
-  myFile.close();
-}
-
-void sdWrite()
-{
-  if (digitalRead(P_SD_CD) == LOW)
-  {
-    // SD Card is not inserted, return from this function to simply skip it
-    sd_card_is_initialized = false;
-    return;
-  }
-  else if (sd_card_is_initialized == false)
-  {
-    // SD card is inserted because P_SD_CD read was high, but card is not initialized yet
-    sdSetup();
-
-    if (sd_card_is_initialized == false)
-    {
-      // If for some reason initialized failed, we dont write this time
-      return;
-    }
-  }
-
-  // open the file and append
-  myFile = SD.open("m.bin", O_CREAT | O_APPEND | O_WRITE);
-
-  // if the file opened okay, write to it:
-  if (myFile)
-  {
-    myFile.write(total_xbee_payload, total_xbee_payload_size);
-    //myFile.flush();
-    myFile.close();
-  } else {
-    // if the file didn't open, just ignore it...
-  }
-}
-
-
-
-// Commented out, not because it doesnt work but because we currently never read anything from the card
-//void sdRead()
-//{
-//  // re-open the file for reading:
-//  myFile = SD.open("test_2.txt");
-//  if (myFile) {
-//    Serial.println("test_2.txt content:");
-//
-//    // read from the file until there's nothing else in it:
-//    while (myFile.available()) {
-//      Serial.write(myFile.read());
-//    }
-//    // close the file:
-//    myFile.close();
-//  } else {
-//    // if the file didn't open, print an error:
-//    Serial.println("error opening test_2.txt");
-//  }
-//
-//  // Somehow if I dont do a dummy filewrite the current consumption staays high afterwards
-//  sdDummyFileWrite();
-//}
-
 
 /*****************************
    Measure Battery Voltage in Volts
@@ -1116,7 +861,6 @@ void goToSleep()
 }
 
 
-
 /*****************************
    Functions for DS3231 Real Time Clock.
 */
@@ -1138,28 +882,11 @@ byte bcdToDec(byte val)
 //void setupDS3231(bool useAlarm1, bool useAlarm2)
 void setupDS3231(bool useAlarm1)
 {
-  //  while(Serial.available() == 0){}
-  //  // Check content:
-  //  byte content;
-  //  Wire.beginTransmission(DS3231_I2C_ADDRESS);
-  //  Wire.write(0x0E); // set DS3231 register pointer to 00h
-  //  Wire.endTransmission();
-  //  Wire.requestFrom(DS3231_I2C_ADDRESS, 1);
-  //  // request seven bytes of data from DS3231 starting from register 00h
-  //  content = Wire.read();
-  //  Serial.print("Content before: ");
-  //  Serial.print(content, DEC);
-  //  Serial.print("\n");
-
   byte dataToWrite = 0b00011100;
   if (useAlarm1 == true)
   {
     dataToWrite |= (1 << 0);
   }
-  //  if (useAlarm2 == true)
-  //  {
-  //    dataToWrite |= (1 << 1);
-  //  }
 
   Wire.beginTransmission(DS3231_I2C_ADDRESS);
   Wire.write(0x0E); // set next input to start at (0Eh) register
@@ -1180,13 +907,7 @@ void setupDS3231(bool useAlarm1)
 
     Wire.endTransmission();
   }
-  //  if (useAlarm2 == true)
-  //  {
-  //    // We use alarm 1 as once per hour
-  //  }
 }
-
-
 
 void setDS3231time(byte second, byte minute, byte hour, byte dayOfWeek, byte dayOfMonth, byte month, byte year)
 {
@@ -1218,55 +939,3 @@ void readDS3231time(byte *second, byte *minute, byte *hour, byte *dayOfWeek, byt
   *month = bcdToDec(Wire.read());
   *year = bcdToDec(Wire.read());
 }
-
-//void displayTime()
-//{
-//  byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
-//  // retrieve data from DS3231
-//  readDS3231time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);
-//  // send it to the serial monitor
-//  Serial.print(hour, DEC);
-//  // convert the byte variable to a decimal number when displayed
-//  Serial.print(":");
-//  if (minute < 10)
-//  {
-//    Serial.print("0");
-//  }
-//  Serial.print(minute, DEC);
-//  Serial.print(":");
-//  if (second < 10)
-//  {
-//    Serial.print("0");
-//  }
-//  Serial.print(second, DEC);
-//  Serial.print(" ");
-//  Serial.print(dayOfMonth, DEC);
-//  Serial.print("/");
-//  Serial.print(month, DEC);
-//  Serial.print("/");
-//  Serial.print(year, DEC);
-//  Serial.print(" Day of week: ");
-//  switch (dayOfWeek) {
-//    case 1:
-//      Serial.println("Sunday");
-//      break;
-//    case 2:
-//      Serial.println("Monday");
-//      break;
-//    case 3:
-//      Serial.println("Tuesday");
-//      break;
-//    case 4:
-//      Serial.println("Wednesday");
-//      break;
-//    case 5:
-//      Serial.println("Thursday");
-//      break;
-//    case 6:
-//      Serial.println("Friday");
-//      break;
-//    case 7:
-//      Serial.println("Saturday");
-//      break;
-//  }
-//}
