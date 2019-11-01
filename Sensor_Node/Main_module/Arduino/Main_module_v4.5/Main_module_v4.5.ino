@@ -1,4 +1,4 @@
-// Main module v4.3
+// Main module v4.5
 
 // Improvments from v2
 //  - remove sd card functionality                         (tested)
@@ -9,24 +9,27 @@
 //  - merge if(debug_enable=True) statements               (tested)
 //  - add blink function                                   (tested)
 //  - Rename C_MEASUREMENT_EVERY_X_MIN TO SAMPING_INTERVAL (tested)
-//  - Implement universal message library                  (does not work)
-//  - Implement heart beat                                 (does not work)
-//  - Change battery warning message to universal format   (does not work)
-//  - 1272 -> 814 lines
+// Improvements from v4.4
+//  - Implement universal message library                  (tested)
+//  - Implement heartbeat                                  (tested)
+//  - Change battery warning message to universal format   (tested)
+//  - Encapsulate battery check and alarm in function      (tested)
+//  - 1272 -> 827 lines
 
 // To Do:
-//  - Encapsulate battery check and alarm in function
 //  - Apply payload class to standard measurement payload
 //  - Use watchdog timer for wake up
 //  - Implement universal coordinator address
 //  - Test current draw
 //  - Test low battery functionality
+//  - Fix ddrDB2, web parser, (now there are multiple message types per node)
 
 /********************************
    CONFIGURATION
  ********************************/
 static const uint16_t C_SAMPLING_INTERVAL       = 5;   // Every how many minutes a measurement is taken from the sensor module
 static const float    LOW_BATTERY_WARNING_LEVEL = 3.4; // V
+static const uint16_t C_HEARTBEAT_INTERVAL      = 2*60 // Every how many minutes a heart beat signal is sent
 
 // Coordinator XBee Address:
 #define UPLINK_SH 0x13A200
@@ -59,6 +62,7 @@ static const uint16_t THIS_CM_ID = 818;
  ********************************/
  
 uint16_t             wakeup_counter          = 0;
+uint16_t             heartbeat_counter       = 0;
 static const uint8_t FRAMESTART_BYTE         = 0xAA; // ANYTHING OTHER THAN 0xBB
 uint8_t*             total_xbee_payload;
 uint8_t              total_xbee_payload_size;
@@ -216,6 +220,7 @@ void loop()
     // Meaning that only now do we learn whether the sensor module is a periodic one or an interrupting one
     first_time = false;
     wakeup_counter = 0;
+    heartbeat_counter = C_HEARTBEAT_INTERVAL;
     
     digitalWrite(P_L1, HIGH); // Indicate start acquiring sensor measurement
     turnOnSensorModule();     // Take sensor module measurement
@@ -252,6 +257,16 @@ void loop()
   }
   // END OF EXTENDED SETUP
 
+  // Send heart beat signal
+  if (heartbeat_counter > C_HEARTBEAT_INTERVAL){
+      heartbeat_counter = 0;
+      digitalWrite(P_SLP_XBEE, LOW);          // Wake XBee up
+      while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after waking up
+      heartbeat();                            // Send heartbeat message
+      digitalWrite(P_SLP_XBEE, HIGH);         // XBee sleep
+
+    }
+
 
   // The usual RTC interrupt when using a periodic sensor module will trigger this:
   if (wakeUpInterrupt_flag_RTC == true && ignore_rtc_interrupt == false) {
@@ -268,20 +283,12 @@ void loop()
       }
     }
     wakeup_counter++;
+    heartbeat_counter++;
 
     // Take measurement if it is time
     if (wakeup_counter >= SAMPLING_INTERVAL) {
       wakeup_counter = 0;
-      float currentBatteryVoltage = measureVBat(); // Check battery level
-      if (low_battery_level_detected == false && currentBatteryVoltage < LOW_BATTERY_WARNING_LEVEL && currentBatteryVoltage > 1) {// > 1 check because if it is supplied through the power jack, then VBat is zero. So I use 1V here, because with 1V at VBat the system would not be running.
-        digitalWrite(P_SLP_XBEE, LOW);             // Wake XBee up
-        while (digitalRead(P_CTS_XBEE) == 1) {}    // Wait until XBee is ready after waking up:
-        xbee_transmit_lowbatterywarning(currentBatteryVoltage);
-        digitalWrite(P_SLP_XBEE, HIGH);            // Xbee sleep
-        low_battery_level_detected = true;         // So that only the first time will the warning be transmitted
-        ignore_rtc_interrupt       = true;         // Do not wake up ever again to safe the battery
-        ignore_sm_interrupt        = true;
-      }
+      low_battery_check();
 
       // Take sensor module measurement
       turnOnSensorModule();
@@ -293,16 +300,16 @@ void loop()
       }
 
       // Do XBEE transmit
-      digitalWrite(P_SLP_XBEE, LOW);          // Wake XBee up
-      while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after waking up:
-      xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);
+      digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
+      while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up
+      xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);  // Send measurement data
+      digitalWrite(P_SLP_XBEE, HIGH);                                   // XBee sleep
 
-      
-      heartbeat();
-      low_battery_check();
-
-      
-      digitalWrite(P_SLP_XBEE, HIGH);         // XBee sleep
+      // Send heartbeat message
+      digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
+      while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up
+      heartbeat();                                                      // Send heartbeat message
+      digitalWrite(P_SLP_XBEE, HIGH);                                   // XBee sleep
 
       if (debug_mode_enabled == true) {
         digitalWrite(P_L3, HIGH);
@@ -331,16 +338,7 @@ void loop()
   if (wakeUpInterrupt_flag_SM == true && ignore_sm_interrupt == false) {
     // transmit at every event
     startSerialToSM();
-    float currentBatteryVoltage = measureVBat();// Check battery level
-    if (low_battery_level_detected == false && currentBatteryVoltage < LOW_BATTERY_WARNING_LEVEL && currentBatteryVoltage > 1) {
-      digitalWrite(P_SLP_XBEE, LOW);          // Wake XBee up
-      while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after waking up:
-      xbee_transmit_lowbatterywarning(currentBatteryVoltage);
-      digitalWrite(P_SLP_XBEE, HIGH);         // Xbee sleep
-      low_battery_level_detected = true;      // So that only the first time will the warning be transmitted
-      ignore_rtc_interrupt       = true;      // Do not wake up ever again to safe the battery
-      ignore_sm_interrupt        = true;
-    }
+    low_battery_check();
 
     if (debug_mode_enabled == true) {
       // First check if slide switch still selects debug mode
@@ -362,11 +360,10 @@ void loop()
       digitalWrite(P_L2, HIGH);
     }
 
-    digitalWrite(P_SLP_XBEE, LOW);          // Wake XBee up
-    while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after waking up:
-    xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);
-    heartbeat();
-    digitalWrite(P_SLP_XBEE, HIGH);         // Xbee sleep
+    digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
+    while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up:
+    xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);  // Send measurement data to gateway
+    digitalWrite(P_SLP_XBEE, HIGH);                                   // Xbee sleep
 
     if (debug_mode_enabled == true)
     {
@@ -815,6 +812,17 @@ void heartbeat(){
 
 void low_battery_check(){
   float currentBatteryVoltage = measureVBat();
-  message(byte(13), currentBatteryVoltage, 0, 0, 0, 0);
-  //xbee_transmit_data();
+  if (low_battery_level_detected == false && currentBatteryVoltage < LOW_BATTERY_WARNING_LEVEL && currentBatteryVoltage > 1) {// > 1 check because if it is supplied through the power jack, then VBat is zero. So I use 1V here, because with 1V at VBat the system would not be running.
+    digitalWrite(P_SLP_XBEE, LOW);             // Wake XBee up
+    while (digitalRead(P_CTS_XBEE) == 1) {}    // Wait until XBee is ready
+    PayloadClass myMessage;
+    myMessage.set_id(THIS_CM_ID);
+    myMessage.set_SMtype(13);
+    myMessage.set_payload(currentBatteryVoltage, 0, 0, 0, 0);
+    xbee_transmit_data(myMessage.get_payload_ptr(), sizeof(myMessage.payload));
+    digitalWrite(P_SLP_XBEE, HIGH);            // Xbee sleep
+    low_battery_level_detected = true;         // So that only the first time will the warning be transmitted
+    ignore_rtc_interrupt       = true;         // Do not wake up ever again to safe the battery
+    ignore_sm_interrupt        = true;
+  }
 }
