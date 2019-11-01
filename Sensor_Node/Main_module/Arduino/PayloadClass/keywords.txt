@@ -1,0 +1,24 @@
+#######################################
+# Syntax Coloring Map For Keyboard
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+PaylpadClass	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+set_sensor_module_type	KEYWORD2
+set_led_pin	KEYWORD2
+set_debug_pin	KEYWORD2
+set_serial	KEYWORD2
+set_payload	KEYWORD2
+send_message	KEYWORD2
+blink	KEYWORD2
+#######################################
+# Constants (LITERAL1)
+#######################################
