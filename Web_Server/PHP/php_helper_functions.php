@@ -101,6 +101,8 @@
 / Input: $id:   sensor node id
 /        $conn: database connection
 / Output: sensor module type from the last database entry from the sensor node with id=$id
+/ To Do: Use joins for sql statement
+/        Combine getSEnsorType, get_entity to get_meta_data
 /************************************************/
     function getSensorType($id, $conn){
         $sql = "SELECT sensorModuleType FROM wsn_input WHERE node_id=$id AND SensorModuleType!=20 AND SensorModuleType!=13 ORDER BY id DESC LIMIT 1";
@@ -126,9 +128,10 @@
 /************************************************
 / Get entitity of DB entries
 / Entity is the description of the timeseries data, e.g. temperature, CO2 concentration, etc.
-/ Input: $node_id:   id if sensor node
+/ Input: $node_id:   id of sensor node
          $entity_nr: which entity of a particular sensor module type is requested, e.g. SHT31 has two entities: 1. air temperature, 2. relative humidity)
 / Output: Entity as string
+/ To Do: Use joins for sql statement
 /************************************************/
     function get_entity($node_id, $entity_nr, $heartbeat=False){
     // Include configuration file
