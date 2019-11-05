@@ -17,9 +17,11 @@
 // Improvements from v4.5
 //  - Move includes up                                     (tested)
 //  - Remove xbee_transmit_lowbatterywarning               (tested)
-//  - Get RSSI from XBee for heart beat message            (tested)
+//  - Get RSSI from XBee for heartbeat message             (tested)
 //  - Web parser fixed (isituprightnow_v5.php)             (tested)
-//  - 1272 -> 779 lines
+// Improvements from v4.6
+//  - Fix reporting interval of heartbeat message          ()
+//  - 1272 -> 777 lines
 
 // To Do:
 //  - Apply payload class to standard measurement payload
@@ -36,7 +38,7 @@
  ********************************/
 static const uint16_t C_SAMPLING_INTERVAL       = 5;    // Every how many minutes a measurement is taken from the sensor module
 static const float    LOW_BATTERY_WARNING_LEVEL = 3.4;  // V
-static const uint16_t C_HEARTBEAT_INTERVAL      = 2*60; // Every how many minutes a heart beat signal is sent
+static const uint16_t C_HEARTBEAT_INTERVAL      = 2*60; // Every how many minutes a heartbeat signal is sent
 
 // Coordinator XBee Address:
 #define UPLINK_SH 0x13A200
@@ -264,7 +266,8 @@ void loop()
   }
   // END OF EXTENDED SETUP
 
-  // Send heart beat signal
+  // Send heartbeat signal
+  heartbeat_counter++;
   if (heartbeat_counter > C_HEARTBEAT_INTERVAL){
       heartbeat_counter = 0;
       digitalWrite(P_SLP_XBEE, LOW);          // Wake XBee up
@@ -289,7 +292,6 @@ void loop()
       }
     }
     wakeup_counter++;
-    heartbeat_counter++;
 
     // Take measurement if it is time
     if (wakeup_counter >= SAMPLING_INTERVAL) {
@@ -309,13 +311,6 @@ void loop()
       digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
       while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up
       xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);  // Send measurement data
-      digitalWrite(P_SLP_XBEE, HIGH);                                   // XBee sleep
-
-      // Send heartbeat message
-      delay(6000);
-      digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
-      while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up
-      heartbeat();                                                      // Send heartbeat message
       digitalWrite(P_SLP_XBEE, HIGH);                                   // XBee sleep
 
       if (debug_mode_enabled == true) {
@@ -747,7 +742,7 @@ void blink(int pin, int duration){
 }
 
 /*****************************
-   Function for heart beat message
+   Function for heartbeat message
 */
 void heartbeat(){
   float currentBatteryVoltage = measureVBat(); // Get battery voltage
