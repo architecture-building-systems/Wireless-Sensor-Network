@@ -1,4 +1,4 @@
-// Main module v4.5
+// Main module v4.7
 
 // Improvments from v2
 //  - remove sd card functionality                         (tested)
@@ -20,8 +20,11 @@
 //  - Get RSSI from XBee for heartbeat message             (tested)
 //  - Web parser fixed (isituprightnow_v5.php)             (tested)
 // Improvements from v4.6
+//  - Change LED on time from 2s to 1s                     (tested)
 //  - Fix reporting interval of heartbeat message          ()
-//  - 1272 -> 777 lines
+//  - Change heartbeat interval according to debug mode    ()
+//  - Add new low battery check to server                  ()
+//  - 1272 -> 780 lines
 
 // To Do:
 //  - Apply payload class to standard measurement payload
@@ -29,7 +32,6 @@
 //  - Use watchdog timer for wake up
 //  - Implement universal coordinator address
 //  - Test current draw
-//  - Fix low battery warning on webserver
 //  - Test low battery functionality
 //  - Fix ddrDB2 (now there are multiple message types per node)
 
@@ -44,28 +46,28 @@ static const uint16_t C_HEARTBEAT_INTERVAL      = 2*60; // Every how many minute
 #define UPLINK_SH 0x13A200
 
 //#define UPLINK_SL 0x          // Cxxx
-//#define UPLINK_SL 0x41046BD5  // C100
+#define UPLINK_SL 0x41046BD5  // C100
 //#define UPLINK_SL 0x41628F9C  // C200
 //#define UPLINK_SL 0x415ABDD9  // C300
 //#define UPLINK_SL 0x41046775  // C400
 //#define UPLINK_SL 0x41631484  // C500
 //#define UPLINK_SL 0x41628FF0  // C600
 //#define UPLINK_SL 0x41628FA9  // C700
-#define UPLINK_SL 0x41628FFD  // C800
+//#define UPLINK_SL 0x41628FFD  // C800
 
 // Network ID (XBee PAN ID of Corrdinator): unsigned int 32 bit
 //static const uint32_t PAN_ID = 0x01;   // C0
-//static const uint32_t PAN_ID = 0x100;  // C100
+static const uint32_t PAN_ID = 0x100;  // C100
 //static const uint32_t PAN_ID = 0x200;  // C200
 //static const uint32_t PAN_ID = 0x300;  // C300
 //static const uint32_t PAN_ID = 0x400;  // C400
 //static const uint32_t PAN_ID = 0x500;  // C500
 //static const uint32_t PAN_ID = 0x600;  // C600
 //static const uint32_t PAN_ID = 0x700;  // C700
-static const uint32_t PAN_ID = 0x800;  // C800
+//static const uint32_t PAN_ID = 0x800;  // C800
 
 // This communication module's ID. Allowed range: [0,65535] (unsigned 16 bit integer)
-static const uint16_t THIS_CM_ID = 818;
+static const uint16_t THIS_CM_ID = 115;
 /********************************
    END OF CONFIGURATION
  ********************************/
@@ -89,6 +91,7 @@ PayloadClass         myPayload;
 uint8_t              SMtype                  = 0; // Will be set once the sensor module tells us
 uint8_t              sizeofSMdata            = 0; // Will be set to number of bytes of the SM payload once the sensor module
 uint16_t             SAMPLING_INTERVAL       = 1;
+uint16_t             HEARTBEAT_INTERVAL      = 1;
 static const uint8_t xbee_header_bytes       = 4; // uint16_t NodeID, uint8_t n_measurements, uint8_t SM_type
 
 // Pin numbers
@@ -198,10 +201,12 @@ void setup(){
   if (digitalRead(P_DBG_ENABLE) == LOW) { // Switch on east side = LOW
     debug_mode_enabled = true;
     SAMPLING_INTERVAL = 1;
+    HEARTBEAT_INTERVAL = 1;
   }
   else {
     debug_mode_enabled = false;
     SAMPLING_INTERVAL = C_SAMPLING_INTERVAL;
+    HEARTBEAT_INTERVAL = C_HEARTBEAT_INTERVAL;
   }
 
   digitalWrite(P_L1, LOW);
@@ -274,9 +279,8 @@ void loop()
       while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after waking up
       heartbeat();                            // Send heartbeat message
       digitalWrite(P_SLP_XBEE, HIGH);         // XBee sleep
-    }
+  }
     
-
   // The usual RTC interrupt when using a periodic sensor module will trigger this:
   if (wakeUpInterrupt_flag_RTC == true && ignore_rtc_interrupt == false) {
     if (debug_mode_enabled == true) {
@@ -286,6 +290,7 @@ void loop()
         debug_mode_enabled               = false;
         debug_mode_has_been_switched_off = true;
         SAMPLING_INTERVAL                = C_SAMPLING_INTERVAL;
+        HEARTBEAT_INTERVAL               = C_HEARTBEAT_INTERVAL;
       }
       else {
         digitalWrite(P_L1, HIGH);
@@ -367,10 +372,9 @@ void loop()
     xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);  // Send measurement data to gateway
     digitalWrite(P_SLP_XBEE, HIGH);                                   // Xbee sleep
 
-    if (debug_mode_enabled == true)
-    {
+    if (debug_mode_enabled == true){
       digitalWrite(P_L3, HIGH);
-      delay(2000);
+      delay(1000);
       digitalWrite(P_L1, LOW);
       digitalWrite(P_L2, LOW);
       digitalWrite(P_L3, LOW);
