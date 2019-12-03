@@ -116,7 +116,14 @@
     {
         trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
     }
-                                                                                          
+
+/************************************************
+/ Send low battery warning mail
+/************************************************/
+    if ($sensorModuleType==13){
+        low_battery_warning_mail($node_id);
+    }
+
 // Close db connection
     $conn->close();                                                                        
     

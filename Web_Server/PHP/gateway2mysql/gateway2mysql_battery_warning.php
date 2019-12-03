@@ -3,9 +3,10 @@
 / gateway2mysql_battery_warning.php
 / This script takes the battery warning payload message from the gateway disaggregates it.
 / This script get called in php2mysql.php
-/ This scirpt is necessary because battery warning messages do not strictly adhere to 
-/ the standard payload message scheme. In addition an e-mail is sent to the admin 
-/ with a notification about low battery state of the sensor node.
+/ This scirpt is necessary because battery warning messages do not strictly
+/ adhere to the standard payload message scheme (main module firmware version 2.0).
+/ In addition an e-mail is sent to the admin with a notification about low
+/ battery state of the sensor node.
 / Author: Mario Frei (2018)
 /********************************************************************************************************************/
 
