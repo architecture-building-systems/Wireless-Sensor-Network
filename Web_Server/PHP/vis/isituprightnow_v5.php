@@ -42,7 +42,7 @@ Author: Mario Frei (2018)
     $accepted_delay         = 16; // Maximal accepted delay in minutes for which the cell is still highlighted green
     include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
     include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/php_helper_functions.php');
-    
+
 /************************************************
 // DB connection 
 /************************************************/
@@ -52,7 +52,8 @@ Author: Mario Frei (2018)
     // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
-    } 
+    }
+    $token = mysqli_real_escape_string($conn, $_GET["token"]);
 
 /************************************************
 / Echo title of site
@@ -78,7 +79,7 @@ Author: Mario Frei (2018)
     {
         $timePast = checkGateway($i, $conn);
         echo "<tr>";
-        echo "<td> <a href=\"?gateway_id=$i\">$i</a></td>";
+        echo "<td> <a href=\"?gateway_id=$i&token=$token\">$i</a></td>";
         echo "<td>";
         echo number_format($timePast,0,",","'");
         echo "</td>";
@@ -159,7 +160,7 @@ Author: Mario Frei (2018)
 
         // Display table
         echo "<tr>";
-        echo "<td> <a href=\"graph_db_v1.php?node_id=$node_id\">$node_id</a></td>";
+        echo "<td> <a href=\"graph_db_v2.php?node_id=$node_id&token=$token\">$node_id</a></td>";
         echo "<td>$description</td>";
         echo "<td>";
         echo number_format($timePast,2,",","'");
@@ -169,8 +170,8 @@ Author: Mario Frei (2018)
         } else {
           echo "<td bgcolor=\"#FF0000\">Offline</td>";
         }
-        echo "<td bgcolor=\"$RSSI_color\"> <a href=\"./graph_db_v1_heartbeat.php?node_id=$node_id\">$RSSI%</a></td>";
-        echo "<td bgcolor=\"$bat_color\">  <a href=\"./graph_db_v1_heartbeat.php?node_id=$node_id\">$batteryVoltage%</a></td>";
+        echo "<td bgcolor=\"$RSSI_color\"> <a href=\"./graph_db_v2_heartbeat.php?node_id=$node_id&token=$token\">$RSSI%</a></td>";
+        echo "<td bgcolor=\"$bat_color\">  <a href=\"./graph_db_v2_heartbeat.php?node_id=$node_id&token=$token\">$batteryVoltage%</a></td>";
 
     }
     echo "</table>";

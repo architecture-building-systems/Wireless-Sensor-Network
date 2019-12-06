@@ -26,6 +26,7 @@
     // Select data 
     /************************************************/
     // Get sensor module type
+    $node_id = mysqli_real_escape_string($conn, $_GET["node_id"]);
     $sensorModuleType = 20;
 
     // Get number of measurement entries of sensor module type
@@ -35,7 +36,7 @@
     $number_of_values = $row["number_of_values"];
     
     // Get measurement values
-    $sql = "SELECT time as date, value0 , value1, value2, value3, value4 FROM wsn_input WHERE node_id=$node_id AND sensorModuleType=$sensorModuleType ORDER BY id DESC LIMIT 85";
+    $sql = "SELECT time as date, value0 , value1, value2, value3, value4 FROM wsn_input WHERE node_id=$node_id AND sensorModuleType=$sensorModuleType ORDER BY id DESC LIMIT 20";
     $result = $conn->query($sql);
     $conn->close();
     

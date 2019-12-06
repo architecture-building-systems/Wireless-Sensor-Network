@@ -1,10 +1,10 @@
 <!------------------------------------------------------------------------------
- graph_db_v1 
- This script takes the node id and displays time series data.
- The time series data is fetched by det_data_v2.php.
+ graph_db_v2_hearbeat
+ This script takes the node id and displays RSSI and battery voltage data data.
+ The time series data is fetched by get_data_v2_hearbeat.php.
  Helper functions are in php_helper_functions.php.
  To plot the time series data, the metrics graphics framework is used.
- Author: Mario Frei (2018)
+ Author: Mario Frei (2019)
  ------------------------------------------------------------------------------>
 <html lang='en'>
 <head>
@@ -90,7 +90,7 @@ The actual plotting of the data happens in the following javascript lines.
 <script>
 MG._hooks = {};
 
-d3.json('./get_data_v3.php?node_id=<?echo $node_id;?>&token=<?echo $token;?>', function(data) {
+d3.json('./get_data_v2_heartbeat.php?node_id=<?echo $node_id;?>&token=<?echo $token;?>', function(data) {
     for (var i = 0; i < data.length; i++) {
         data[i] = MG.convert.date(data[i], 'date', "%Y-%m-%d %H:%M:%S" );
     }

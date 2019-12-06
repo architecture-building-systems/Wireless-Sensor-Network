@@ -26,7 +26,7 @@
     // Select data 
     /************************************************/
     // Get sensor module type
-    $node_id = $_GET["node_id"];
+    $node_id = mysqli_real_escape_string($conn, $_GET["node_id"]);
     $sql = "SELECT sensorModuleType FROM wsn_input WHERE node_id=$node_id ORDER BY id DESC LIMIT 1";
     $result = $conn->query($sql);
     $row = $result->fetch_array(MYSQLI_ASSOC);
