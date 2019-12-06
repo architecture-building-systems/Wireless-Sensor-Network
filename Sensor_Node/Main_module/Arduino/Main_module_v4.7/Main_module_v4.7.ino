@@ -21,12 +21,13 @@
 //  - Web parser fixed (isituprightnow_v5.php)             (tested)
 // Improvements from v4.6
 //  - Change LED on time from 2s to 1s                     (tested)
-//  - Fix reporting interval of heartbeat message          ()
-//  - Change heartbeat interval according to debug mode    ()
+//  - Fix reporting interval of heartbeat message          (tested)
+//  - Change heartbeat interval according to debug mode    (tested)
 //  - Add new low battery check to server                  ()
 //  - 1272 -> 780 lines
 
 // To Do:
+//  - Check debug switch only once in the loop
 //  - Apply payload class to standard measurement payload
 //  - Improve terminology of Payload class (message vs payload vs myMessage vs myPayload)
 //  - Use watchdog timer for wake up
@@ -273,7 +274,7 @@ void loop()
 
   // Send heartbeat signal
   heartbeat_counter++;
-  if (heartbeat_counter > C_HEARTBEAT_INTERVAL){
+  if (heartbeat_counter > HEARTBEAT_INTERVAL){
       heartbeat_counter = 0;
       digitalWrite(P_SLP_XBEE, LOW);          // Wake XBee up
       while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after waking up
