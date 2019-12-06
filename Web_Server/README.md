@@ -24,5 +24,5 @@ There are two main PHP scripts:
 * [PHP/vis/isituprightnow_v4.php](PHP/vis/isituprightnow_v4.php) gives an overview of the status of sensor nodes.
 * [PHP/gateway2mysql/gateway2mysql.php](PHP/gateway2mysql/gateway2mysql.php) is called by the gateways. It takes the payload message with the measured data, disaggregates it and inserts it in the database.
 
-## A word of Caution:
+## A word of Caution
 Some inputs might be properly sanitized. And database quere do not use prepared statements. Hence, there is some risk of cross-site scripting vulnerability. Thus, we strongly suggest to not expose the web-interface to the public and to only share it with trusted parties. Otherwise, one might risk damage or loss of all contents of the database.
