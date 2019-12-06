@@ -1,5 +1,7 @@
 # Webserver
-Two tasks are assigned to the webserver: 1. Inserting the measurement data into the database and 2. Displaying the measured data. All scripts are written in PHP.
+Two tasks are assigned to the webserver: 
+1. Inserting the measurement data into the database and 
+2. Displaying the measured data. All scripts are written in PHP.
 
 ## Storing Measured Data
 All the files for storing the measured data in the database are in the [/gateway2mysql/ directory](PHP/gateway2mysql/). The main file is [gateway2mysql.php](PHP/gateway2mysql/gateway2mysql.php), which is also called by the gateway. The data is attached as an URL-parameter.
