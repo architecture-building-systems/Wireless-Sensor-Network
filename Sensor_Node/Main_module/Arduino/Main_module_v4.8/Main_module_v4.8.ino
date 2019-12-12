@@ -1,4 +1,4 @@
-// Main module v4.7
+// Main module v4.8
 
 // Improvments from v2
 //  - remove sd card functionality                         (tested)
@@ -25,41 +25,39 @@
 //  - Change heartbeat interval according to debug mode    (tested)
 //  - Test with windows sensor module                      (tested)
 //  - Add new low battery check to server                  ()
-//  - 1272 -> 780 lines
+// Improvements from v4.8
+//  - Check debug switch only once in the setup function   (tested)
+//  - Remove debug_mode_has_been_switched_off              (tested)
+//  - Implement universal coordinator address              (tested)
+//  - Replace THIS_CM_ID by MAIN_MODULE_ID                 (tested)
+//  - Apply payload class to standard measurement payload  (tested)
+//  - Improve terminology of Payload class                 (tested)
+//    (message vs payload vs myMessage vs myPayload)
+//  - Remove dublicate RTC interrupt settings              (tested)
+//  - Integrate wakeup and sleep into xbee_transmit_data   (tested)
+//  - Move extended setup to regular setup                 (tested)
+//  - Test with windows sensor module                      (tested)
+//  - 1272 -> 677 lines
 
 // To Do:
-//  - Check debug switch only once in the loop
-//  - Apply payload class to standard measurement payload
-//  - Improve terminology of Payload class (message vs payload vs myMessage vs myPayload)
-//  - Use watchdog timer for wake up
-//  - Implement universal coordinator address
+//  - Put arming of RTC trigger in function
 //  - Test current draw
 //  - Test low battery functionality
 //  - Fix ddrDB2 (now there are multiple message types per node)
+//  - Use watchdog timer for wake up
+//  - Unify sm payload format and mm payload format
 
 /********************************
    CONFIGURATION
  ********************************/
-static const uint16_t C_SAMPLING_INTERVAL       = 5;    // Every how many minutes a measurement is taken from the sensor module
-static const float    LOW_BATTERY_WARNING_LEVEL = 3.4;  // V
-static const uint16_t C_HEARTBEAT_INTERVAL      = 2*60; // Every how many minutes a heartbeat signal is sent
+static const uint16_t C_SAMPLING_INTERVAL         = 5;    // Every how many minutes a measurement is taken from the sensor module
+static const float    C_LOW_BATTERY_WARNING_LEVEL = 3.4;  // V
+static const uint16_t C_HEARTBEAT_INTERVAL        = 2*60; // Every how many minutes a heartbeat signal is sent
+static const uint16_t MAIN_MODULE_ID              = 115;  // Main module ID. Allowed range: [0,65535]
 
-// Coordinator XBee Address:
-#define UPLINK_SH 0x13A200
-
-//#define UPLINK_SL 0x          // Cxxx
-#define UPLINK_SL 0x41046BD5  // C100
-//#define UPLINK_SL 0x41628F9C  // C200
-//#define UPLINK_SL 0x415ABDD9  // C300
-//#define UPLINK_SL 0x41046775  // C400
-//#define UPLINK_SL 0x41631484  // C500
-//#define UPLINK_SL 0x41628FF0  // C600
-//#define UPLINK_SL 0x41628FA9  // C700
-//#define UPLINK_SL 0x41628FFD  // C800
-
-// Network ID (XBee PAN ID of Corrdinator): unsigned int 32 bit
+// Network ID (XBee PAN ID of Coordinator): unsigned int 32 bit
 //static const uint32_t PAN_ID = 0x01;   // C0
-static const uint32_t PAN_ID = 0x100;  // C100
+static const uint32_t PAN_ID = 0x100;    // C100
 //static const uint32_t PAN_ID = 0x200;  // C200
 //static const uint32_t PAN_ID = 0x300;  // C300
 //static const uint32_t PAN_ID = 0x400;  // C400
@@ -68,8 +66,6 @@ static const uint32_t PAN_ID = 0x100;  // C100
 //static const uint32_t PAN_ID = 0x700;  // C700
 //static const uint32_t PAN_ID = 0x800;  // C800
 
-// This communication module's ID. Allowed range: [0,65535] (unsigned 16 bit integer)
-static const uint16_t THIS_CM_ID = 115;
 /********************************
    END OF CONFIGURATION
  ********************************/
@@ -78,18 +74,19 @@ static const uint16_t THIS_CM_ID = 115;
 #include <avr/sleep.h>
 #include <avr/io.h>
 #include "Wire.h"
-#define DS3231_I2C_ADDRESS 0x68
 #include <SPI.h>
 #include <XBee.h>
 #include <SoftwareSerial.h>
 #include <PayloadClass.h>
- 
+
+#define DS3231_I2C_ADDRESS 0x68
+#define UPLINK_SH 0x00000000    // Universal coordinator address
+#define UPLINK_SL 0x00000000    // Universal coordinator address
+
 uint16_t             wakeup_counter          = 0;
 uint16_t             heartbeat_counter       = 0;
 static const uint8_t FRAMESTART_BYTE         = 0xAA; // ANYTHING OTHER THAN 0xBB
-uint8_t*             total_xbee_payload;
-uint8_t              total_xbee_payload_size;
-PayloadClass         myPayload;
+PayloadClass         mySensorMessage;
 uint8_t              SMtype                  = 0; // Will be set once the sensor module tells us
 uint8_t              sizeofSMdata            = 0; // Will be set to number of bytes of the SM payload once the sensor module
 uint16_t             SAMPLING_INTERVAL       = 1;
@@ -131,11 +128,8 @@ volatile bool wakeUpInterrupt_flag_SM  = false;
 volatile bool sd_card_is_initialized   = false;
 volatile bool ignore_rtc_interrupt     = false;
 volatile bool ignore_sm_interrupt      = false;
-
 bool debug_mode_enabled                = false;
-bool debug_mode_has_been_switched_off  = false;
 bool low_battery_level_detected        = false;
-bool first_time                        = true;
 
 
 void setup(){
@@ -153,12 +147,10 @@ void setup(){
   // Initialize RTC 
   Wire.begin();
   setupDS3231(true);
-  setDS3231time(01, 49, 23, 7, 01, 01, 10); // DS3231 seconds, minutes, hours, day, date, month, year
-  pinMode(P_RTC_WAKE, INPUT_PULLUP); // Pin for Wakeup from RTC
-  digitalWrite(P_L1, HIGH); // Indicate RTC initialized ok
+  pinMode(P_RTC_WAKE, INPUT_PULLUP);        // Pin for Wakeup from RTC
+  digitalWrite(P_L1, HIGH);                 // Indicate RTC initialized ok
 
-  // For sleep mode: Shut down things we do not need:
-  ACSR = (1 << ACD); //Disable the analog comparator
+  ACSR = (1 << ACD); // Disable the analog comparator. Shut down things we do not need for sleep mode
 
   // Sensor Module setup
   setupSerialToSM();
@@ -170,7 +162,7 @@ void setup(){
   digitalWrite(P_SLP_XBEE, LOW);
   xbeeSoftSerial.begin(9600);
   xbee.setSerial(xbeeSoftSerial);
-  while (digitalRead(P_CTS_XBEE) == 1) {}// Wait until XBee is ready after starting up
+  while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after starting up
 
   // XBee configuration
   uint8_t SM_value = 0x01;
@@ -179,7 +171,7 @@ void setup(){
   sendATCommand('A', 'C');
   // The SM configuration does not work
 
-  uint32_t b0, b1, b2, b3;            // Convert PAN ID from little endian (what arudino uses) to big endian (what XBee wants)
+  uint32_t b0, b1, b2, b3;                // Convert PAN ID from little endian (what arudino uses) to big endian (what XBee wants)
   b0 = (PAN_ID & 0x000000FF) << 24u;
   b1 = (PAN_ID & 0x0000FF00) << 8u;
   b2 = (PAN_ID & 0x00FF0000) >> 8u;
@@ -193,14 +185,14 @@ void setup(){
   // Wait until XBee network joined
   uint8_t AI_value = 0xFF;
   while (AI_value != 0x00) {
-    // "AI" AT command returns network status. 0x00 means successfully joined.
-    AI_value = getSingleByteATCmdValue('A', 'I');
-    blink(P_L2, 250);// blinking led indicates trying to join XBee network
+    AI_value = getSingleByteATCmdValue('A', 'I'); // "AI" AT command returns network status. 0x00 means successfully joined.
+    blink(P_L2, 250);                             // blinking led indicates trying to join XBee network
   }
-  digitalWrite(P_L2, HIGH); // Indicate Xbee network joined ok
+  digitalWrite(P_L2, HIGH);                       // Indicate Xbee network joined ok
+  digitalWrite(P_L3, HIGH);                       // Indicate that first half of setup is over
+  delay(1000);
 
-  // If debug mode is enable we measure and send more often
-  if (digitalRead(P_DBG_ENABLE) == LOW) { // Switch on east side = LOW
+  if (digitalRead(P_DBG_ENABLE) == LOW) {         // Switch on east side = LOW
     debug_mode_enabled = true;
     SAMPLING_INTERVAL = 1;
     HEARTBEAT_INTERVAL = 1;
@@ -211,118 +203,62 @@ void setup(){
     HEARTBEAT_INTERVAL = C_HEARTBEAT_INTERVAL;
   }
 
-  digitalWrite(P_L1, LOW);
+  digitalWrite(P_L1, LOW);                        // Turn all debugging LEDs off
   digitalWrite(P_L2, LOW);
   digitalWrite(P_L3, LOW);
+  delay(500);
 
-  // Make first RTC interruppt occur shortly afterwards seconds
-  setDS3231time(59, 49, 23, 7, 01, 01, 10); // DS3231 seconds, minutes, hours, day, date, month, year
-  // Clear interrupt flag in RTC IC: Clear A2F and A1F bits by setting them to 0
+  //wakeup_counter  = 0;
+  wakeup_counter    = C_SAMPLING_INTERVAL;
+  heartbeat_counter = C_HEARTBEAT_INTERVAL;
+  
+  digitalWrite(P_L1, HIGH);                       // Indicate start acquiring sensor measurement
+      
+  getSensorModuleType();                          // Read sensor module data to get information about the sensor module performing interval-based measurements or event-based measurements
+  turnOffSensorModule();                          // This line shouldn't be needed. Wihtout the line the SM does not turn off. Reason unclear.
+  if (ignore_rtc_interrupt == false) {            // From ignore_rtc_interrupt we can now tell what kind of sensor module we have
+    blink(P_L3, 1000);                            // LED 3 indicates, that it is a sensor module that takes periodic measuruents
+  }
+  else {
+    blink(P_L2, 1000);                            // Sensor module is an event-based one and it will interrupt the main module
+  }
+  digitalWrite(P_L1, LOW);
+                                                  // Make next RTC interruppt occur in 5 seconds afterwards seconds
+  setDS3231time(55, 49, 23, 7, 01, 01, 10);       // DS3231 seconds, minutes, hours, day, date, month, year
   Wire.beginTransmission(DS3231_I2C_ADDRESS);
-  Wire.write(0x0F); // write to register (0Fh)
-  Wire.write(0b10001000);
+  Wire.write(0x0F);                               // Write to register (0Fh)
+  Wire.write(0b10001000);                         // Clear interrupt flag in RTC IC: Clear A2F and A1F bits by setting them to 0
   Wire.endTransmission();
 
   wakeUpInterrupt_flag_RTC = false;
-  wakeUpInterrupt_flag_SM = false;
 }
 
 void loop()
 {
-  // START EXTENDED SETUP
-  // This first_time part is not in the setup() because it somehow did not work then.
-  if (first_time == true && wakeUpInterrupt_flag_RTC  == true) {
-    // The first time the RTC interrupt happens, we are still kind of in the setup phase (not programmed very nicely...)
-    // Meaning that only now do we learn whether the sensor module is a periodic one or an interrupting one
-    first_time = false;
-    wakeup_counter = 0;
-    heartbeat_counter = C_HEARTBEAT_INTERVAL;
-    
-    digitalWrite(P_L1, HIGH); // Indicate start acquiring sensor measurement
-    turnOnSensorModule();     // Take sensor module measurement
-    delay(100);               // Give some time for SM to start if it was not turned on
-    Serial.write(0xBB);       // If it is an interrupting sensor module it will respond to this and if it is a periodic one it will respond with its measurement, which will begin with the FRAMESTART_BYTE
-
-    bool checksum_ok = readSensorModuleData();
-    turnOffSensorModule();
-
-    // From ignore_rtc_interrupt we can now tell what kind of sensor module we have
-    if (ignore_rtc_interrupt == false) {
-      blink(P_L3, 1000);  // LED 3 indicates periodic sensor module
-    }
-    else {
-      blink(P_L2, 1000);  // Sensor module is one which will interrupt the communication module
-    }
-    digitalWrite(P_L1, LOW);
-
-    // Disable interrupt flag in RTC IC: Clear A2F and A1F bits by setting them to 0
-    Wire.beginTransmission(DS3231_I2C_ADDRESS);
-    Wire.write(0x0F);       // write to register (0Fh)
-    Wire.write(0b10001000);
-    Wire.endTransmission();
-
-    // Make next RTC interruppt occur in 5 seconds afterwards seconds
-    setDS3231time(55, 49, 23, 7, 01, 01, 10); // DS3231 seconds, minutes, hours, day, date, month, year
-    // Clear interrupt flag in RTC IC: Clear A2F and A1F bits by setting them to 0
-    Wire.beginTransmission(DS3231_I2C_ADDRESS);
-    Wire.write(0x0F);       // write to register (0Fh)
-    Wire.write(0b10001000);
-    Wire.endTransmission();
-
-    wakeUpInterrupt_flag_RTC = false;
-  }
-  // END OF EXTENDED SETUP
-
   // Send heartbeat signal
   heartbeat_counter++;
   if (heartbeat_counter > HEARTBEAT_INTERVAL){
       heartbeat_counter = 0;
-      digitalWrite(P_SLP_XBEE, LOW);          // Wake XBee up
-      while (digitalRead(P_CTS_XBEE) == 1) {} // Wait until XBee is ready after waking up
-      heartbeat();                            // Send heartbeat message
-      digitalWrite(P_SLP_XBEE, HIGH);         // XBee sleep
+      heartbeat();                              // Send heartbeat message
   }
     
   // The usual RTC interrupt when using a periodic sensor module will trigger this:
   if (wakeUpInterrupt_flag_RTC == true && ignore_rtc_interrupt == false) {
-    if (debug_mode_enabled == true) {
-      // First check if slide switch still selects debug mode
-      if (digitalRead(P_DBG_ENABLE) == HIGH) {
-        // Debug mode has been disabled by the user
-        debug_mode_enabled               = false;
-        debug_mode_has_been_switched_off = true;
-        SAMPLING_INTERVAL                = C_SAMPLING_INTERVAL;
-        HEARTBEAT_INTERVAL               = C_HEARTBEAT_INTERVAL;
-      }
-      else {
-        digitalWrite(P_L1, HIGH);
-      }
-    }
+    if (debug_mode_enabled == true) {digitalWrite(P_L1, HIGH);}         // Light LED at begin of measurement when in debug mode
     wakeup_counter++;
-
-    // Take measurement if it is time
-    if (wakeup_counter >= SAMPLING_INTERVAL) {
+    
+    if (wakeup_counter >= SAMPLING_INTERVAL) {                          // Take measurement if it is time
       wakeup_counter = 0;
       low_battery_check();
 
-      // Take sensor module measurement
-      turnOnSensorModule();
-      bool checksum_ok = readSensorModuleData();   // To Do: Do something if checksum is not ok
-      turnOffSensorModule();
+      readSensorModuleData();
 
-      if (debug_mode_enabled == true) {
-        digitalWrite(P_L2, HIGH);
-      }
+      if (debug_mode_enabled == true) {digitalWrite(P_L2, HIGH);}       // Light LED in debug mode
 
-      // Do XBEE transmit
-      digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
-      while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up
-      xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);  // Send measurement data
-      digitalWrite(P_SLP_XBEE, HIGH);                                   // XBee sleep
+      // Do XBee transmit
+      xbee_transmit_data(mySensorMessage.get_payload_ptr(), sizeof(mySensorMessage.payload));  // Send measurement data to gateway
 
-      if (debug_mode_enabled == true) {
-        digitalWrite(P_L3, HIGH);
-      }
+      if (debug_mode_enabled == true) {digitalWrite(P_L3, HIGH);}       // Light LED in debug mode
     }
 
     if (debug_mode_enabled == true){
@@ -349,30 +285,13 @@ void loop()
     startSerialToSM();
     low_battery_check();
 
-    if (debug_mode_enabled == true) {
-      // First check if slide switch still selects debug mode
-      if (digitalRead(P_DBG_ENABLE) == HIGH) {
-        debug_mode_enabled               = false;
-        debug_mode_has_been_switched_off = true;
-      }
-      else {
-        digitalWrite(P_L1, HIGH);
-      }
-    }
+    if (debug_mode_enabled == true) {digitalWrite(P_L1, HIGH);}       // Light LED at start of measurment in debug mode
 
-    turnOnSensorModule();
-    startSerialToSM();
     readSensorModuleData();
-    turnOffSensorModule();
     
-    if (debug_mode_enabled == true) {
-      digitalWrite(P_L2, HIGH);
-    }
-
-    digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
-    while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up:
-    xbee_transmit_data(total_xbee_payload, total_xbee_payload_size);  // Send measurement data to gateway
-    digitalWrite(P_SLP_XBEE, HIGH);                                   // Xbee sleep
+    if (debug_mode_enabled == true) {digitalWrite(P_L2, HIGH);}       // Light LED in debug mode
+    
+    xbee_transmit_data(mySensorMessage.get_payload_ptr(), sizeof(mySensorMessage.payload));  // Send measurement data to gateway
 
     if (debug_mode_enabled == true){
       digitalWrite(P_L3, HIGH);
@@ -395,86 +314,68 @@ void loop()
 
 void turnOnSensorModule() {
   startSerialToSM();
-  delay(3);                       // Small delay necessary somehow
-  digitalWrite(P_SM_VCC_EN, HIGH);// Enable voltage to sensor module
+  delay(3);                               // Small delay necessary somehow
+  digitalWrite(P_SM_VCC_EN, HIGH);        // Enable voltage to sensor module
 }
 
 void turnOffSensorModule() {
-  digitalWrite(P_SM_VCC_EN, LOW); // Disable voltage to sensor module
+  digitalWrite(P_SM_VCC_EN, LOW);         // Disable voltage to sensor module
   endSerialToSM();
 }
 
-// return: true if checksum ok, false if checksum wrong
-bool readSensorModuleData() {
-  uint8_t sumForChecksum = 0x00;
+void getSensorModuleType(){
+  turnOnSensorModule();                   // Take sensor module measurement
+  delay(100);                             // Give some time for SM to start if it was not turned on
+  Serial.write(0xBB);                     // If it is an interrupting sensor module it will respond to this and if it is a periodic one it will respond with its measurement, which will begin with the FRAMESTART_BYTE
+
   // Wait for frame start byte
   uint8_t readByte = 0x00;
   while (readByte != FRAMESTART_BYTE) {
     while (!Serial.available()) {}
     readByte = Serial.read();
 
-    // The sensor module is an interrupt based one and not one that we use periodically, so return. We will note this and not try to ask it with the RTC interrupt anymore.
-    if (readByte == 0xBB) {
-      ignore_rtc_interrupt = true;
+
+    if (readByte == 0xBB) {               // The sensor module is an interrupt based one and not one that we use periodically, so return. 
+      ignore_rtc_interrupt = true;        // We will note this and not try to ask it with the RTC interrupt anymore.
       return false;
     }
   }
 
-  sumForChecksum += FRAMESTART_BYTE;
+  serialFlush();
+  turnOffSensorModule();                  // This line doesn't work. Reason unclear. This line needs to be repeated after the call of getSensorModuleType().
+  return;
+}
 
-  // Next byte indicates type of sensor module
-  while (!Serial.available()) {}
-  uint8_t SMtypebyte = Serial.read();
-  sumForChecksum += SMtypebyte;
-
-  // Next byte indicates length of data
-  while (!Serial.available()) {}
-  uint8_t SMsizebyte = Serial.read();
-  sumForChecksum += SMsizebyte;
-
-  // If sensor module type has changed, or if it is the first time we read from sensor module. Or if the debug mode was disabled we need to cahnge the size of the memory for the payload too
-  if (SMtypebyte != SMtype || debug_mode_has_been_switched_off == true) {
-    debug_mode_has_been_switched_off = false;
-
-    if (SMtype != 0 || debug_mode_has_been_switched_off == true) {
-      // The sensor module was actually changed or debug mode has been switched off
-      free(total_xbee_payload);// Throw out data measured but not yet transmitted of old SM for sake of simplicity
-      wakeup_counter = 0;
-    }
-
-    sizeofSMdata = SMsizebyte;
-    SMtype       = SMtypebyte;
-
-    // Allocate space for accumulating required number of measurements before transmit is done
-    total_xbee_payload_size = (xbee_header_bytes + sizeofSMdata *1);
-    total_xbee_payload      = (uint8_t*) malloc(total_xbee_payload_size);
-
-    // Fill in the header
-    total_xbee_payload[0] = 0x00FF & THIS_CM_ID;
-    total_xbee_payload[1] = (0xFF00 & THIS_CM_ID)>>8;
-    total_xbee_payload[2] = 1; // How many measurements are in this packet
-    total_xbee_payload[3] = SMtype;
+bool readSensorModuleData() {
+  turnOnSensorModule();                   // Turn sensor module on
+  // Wait for frame start byte
+  uint8_t readByte = 0x00;
+  while (readByte != FRAMESTART_BYTE) {
+    while (!Serial.available()) {}
+    readByte = Serial.read();
   }
 
+  while (!Serial.available()) {}
+  uint8_t SMtypebyte = Serial.read();     // Byte indicates type of sensor module
+
+  while (!Serial.available()) {}
+  uint8_t SMsizebyte = Serial.read();     // Byte indicates length of data
+
+  sizeofSMdata = SMsizebyte;
+  SMtype       = SMtypebyte;
+
+  mySensorMessage.set_id(MAIN_MODULE_ID);
+  mySensorMessage.set_SMtype(SMtype);
+  uint8_t* mySensorMessagePointer = mySensorMessage.get_payload_ptr();
   while (Serial.available() < sizeofSMdata + 1) {} // Wait until payload arrived plus checksum byte
 
   // Read the payload
   for (int k = 0; k < sizeofSMdata; k++) {
     uint8_t inByte = (uint8_t) Serial.read();
-    sumForChecksum += inByte;
-    (total_xbee_payload + xbee_header_bytes + 0 * SMsizebyte)[k] = inByte; // " xbee_header_bytes + (measurement_counter-1)*SMsizebyte" provides offset, for second, third etc measurements
+    mySensorMessagePointer[4+k] = inByte;
   }
-
-  // Read checksum byte
-  uint8_t checksumbyte = Serial.read();
-
-  // Confirm that checksum is ok
-  if (uint8_t (checksumbyte + sumForChecksum) == 0xFF) {
-    return true;
-  }
-  else {
-    return false;
-  }
+  
+  turnOffSensorModule();
 }
 
 void setupSerialToSM() {
@@ -510,34 +411,37 @@ void serialFlush() {
    XBee
 */
 void xbee_transmit_data(uint8_t* myPayload, uint8_t myPayloadSize) {
+  digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
+  while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up:
   zbTx = ZBTxRequest(addr64, myPayload, myPayloadSize);
 
   bool message_acked = false;
   while (message_acked == false) {
-    message_acked = true; // TODO
+    message_acked = true;         // To Do: Resend message a few times
     xbee.send(zbTx);
-
-    // after sending a tx request, we expect a status response
-    // wait up to half second for the status response
+    // After sending a tx request, we expect a status response, wait up to half second for the status response
     if (xbee.readPacket(500)) {
-      // got a response!
-      // should be a znet tx status
+      // Got a response! It should be a znet tx status
       if (xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {
         xbee.getResponse().getZBTxStatusResponse(txStatus);
-        // get the delivery status, the fifth byte
+        // Get the delivery status, the fifth byte
         if (txStatus.getDeliveryStatus() == SUCCESS) {
           message_acked = true;
         } else {
-          // the remote XBee did not receive our packet. is it powered on?
+          // The remote XBee did not receive our packet. is it powered on?
           message_acked = false;
         }
       }
     }
   }
+  digitalWrite(P_SLP_XBEE, HIGH);                                   // Xbee sleep
 }
 
 int xbee_get_rssi() { 
+  digitalWrite(P_SLP_XBEE, LOW);                                    // Wake XBee up
+  while (digitalRead(P_CTS_XBEE) == 1) {}                           // Wait until XBee is ready after waking up:
   int rssi = -getSingleByteATCmdValue('D', 'B');
+  digitalWrite(P_SLP_XBEE, HIGH);                                   // Xbee sleep
   return rssi;
 }
 
@@ -563,8 +467,6 @@ void setATCommandToValue(uint8_t firstChar, uint8_t secondChar, uint8_t* value, 
 }
 
 // For commands that don't need a value but are executed like AC, FR, etc
-
-// For commands that don't need a value but are executed like AC, FR, etc
 void sendATCommand(uint8_t firstChar, uint8_t secondChar) {
   uint8_t at_command_container[2];
   at_command_container[0] = firstChar;
@@ -574,10 +476,9 @@ void sendATCommand(uint8_t firstChar, uint8_t secondChar) {
   AtCommandResponse atResponse = AtCommandResponse();
   xbee.send(atRequest); // send the command
 
-  // wait up to __ seconds for the status response
+  // Wait up to __ seconds for the status response
   if (xbee.readPacket(10000)) {
-    // got a response!
-    // should be an AT command response
+    // Got a response! It should be an AT command response
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
       xbee.getResponse().getAtCommandResponse(atResponse);
     }
@@ -595,16 +496,14 @@ uint8_t getSingleByteATCmdValue(uint8_t firstChar, uint8_t secondChar){
 
   uint8_t responseValue = 0xBA; // Some default value
 
-  // send the command
+  // Send the command
   xbee.send(atRequest);
 
-  // wait up to __ milliseconds for the status response
+  // Wait up to __ milliseconds for the status response
   if (xbee.readPacket(10000)) {
-    // got a response!
-    // should be an AT command response
+    // Got a response! It should be an AT command response
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
       xbee.getResponse().getAtCommandResponse(atResponse);
-
       if (atResponse.isOk()) {
         if (atResponse.getValueLength() > 0) {
           responseValue = atResponse.getValue()[0];
@@ -649,9 +548,9 @@ void pin3_isr(void){
 
 
 void goToSleep(){
-  cli(); // Disable interrupts to prevent an interrupt from disturbing this sequence
-  digitalWrite(P_SLP_XBEE, HIGH); // Set XXBEe to sleep
-  ADCSRA &= ~(1 << ADEN); //Disable ADC
+  cli();                          // Disable interrupts to prevent an interrupt from disturbing this sequence
+  digitalWrite(P_SLP_XBEE, HIGH); // Set XBee to sleep
+  ADCSRA &= ~(1 << ADEN);         // Disable ADC
   sleep_enable();
   if (ignore_rtc_interrupt == false)
   {
@@ -662,8 +561,8 @@ void goToSleep(){
     attachInterrupt(1, pin3_isr, RISING);
   }
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-  power_twi_disable(); // Two Wire
-  power_spi_disable(); // SPI
+  power_twi_disable();    // Two Wire
+  power_spi_disable();    // SPI
   power_usart0_disable();
   power_timer0_disable();
   power_timer1_disable();
@@ -751,11 +650,10 @@ void blink(int pin, int duration){
    Function for heartbeat message
 */
 void heartbeat(){
-  float currentBatteryVoltage = measureVBat(); // Get battery voltage
-  float myRSSI = 26;  // Dummy value
-  myRSSI = (float) xbee_get_rssi();
+  float currentBatteryVoltage = measureVBat();  // Get battery voltage
+  float myRSSI = (float) xbee_get_rssi();       // Get RSSI
   PayloadClass myMessage;
-  myMessage.set_id(THIS_CM_ID);
+  myMessage.set_id(MAIN_MODULE_ID);
   myMessage.set_SMtype(20);
   myMessage.set_payload(currentBatteryVoltage, myRSSI, 0, 0, 0);
   xbee_transmit_data(myMessage.get_payload_ptr(), sizeof(myMessage.payload));
@@ -766,15 +664,12 @@ void heartbeat(){
 */
 void low_battery_check(){
   float currentBatteryVoltage = measureVBat();
-  if (low_battery_level_detected == false && currentBatteryVoltage < LOW_BATTERY_WARNING_LEVEL && currentBatteryVoltage > 1) {// > 1 check because if it is supplied through the power jack, then VBat is zero. So I use 1V here, because with 1V at VBat the system would not be running.
-    digitalWrite(P_SLP_XBEE, LOW);             // Wake XBee up
-    while (digitalRead(P_CTS_XBEE) == 1) {}    // Wait until XBee is ready
+  if (low_battery_level_detected == false && currentBatteryVoltage < C_LOW_BATTERY_WARNING_LEVEL && currentBatteryVoltage > 1) {// > 1 check because if it is supplied through the power jack, then VBat is zero. So I use 1V here, because with 1V at VBat the system would not be running.
     PayloadClass myMessage;
-    myMessage.set_id(THIS_CM_ID);
+    myMessage.set_id(MAIN_MODULE_ID);
     myMessage.set_SMtype(13);
     myMessage.set_payload(currentBatteryVoltage, 0, 0, 0, 0);
     xbee_transmit_data(myMessage.get_payload_ptr(), sizeof(myMessage.payload));
-    digitalWrite(P_SLP_XBEE, HIGH);            // Xbee sleep
     low_battery_level_detected = true;         // So that only the first time will the warning be transmitted
     ignore_rtc_interrupt       = true;         // Do not wake up ever again to safe the battery
     ignore_sm_interrupt        = true;
