@@ -24,8 +24,8 @@
 //  - Fix reporting interval of heartbeat message          (tested)
 //  - Change heartbeat interval according to debug mode    (tested)
 //  - Test with windows sensor module                      (tested)
-//  - Add new low battery check to server                  ()
-// Improvements from v4.8
+//  - Add new low battery check to server                  (tested)
+// Improvements from v4.7
 //  - Check debug switch only once in the setup function   (tested)
 //  - Remove debug_mode_has_been_switched_off              (tested)
 //  - Implement universal coordinator address              (tested)
@@ -37,21 +37,21 @@
 //  - Integrate wakeup and sleep into xbee_transmit_data   (tested)
 //  - Move extended setup to regular setup                 (tested)
 //  - Test with windows sensor module                      (tested)
-//  - 1272 -> 677 lines
+//  - Changed default low battery cut out to 3.5           (tested)
+//  - 1272 -> 675 lines (~50%)
 
 // To Do:
 //  - Put arming of RTC trigger in function
 //  - Test current draw
-//  - Test low battery functionality
 //  - Fix ddrDB2 (now there are multiple message types per node)
 //  - Use watchdog timer for wake up
-//  - Unify sm payload format and mm payload format
+//  - Unify SM payload format and MM payload format
 
 /********************************
    CONFIGURATION
  ********************************/
 static const uint16_t C_SAMPLING_INTERVAL         = 5;    // Every how many minutes a measurement is taken from the sensor module
-static const float    C_LOW_BATTERY_WARNING_LEVEL = 3.4;  // V
+static const float    C_LOW_BATTERY_WARNING_LEVEL = 3.5;  // V
 static const uint16_t C_HEARTBEAT_INTERVAL        = 2*60; // Every how many minutes a heartbeat signal is sent
 static const uint16_t MAIN_MODULE_ID              = 115;  // Main module ID. Allowed range: [0,65535]
 
@@ -239,7 +239,7 @@ void loop()
   heartbeat_counter++;
   if (heartbeat_counter > HEARTBEAT_INTERVAL){
       heartbeat_counter = 0;
-      heartbeat();                              // Send heartbeat message
+      heartbeat();                                // Send heartbeat message
   }
     
   // The usual RTC interrupt when using a periodic sensor module will trigger this:
@@ -266,7 +266,7 @@ void loop()
       digitalWrite(P_L1, LOW);
       digitalWrite(P_L2, LOW);
       digitalWrite(P_L3, LOW);
-      // If we are in debug mode we want an interrupt every 10 seconds instead of every minute.
+      // In debug mode we want an interrupt every 10 seconds instead of every minute.
       setDS3231time(50, 49, 23, 7, 01, 01, 10); // DS3231 seconds, minutes, hours, day, date, month, year
     }
 
@@ -348,9 +348,8 @@ void getSensorModuleType(){
 
 bool readSensorModuleData() {
   turnOnSensorModule();                   // Turn sensor module on
-  // Wait for frame start byte
   uint8_t readByte = 0x00;
-  while (readByte != FRAMESTART_BYTE) {
+  while (readByte != FRAMESTART_BYTE) {   // Wait for frame start byte
     while (!Serial.available()) {}
     readByte = Serial.read();
   }
@@ -417,7 +416,7 @@ void xbee_transmit_data(uint8_t* myPayload, uint8_t myPayloadSize) {
 
   bool message_acked = false;
   while (message_acked == false) {
-    message_acked = true;         // To Do: Resend message a few times
+    message_acked = true;                                           // To Do: Resend message a few times [XXX]
     xbee.send(zbTx);
     // After sending a tx request, we expect a status response, wait up to half second for the status response
     if (xbee.readPacket(500)) {
@@ -458,8 +457,7 @@ void setATCommandToValue(uint8_t firstChar, uint8_t secondChar, uint8_t* value, 
 
   // wait up to xxx milliseconds for the status response
   if (xbee.readPacket(10000)) {
-    // got a response!
-    // should be an AT command response
+    // Got a response! It should be an AT command response
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
       xbee.getResponse().getAtCommandResponse(atResponse);
     }
