@@ -58,5 +58,5 @@ The gateway receives the data from the sensor nodes and relays the data to a web
 A router node consists of XBee-radio module and SparkFun XBee Explorer Regulated Board. The router node is powered by a wall adapter power supply. It always needs to be powered on.
 
 ## Publications
- * [Wireless sensor network for estimating building performance](sciencedirect.com/science/article/pii/S0926580519307472)
+ * [Wireless sensor network for estimating building performance](https://sciencedirect.com/science/article/pii/S0926580519307472)
  * [An easily-deployable wireless sensor network for building energy performance assessment](https://www.sciencedirect.com/science/article/pii/S1876610217329077)
