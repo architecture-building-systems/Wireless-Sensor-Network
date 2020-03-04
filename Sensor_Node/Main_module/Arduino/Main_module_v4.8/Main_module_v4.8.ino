@@ -33,7 +33,7 @@
 //  - Apply payload class to standard measurement payload  (tested)
 //  - Improve terminology of Payload class                 (tested)
 //    (message vs payload vs myMessage vs myPayload)
-//  - Remove dublicate RTC interrupt settings              (tested)
+//  - Remove duplicate RTC interrupt settings              (tested)
 //  - Integrate wakeup and sleep into xbee_transmit_data   (tested)
 //  - Move extended setup to regular setup                 (tested)
 //  - Test with windows sensor module                      (tested)
@@ -42,6 +42,8 @@
 
 // To Do:
 //  - Put arming of RTC trigger in function
+//  - Get sensor node id from XBee
+//  - Get pan id from XBee
 //  - Test current draw
 //  - Fix ddrDB2 (now there are multiple message types per node)
 //  - Use watchdog timer for wake up
