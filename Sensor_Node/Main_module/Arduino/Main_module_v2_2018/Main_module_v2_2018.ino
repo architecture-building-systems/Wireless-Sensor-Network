@@ -12,11 +12,11 @@ static const float LOW_BATTERY_WARNING_LEVEL = 3.4; // V
 //#define UPLINK_SL 0x41046BD5  // C100
 //#define UPLINK_SL 0x41628F9C  // C200
 //#define UPLINK_SL 0x415ABDD9  // C300
-//#define UPLINK_SL 0x41046775  // C400
+#define UPLINK_SL 0x41046775  // C400
 //#define UPLINK_SL 0x41631484  // C500
 //#define UPLINK_SL 0x41628FF0  // C600
 //#define UPLINK_SL 0x41628FA9  // C700
-#define UPLINK_SL 0x41628FFD  // C800
+//#define UPLINK_SL 0x41628FFD  // C800
 
 
 
@@ -25,14 +25,14 @@ static const float LOW_BATTERY_WARNING_LEVEL = 3.4; // V
 //static const uint32_t PAN_ID = 0x100;  // C100
 //static const uint32_t PAN_ID = 0x200;  // C200
 //static const uint32_t PAN_ID = 0x300;  // C300
-//static const uint32_t PAN_ID = 0x400;  // C400
+static const uint32_t PAN_ID = 0x400;  // C400
 //static const uint32_t PAN_ID = 0x500;  // C500
 //static const uint32_t PAN_ID = 0x600;  // C600
 //static const uint32_t PAN_ID = 0x700;  // C700
-static const uint32_t PAN_ID = 0x800;  // C800
+//static const uint32_t PAN_ID = 0x800;  // C800
 
 // This communication module's ID. Allowed range: [0,65535] (unsigned 16 bit integer)
-static const uint16_t THIS_CM_ID = 807;
+static const uint16_t THIS_CM_ID = 417;
 
 
 
