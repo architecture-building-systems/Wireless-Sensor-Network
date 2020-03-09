@@ -213,7 +213,6 @@
       $myValueArray[$i] = array();
       // Get sensorModuleType and other meta data
       $sql = "SELECT `sensorModuleType` FROM `wsn_input` WHERE `node_id`=$node_id[$i] AND `time`<'$date_end' AND sensorModuleType!=20 ORDER BY `id` DESC LIMIT 1";
-      echo($sql);
       $result = $conn->query($sql);
       if ($result->num_rows > 0){
         $row = $result->fetch_array(MYSQLI_ASSOC);
