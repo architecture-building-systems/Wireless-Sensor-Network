@@ -56,9 +56,9 @@
 /************************************************
 / Configurations
 /************************************************/
-    $time_start = microtime(true);          
     include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
     include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/php_helper_functions.php');
+    ini_set('memory_limit', '-1');
     
 /************************************************
 // DB connection 
@@ -103,6 +103,10 @@
     // GET parameters
     if (!empty($_GET["node_id"])){
         $node_id = mysqli_real_escape_string($conn, $_GET["node_id"]);
+        if (strcmp($node_id, "all")!=0){
+          $node_id = explode(",", $node_id);
+          $node_id = array_map('intval', $node_id);
+        }
     }
     if (!empty($_GET["date_start"])){
         $date_start = mysqli_real_escape_string($conn, $_GET["date_start"]);
@@ -124,7 +128,7 @@
 // Fetch data
 /************************************************/
 
-    // Get last data entry
+    // Get end date
     if (strcmp($date_end, "")==0){
         if (isset($campaign_name) AND isset($campaign_description)){
             $sql = "SELECT `start_date`, `end_date` FROM `wsn_measurement_campaign` WHERE `campaign_name`='$campaign_name' AND `description`='$campaign_description' ORDER BY `id` DESC LIMIT 1";
@@ -143,49 +147,65 @@
         }
     }
 
-    // Get sensorModuleType and other meta data
-    $sql = "SELECT `sensorModuleType` FROM `wsn_input` WHERE `node_id`=$node_id AND `time`<'$date_end' AND sensorModuleType!=20 ORDER BY `id` DESC LIMIT 1";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0){
-      $row = $result->fetch_array(MYSQLI_ASSOC);
-      $sensorModuleType = (int)$row["sensorModuleType"];
-      // Get meta data
-      $sql = "SELECT number_of_values, description, unit, entity FROM wsn_sensor_module_type WHERE id=$sensorModuleType ORDER BY id DESC LIMIT 1";
+    // Get list of ids from campaign_name & campagin_description
+    if (isset($campaign_name) AND isset($campaign_description) AND is_string($node_id)){
+      $sql = "SELECT `node_id_list` FROM `wsn_measurement_campaign` WHERE `campaign_name`='$campaign_name' AND `description`='$campaign_description' ORDER BY `id` DESC LIMIT 1";
       $result = $conn->query($sql);
-      $row = $result->fetch_array(MYSQLI_ASSOC);
-      $number_of_values = (int)$row["number_of_values"];
-      $entities = explode(', ', $row["entity"]);
-      $units = explode(',', $row["unit"]);
-      $description = explode(', ', $row["description"]);
-   }
-
-    // Get measurement values
-    $sql = "SELECT UNIX_TIMESTAMP(time) as date, value0 , value1, value2, value3, value4 FROM wsn_input WHERE node_id=$node_id AND sensorModuleType=$sensorModuleType";
-
-    if (strcmp($date_start, "")!=0) {
-      $sql .= " AND time>'$date_start'";
+      if ($result->num_rows > 0){
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $id_list = $row["node_id_list"];
+        $id_list = explode(", ", $id_list);
+        $node_id = array_map('intval', $id_list);
+      }
     }
-    if (strcmp($date_end, "")!=0) {
-      $sql .= " AND time<'$date_end'";
-    }
-    $sql .= " ORDER BY id DESC";
-    if (isset($samples)){
-      $sql .= " LIMIT $samples";
-    }
-    $result = $conn->query($sql);
-    // Add meta data to output array
-    $myValueArray[0][]= array("node_id"=>(int)$node_id, "units"=>$units, "description"=>$description, "entities"=>$entities, "sensorModuleType"=>$sensorModuleType, "number_of_values"=>$number_of_values);
 
-    // Add measurement data to output array
-    if ($result->num_rows > 0) {
-        // Read data of each row
-        while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            for ($i=0; $i<$number_of_values; $i++ ){
-                $myValueArray[$i+1] [] = array("date"=>(int)$row["date"], "value"=>(float)$row["value$i"]);
-            }
-        }
-    } else {
-        $myValueArray[1] [] = array();
+    $myValueArray = array();
+    for ($i=0; $i<count($node_id); $i++){
+      $myValueArray[$i] = array();
+      // Get sensorModuleType and other meta data
+      $sql = "SELECT `sensorModuleType` FROM `wsn_input` WHERE `node_id`=$node_id[$i] AND `time`<'$date_end' AND sensorModuleType!=20 ORDER BY `id` DESC LIMIT 1";
+      $result = $conn->query($sql);
+      if ($result->num_rows > 0){
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $sensorModuleType = (int)$row["sensorModuleType"];
+        // Get meta data
+        $sql = "SELECT number_of_values, description, unit, entity FROM wsn_sensor_module_type WHERE id=$sensorModuleType ORDER BY id DESC LIMIT 1";
+        $result = $conn->query($sql);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $number_of_values = (int)$row["number_of_values"];
+        $entities = explode(', ', $row["entity"]);
+        $units = explode(',', $row["unit"]);
+        $description = explode(', ', $row["description"]);
+     }
+
+      // Get measurement values
+      $sql = "SELECT UNIX_TIMESTAMP(time) as date, value0 , value1, value2, value3, value4 FROM wsn_input WHERE node_id=$node_id[$i] AND sensorModuleType=$sensorModuleType";
+
+      if (strcmp($date_start, "")!=0) {
+        $sql .= " AND time>'$date_start'";
+      }
+      if (strcmp($date_end, "")!=0) {
+        $sql .= " AND time<'$date_end'";
+      }
+      $sql .= " ORDER BY id DESC";
+      if (isset($samples)){
+        $sql .= " LIMIT $samples";
+      }
+      $result = $conn->query($sql);
+      // Add meta data to output array
+      $myValueArray[$i][0][]= array("node_id"=>(int)$node_id[$i], "units"=>$units, "description"=>$description, "entities"=>$entities, "sensorModuleType"=>$sensorModuleType, "number_of_values"=>$number_of_values);
+
+      // Add measurement data to output array
+      if ($result->num_rows > 0) {
+          // Read data of each row
+          while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+              for ($j=0; $j<$number_of_values; $j++ ){
+                  $myValueArray[$i][$j+1] [] = array("date"=>(int)$row["date"], "value"=>(float)$row["value$j"]);
+              }
+          }
+      } else {
+          $myValueArray[$i][1] [] = array();
+      }
     }
 
 /************************************************
@@ -193,24 +213,10 @@
 /************************************************/
   header("Content-Type: application/json;charset=utf-8");
   echo json_encode($myValueArray);
-    $conn->close();
-/************************************************
-/ Echo title of site
-/************************************************
-   echo "<div>";
-   echo "<h1><a href=\"?\">Is it up right now?</a></h1>\n";
-   echo date("d.m.Y H:i:s", time());
-   echo "</div>\n";
 
 /************************************************
 / Clean up
-/************************************************
-// Close db-connection    
+/************************************************/
+// Close db-connection
     $conn->close();
-    
-// Echo execution time
-    $time_end = microtime(true);
-    $execution_time = round(($time_end - $time_start),1);
-    echo "<div id=\"exectime\">Total Execution Time: ".$execution_time." Seconds </div>";
-    /**/
 ?>
