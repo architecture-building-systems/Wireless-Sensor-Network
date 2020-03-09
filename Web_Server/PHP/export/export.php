@@ -5,50 +5,84 @@
  * Output: json formatted measruement data including meta data
 [
    [
-      {
-         "node_id":801,
-         "units":[
-            "\u00b0C",
-            "%"
-         ],
-         "description":[
-            "SHT31"
-         ],
-         "entities":[
-            "air temperature (indoor)",
-            "relative humidity (indoor)"
-         ],
-         "sensorModuleType":2,
-         "number_of_values":2
-      }
+      [
+         {
+            "node_id":801,
+            "units":[
+               "\u00b0C",
+               "%"
+            ],
+            "description":[
+               "SHT31"
+            ],
+            "entities":[
+               "air temperature (indoor)",
+               "relative humidity (indoor)"
+            ],
+            "sensorModuleType":2,
+            "number_of_values":2
+         }
+      ],
+      [
+         {
+            "date":1583780593,
+            "value":21.7609
+         },
+         {
+            "date":1583780294,
+            "value":21.8757
+         },
+         {
+            "date":1583779393,
+            "value":21.7742
+         }
+      ],
+      [
+         {
+            "date":1583780593,
+            "value":51.0765
+         },
+         {
+            "date":1583780294,
+            "value":50.7057
+         },
+         {
+            "date":1583779393,
+            "value":48.9708
+         }
+      ]
    ],
    [
-      {
-         "date":1583770093,
-         "value":22.0306
-      },
-      {
-         "date":1583769793,
-         "value":22.0439
-      },
-      {
-         "date":1583769493,
-         "value":22.0306
-      }
-   ],
-   [
-      {
-         "date":1583770093,
-         "value":55.6527
-      },
-      {
-         "date":1583769793,
-         "value":55.7504
-      },
-      {
-         "date":1583769493,
-         "value":55.9426
-      }
+      [
+         {
+            "node_id":805,
+            "units":[
+               "W\/m2"
+            ],
+            "description":[
+               "Heat flux"
+            ],
+            "entities":[
+               "heat flux"
+            ],
+            "sensorModuleType":7,
+            "number_of_values":1
+         }
+      ],
+      [
+         {
+            "date":1583780845,
+            "value":23.8
+         },
+         {
+            "date":1583780545,
+            "value":27.5
+         },
+         {
+            "date":1583780245,
+            "value":28.9
+         }
+      ]
    ]
 ]
 /************************************************/
@@ -140,6 +174,10 @@
               if (strtotime($date_end) < strtotime($date_start)){
                 $date_end = date('Y-m-d H:i:s');            // Overwrite date_end if it before start_date, e.g. default data 00-00-0000 00:00:00
               }
+            } else {  // Campaign not found
+              $date_end = date('Y-m-d H:i:s');
+              $campaign_name = "Campaign_name not found";
+              $campaign_description = "Campaign_description not found";
             }
         }
         else {
@@ -156,7 +194,18 @@
         $id_list = $row["node_id_list"];
         $id_list = explode(", ", $id_list);
         $node_id = array_map('intval', $id_list);
+      } else {
+        $campaign_name = "Campaign_name not found";
+        $campaign_description = "Campaign_description not found";
+        $node_id = array();
       }
+    }
+
+    if (!isset($campaign_description)){
+      $campaign_name = "";
+    }
+    if (!isset($campaign_description)){
+      $campaign_description = "";
     }
 
     $myValueArray = array();
@@ -164,6 +213,7 @@
       $myValueArray[$i] = array();
       // Get sensorModuleType and other meta data
       $sql = "SELECT `sensorModuleType` FROM `wsn_input` WHERE `node_id`=$node_id[$i] AND `time`<'$date_end' AND sensorModuleType!=20 ORDER BY `id` DESC LIMIT 1";
+      echo($sql);
       $result = $conn->query($sql);
       if ($result->num_rows > 0){
         $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -193,7 +243,7 @@
       }
       $result = $conn->query($sql);
       // Add meta data to output array
-      $myValueArray[$i][0][]= array("node_id"=>(int)$node_id[$i], "units"=>$units, "description"=>$description, "entities"=>$entities, "sensorModuleType"=>$sensorModuleType, "number_of_values"=>$number_of_values);
+      $myValueArray[$i][0][]= array("node_id"=>(int)$node_id[$i], "units"=>$units, "description"=>$description, "entities"=>$entities, "sensorModuleType"=>$sensorModuleType, "number_of_values"=>$number_of_values, "campaign_name"=>$campaign_name, "campaign_description"=>$campaign_description);
 
       // Add measurement data to output array
       if ($result->num_rows > 0) {
