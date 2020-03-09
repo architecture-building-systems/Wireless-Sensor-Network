@@ -20,7 +20,9 @@
                "relative humidity (indoor)"
             ],
             "sensorModuleType":2,
-            "number_of_values":2
+            "number_of_values":2,
+            "campaign_name":"Measurement Campaign Winter 18/19",
+            "campaign_description":"Building 3"
          }
       ],
       [
@@ -66,7 +68,9 @@
                "heat flux"
             ],
             "sensorModuleType":7,
-            "number_of_values":1
+            "number_of_values":1,
+            "campaign_name":"Measurement Campaign Winter 18/19",
+            "campaign_description":"Building 3"
          }
       ],
       [
