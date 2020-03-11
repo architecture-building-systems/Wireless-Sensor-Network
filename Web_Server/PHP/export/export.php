@@ -3,6 +3,7 @@
  * Scirpt to retrieve measurement data over web interface
  * access: http://www.[YOUR URL].com/export.export.php?node_id=[YOUR NODE ID]&token=[YOUR TOKEN]&campaign_name=[YOUR CAMPAIGN NAME]&campaign_description=[YOUR CAMPAIGN DESCRIPTION]&date_start=[YOUR START DATE]&date_end=[YOUR END DATE]
  * Output: json formatted measruement data including meta data
+ * Example:
 [
    [
       [
@@ -89,6 +90,8 @@
       ]
    ]
 ]
+ * To Do:
+ *  - Deal with heartbeat messages
 /************************************************/
 
 /************************************************
@@ -128,7 +131,6 @@
 /************************************************
 // Parse GET parameters
 /************************************************/
-
     // Default data
     $number_of_values = 0;
     $entities = ["no data"];
@@ -165,7 +167,6 @@
 /************************************************
 // Fetch data
 /************************************************/
-
     // Get end date
     if (strcmp($date_end, "")==0){
         if (isset($campaign_name) AND isset($campaign_description)){
@@ -245,6 +246,7 @@
         $sql .= " LIMIT $samples";
       }
       $result = $conn->query($sql);
+
       // Add meta data to output array
       $myValueArray[$i][0][]= array("node_id"=>(int)$node_id[$i], "units"=>$units, "description"=>$description, "entities"=>$entities, "sensorModuleType"=>$sensorModuleType, "number_of_values"=>$number_of_values, "campaign_name"=>$campaign_name, "campaign_description"=>$campaign_description);
 
