@@ -3,6 +3,9 @@
  * Scirpt to retrieve measurement data over web interface
  * access: http://www.[YOUR URL].com/export.export.php?node_id=[YOUR NODE ID]&token=[YOUR TOKEN]&campaign_name=[YOUR CAMPAIGN NAME]&campaign_description=[YOUR CAMPAIGN DESCRIPTION]&date_start=[YOUR START DATE]&date_end=[YOUR END DATE]
  * Output: json formatted measruement data including meta data
+ * * To Do:
+ *  - Deal with heartbeat messages
+ *  - Make sure only data is exported that belongs to the access token
  * Example:
 [
    [
@@ -90,8 +93,7 @@
       ]
    ]
 ]
- * To Do:
- *  - Deal with heartbeat messages
+
 /************************************************/
 
 /************************************************
