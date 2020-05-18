@@ -62,3 +62,6 @@ A router node consists of XBee-radio module and SparkFun XBee Explorer Regulated
 ## Publications
  * [Wireless sensor network for estimating building performance](https://sciencedirect.com/science/article/pii/S0926580519307472)
  * [An easily-deployable wireless sensor network for building energy performance assessment](https://www.sciencedirect.com/science/article/pii/S1876610217329077)
+ 
+ ## Cite us
+ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3249021.svg)](https://doi.org/10.5281/zenodo.3249021)
