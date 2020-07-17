@@ -43,6 +43,7 @@ Author: Mario Frei (2018)
     include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');
     include_once($_SERVER['DOCUMENT_ROOT'].'/wsn/php_helper_functions.php');
 
+
 /************************************************
 // DB connection 
 /************************************************/
@@ -53,7 +54,28 @@ Author: Mario Frei (2018)
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    $token = mysqli_real_escape_string($conn, $_GET["token"]);
+
+/************************************************
+/ Check all GET-parameters from the gateway
+/************************************************/
+// Received data from gateway
+    $token     = mysqli_real_escape_string($conn, $_GET['token']);                        // Access token (escaped for SQL)
+    if (isset($_GET["gateway_id"])){                                                      // Get gateway ID (escaped for SQL)
+        $gateway_id = mysqli_real_escape_string($conn, $_GET["gateway_id"]);
+    }
+    else {
+        $gateway_id = 1; // If there is no gateway id available as GET-Parameter, set it to 1
+    }
+
+/************************************************
+/ Check access token for validity
+/************************************************/
+  $type = "read";
+  $access = check_token($token, $type);
+    // Abort script if access is not granted.
+    if (!$access){
+      exit();
+    }
 
 /************************************************
 / Echo title of site
@@ -110,13 +132,6 @@ Author: Mario Frei (2018)
     echo "\n";
     echo "</tr>";
 
-// Set gateway id
-    if (isset($_GET["gateway_id"])) {
-        $gateway_id = mysqli_real_escape_string($conn, $_GET["gateway_id"]);
-    }
-    else {
-        $gateway_id = 1; // If there is no gateway id available as GET-Parameter, set it to 1
-    }
 
 // Create list of node ids
     $node_list = array();
