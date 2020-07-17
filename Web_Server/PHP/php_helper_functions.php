@@ -27,6 +27,7 @@
         return $nov;
     } 
     else {
+        echo("<br>Error: Could not find \"sensor_moudle_type\" in database.<br>");
         return -1;
     } 
      $conn->close();    
@@ -54,7 +55,7 @@
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         $headers .= "From:".$e_mail_address_admin;
         
-        echo mail($receiver, $subject, $message, $headers);
+ mail($rechoeceiver, $subject, $message, $headers);
     }
 
 
@@ -271,4 +272,32 @@
         }
     }
 
+
+/************************************************
+/ Generate a new access token that is not already present in the database
+/ Input: -
+/ Output: access token (string)
+/************************************************/
+    function generate_token($conn){
+        $token_is_unique = FALSE;
+        while($token_is_unique==FALSE) {
+            // Generate string
+            $alphabet = "abcdefghijklmnopqrstuwxyzZ0123456789";
+            $length = 16;
+            for ($i = 0; $i < $length; $i++) {
+                $n = rand(0, strlen($alphabet)-1);    // Not cryptographically secure according to https://stackoverflow.com/questions/6101956/generating-a-random-password-in-php/31284266#31284266
+                $token[$i] = $alphabet[$n];
+            }
+            $token = implode($token);
+
+            // Check database for
+            $sql = "SELECT token FROM wsn_access WHERE token=$token";
+            $result = $conn->query($sql);
+            if ($result->num_rows == 0) {
+                $token_is_unique = TRUE;
+            }
+        }
+        // Return token
+        return $token;
+    }
 ?>
