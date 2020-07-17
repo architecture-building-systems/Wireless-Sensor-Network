@@ -13,7 +13,8 @@
 /************************************************
 / Configurations
 /************************************************/
-    include($_SERVER['DOCUMENT_ROOT'].'/wsn/gateway2mysql_functions.php');                // Include helper functions
+    //include($_SERVER['DOCUMENT_ROOT'].'/wsn/gateway2mysql_functions.php');                // Include helper functions
+    include($_SERVER['DOCUMENT_ROOT'].'/wsn/php_helper_functions.php');                   // Include helper functions
     include($_SERVER['DOCUMENT_ROOT'].'/wsn/config.php');                                 // Include configuration file
     
 /************************************************
@@ -80,13 +81,13 @@
     
 // Depending on the payload type use a different script for the disaggregation (idealy all payload would adhere to the standard scheme)
     if ($payloadBytes[0]==255 && $payloadBytes[1]==255 && $payloadBytes[2]==255 && $payloadBytes[3]==255){
-        include 'gateway2mysql_battery_warning.php';
+       include($_SERVER['DOCUMENT_ROOT'].'/wsn/gateway2mysql/gateway2mysql_battery_warning.php');
     }
     else if ($payloadBytes[3]==7){
-        include 'gateway2mysql_heat_flux_sensor_module.php';
+        include($_SERVER['DOCUMENT_ROOT'].'/wsn/gateway2mysql/gateway2mysql_heat_flux_sensor_module.php');
     }
     else {
-        include 'gateway2mysql_standard_sensor_module.php';
+        include($_SERVER['DOCUMENT_ROOT'].'/wsn/gateway2mysql/gateway2mysql_standard_sensor_module.php');
     }
 
 
