@@ -18,7 +18,7 @@
 //  - Add input parameters to write2sd    ()
 
 int gatewayID = 0;                                                   // Set this accordingly
-String serverURL = "http://[your webserver]/wsn/gateway2mysql.php";  // Insert the url to your web server here
+String serverURL = "http://[your webserver]/wsn/gateway2mysql/gateway2mysql.php?token=";  // Insert the url to your web server here
 float heartbeat_interval = 0.5;                                      // Heartbeat interval in hours
 bool resetFlag = true;
 
@@ -192,7 +192,7 @@ bool send2Server()
   int16_t length;
   String url; 
   url  = serverURL;
-  url += "?payload=";
+  url += "&payload=";
   url += payload;
   url += "&g_id=";
   url += gatewayID;
