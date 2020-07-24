@@ -61,12 +61,18 @@ Author: Mario Frei (2018)
 // Received data from gateway
     $token     = mysqli_real_escape_string($conn, $_GET['token']);                        // Access token (escaped for SQL)
     if (isset($_GET["gateway_id"])){                                                      // Get gateway ID (escaped for SQL)
-        $gateway_id = mysqli_real_escape_string($conn, $_GET["gateway_id"]);
+        $gateway_id_url = mysqli_real_escape_string($conn, $_GET["gateway_id"]);
     }
     else {
-        $gateway_id = 1; // If there is no gateway id available as GET-Parameter, set it to 1
+        $gateway_id_url = 1; // If there is no gateway id available as GET-Parameter, set it to 1
     }
 
+    if (isset($_GET["campaign_id"])){                                                    // Get campaign ID (escaped for SQL)
+        $campaign_id_url = mysqli_real_escape_string($conn, $_GET["campaign_id"]);
+    }
+    else {
+        $campaign_id_url = -1; // If there is no campaign id available as GET-Parameter, set it to -1
+    }
 /************************************************
 / Check access token for validity
 /************************************************/
@@ -85,6 +91,64 @@ Author: Mario Frei (2018)
    echo date("d.m.Y H:i:s", time());
    echo "</div>\n";
  
+/************************************************
+/ Echo deployment table
+/************************************************/
+    echo "<div id=\"mytables\">";
+    echo "<h2>Deployments</h2>\n";
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>ID</th>";
+    echo "<th>Name</th>";
+    echo "<th>Description</th>";
+    echo "<th>Nodes</th>";
+    echo "<th>Last entry (min)</th>";
+    echo "<th>Status</th>";
+    echo "\n";
+    echo "</tr>";
+
+// Get active campaigns
+    $sql = "SELECT `id`,`campaign_name`,`description`, `node_id_list`, `gateway_id` FROM `wsn_measurement_campaign` WHERE `end_date`='0001-01-01 00:00:00' OR `end_date`>NOW() ORDER BY id ASC";
+    $result = $conn->query($sql);
+
+    while($row = $result->fetch_array(MYSQLI_ASSOC)){
+        $campaign_id = $row["id"];
+        $campaign_name = $row["campaign_name"];
+        $campaign_description = $row["description"];
+        $gateway_id_list =$row["gateway_id"];
+        $gateway_id_list = explode(",", $gateway_id_list);
+        $gateway_id_list = array_map('intval', $gateway_id_list);
+
+        $node_id_list = $row["node_id_list"];
+        $node_id_list = explode(",", $node_id_list);
+        $num_nodes = count($node_id_list);
+
+        $timePast = 10000;  // [minutes]
+        foreach($gateway_id_list as $id){
+            $timePast_temp = checkGateway($id, $conn);
+            if ($timePast_temp < $timePast) {
+                $timePast = $timePast_temp;
+            }
+        }
+// Output campaign details
+        echo "<tr>\n";
+        echo "<td>$campaign_id</td>";
+        echo "<td><a href=\"?campaign_id=$campaign_id&token=$token\"> $campaign_name </a></td>";
+        echo "<td>$campaign_description</td>";
+        echo "<td>$num_nodes</td>";
+        echo "<td>";
+        echo number_format($timePast,0,",","'");
+        echo "</td>";
+        if ($timePast >-1 && $timePast < 10){
+           echo "<td bgcolor=\"#00FF00\">OK</td>";
+        } else {
+           echo "<td bgcolor=\"#FF0000\">Offline </td>";
+        }
+        echo "</tr>";
+    }
+    echo "</table>";
+    echo "</div>";
+
 /************************************************
 / Echo gateway table
 /************************************************/  
@@ -134,10 +198,21 @@ Author: Mario Frei (2018)
 
 
 // Create list of node ids
-    $node_list = array();
-    $pan_id = 100*$gateway_id;
-    for ($i=1; $i<=$number_of_sensor_nodes; $i++){
-        $node_list[] = $pan_id + $i;
+    if ($campaign_id_url!=-1) {     // Get node_id based on campaign name if campaign id is available
+        $node_list = array();
+        $sql = "SELECT `node_id_list` FROM `wsn_measurement_campaign` WHERE `id`=$campaign_id_url LIMIT 1";
+        $result = $conn->query($sql);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $node_list = $row["node_id_list"];
+        $node_list = explode(",", $node_list);
+        $node_list = array_map('intval', $node_list);
+
+    } else {                        // Get node_id based on gateway id
+        $node_list = array();
+        $pan_id = 100*$gateway_id_url;
+        for ($i=1; $i<=$number_of_sensor_nodes; $i++){
+            $node_list[] = $pan_id + $i;
+        }
     }
 
 // Output information for each node listed in the node id list from above, row by row
